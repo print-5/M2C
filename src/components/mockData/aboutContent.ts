@@ -1,0 +1,62 @@
+export interface AboutSection {
+  title: string;
+  content: string;
+  image?: string;
+}
+
+export const aboutContent: AboutSection[] = [
+  {
+    title: "Our Journey of Handcrafted Story",
+    content: "For centuries, the art of textile making has been woven into the very fabric of our culture. What began in humble homes with simple looms has evolved into a rich tradition that connects us to our ancestors. Every thread tells a story of dedication, skill, and the timeless beauty of handcrafted goods.",
+    image: "/assets/images/about/a6.jpg"
+  },
+  {
+    title: "The Traditional Craft",
+    content: "In the early morning hours, when the world is still quiet, our artisans begin their work. Using techniques passed down through generations, they transform simple cotton and linen into beautiful, functional pieces. The rhythmic sound of the loom, the careful selection of threads, and the patient process of weaving create textiles that are not just products, but pieces of living history.",
+    image: "/assets/images/about/a2.jpg"
+  },
+  {
+    title: "Home-Made Excellence",
+    content: "Our marketplace celebrates the beauty of home-made products. Each towel, apron, and textile piece is crafted in small workshops and family homes where quality takes precedence over quantity. These aren't mass-produced items – they're lovingly made pieces that carry the warmth and care of human hands.",
+    image: "/assets/images/about/a3.png"
+  },
+  {
+    title: "Preserving Tradition",
+    content: "In a world of fast fashion and machine production, we stand as guardians of traditional textile arts. Our vendors are not just suppliers – they are keepers of ancient knowledge, master craftspeople who ensure that the skills of their ancestors continue to flourish in the modern world.",
+    image: "/assets/images/about/a4.jpg"
+  },
+  {
+    title: "The Future of Handcraft",
+    content: "While we honor our past, we also embrace the future. Our artisans are incorporating sustainable materials and eco-friendly practices into their traditional methods. This fusion of old wisdom and new consciousness creates textiles that are not only beautiful and functional but also kind to our planet.",
+    image: "/assets/images/about/a5.jpg"
+  }
+];
+
+export const missionStatement = {
+  title: "Our Mission",
+  content: "To connect conscious consumers with authentic, handcrafted textiles while supporting traditional artisans and preserving cultural heritage. We believe that every purchase should tell a story, support a family, and contribute to keeping ancient crafts alive for future generations.",
+  image: "/assets/images/about/a8.webp"
+};
+
+export const values = [
+  {
+    title: "Authenticity",
+    description: "Every product is genuinely handcrafted using traditional methods"
+  },
+  {
+    title: "Quality",
+    description: "We maintain the highest standards in materials and craftsmanship"
+  },
+  {
+    title: "Sustainability",
+    description: "Supporting eco-friendly practices and sustainable livelihoods"
+  },
+  {
+    title: "Heritage",
+    description: "Preserving and celebrating traditional textile arts"
+  },
+  {
+    title: "Community",
+    description: "Building connections between artisans and conscious consumers"
+  }
+];

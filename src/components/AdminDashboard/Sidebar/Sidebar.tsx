@@ -1,0 +1,156 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import {
+  LayoutDashboard,
+  Users,
+  Package,
+  ShoppingCart,
+  Settings,
+  Store,
+  Tags,
+  MessageSquare,
+  FileText,
+  Shield,
+  LogOut,
+  Warehouse,
+  Receipt,
+  Edit3
+} from 'lucide-react'
+
+const sidebarItems = [
+  {
+    title: 'Dashboard',
+    href: '/dashboard',
+    icon: LayoutDashboard,
+  },
+  {
+    title: 'Vendors',
+    href: '/dashboard/vendors',
+    icon: Store,
+  },
+  {
+    title: 'Products',
+    href: '/dashboard/products',
+    icon: Package,
+  },
+  {
+    title: 'Inventory',
+    href: '/dashboard/inventory',
+    icon: Warehouse,
+  },
+  {
+    title: 'Orders',
+    href: '/dashboard/orders',
+    icon: ShoppingCart,
+  },
+  {
+    title: 'Invoice & Billing',
+    href: '/dashboard/billing',
+    icon: Receipt,
+  },
+  {
+    title: 'Categories',
+    href: '/dashboard/categories',
+    icon: Tags,
+  },
+  {
+    title: 'Users',
+    href: '/dashboard/users',
+    icon: Users,
+  },
+  {
+    title: 'Content Management',
+    href: '/dashboard/cms',
+    icon: Edit3,
+  },
+  {
+    title: 'Reviews',
+    href: '/dashboard/reviews',
+    icon: MessageSquare,
+  },
+  {
+    title: 'Reports',
+    href: '/dashboard/reports',
+    icon: FileText,
+  },
+  {
+    title: 'Admin Management',
+    href: '/dashboard/admins',
+    icon: Shield,
+  },
+  {
+    title: 'Settings',
+    href: '/dashboard/settings',
+    icon: Settings,
+  },
+]
+
+export default function Sidebar() {
+  const pathname = usePathname()
+
+  return (
+    <div className="flex h-full w-64 flex-col font-sans bg-white border-r border-red-200 shadow-sm">
+      {/* Logo */}
+      <div className="flex h-18 items-center justify-center border-b border-red-200 px-4 bg-red-50">
+        <Link href="/dashboard" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+          <div className="h-9 w-9 rounded-lg bg-red-800 flex items-center justify-center shadow-md">
+            <span className="text-white text-base font-bold">A</span>
+          </div>
+          <div>
+            <span className="text-lg font-bold text-red-800 block">Admin Panel</span>
+            <span className="text-xs text-slate-500">Control Center</span>
+          </div>
+        </Link>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 space-y-1 px-3 py-4 overflow-y-auto">
+        {sidebarItems.map((item) => {
+          const Icon = item.icon
+          const isActive = pathname === item.href
+          
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
+                isActive
+                  ? 'bg-red-800 text-white shadow-md'
+                  : 'text-slate-700 hover:bg-red-50 hover:text-red-800'
+              )}
+            >
+              <Icon
+                className={cn(
+                  'mr-3 h-5 w-5 shrink-0',
+                  isActive ? 'text-white' : 'text-slate-600'
+                )}
+              />
+              <span className="font-semibold">{item.title}</span>
+            </Link>
+          )
+        })}
+      </nav>
+
+      {/* User section */}
+      <div className="border-t border-red-200 p-4 bg-red-50">
+        <div className="flex items-center">
+          <div className="h-10 w-10 rounded-full bg-red-800 flex items-center justify-center shadow-md">
+            <span className="text-sm font-semibold text-white">SA</span>
+          </div>
+          <div className="ml-3 flex-1">
+            <p className="text-sm font-semibold text-red-800">Super Admin</p>
+            <p className="text-xs text-slate-500">admin@example.com</p>
+          </div>
+        </div>
+        <button className="mt-3 flex w-full items-center px-3 py-2 text-sm font-medium text-red-800 rounded-lg hover:bg-red-100 hover:text-red-900 transition-colors">
+          <LogOut className="mr-3 h-4 w-4" />
+          Sign out
+        </button>
+      </div>
+    </div>
+  )
+}
