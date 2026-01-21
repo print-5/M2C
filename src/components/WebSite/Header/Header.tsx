@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import {
@@ -94,22 +95,33 @@ const Header = () => {
   return (
     <div className="sticky top-0 z-50 font-sans">
          {/* Top Section */}
-      <div className="h-14 bg-[#222222] flex items-center justify-center">
+      <div className="h-12 bg-[#222222] flex items-center justify-center">
         <p className="text-white text-sm sm:text-base font-medium">Bath Towel Collection on 50% off</p>
       </div>
       {/* Main Header */}
       <header className="bg-white shadow-lg border-b border-gray-100 transition-all duration-300">
         <div className="max-w-7xl xl:max-w-420 mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-          <div className="grid grid-cols-[25%_50%_25%] items-center h-16 gap-2 sm:gap-3 md:gap-4">
-            {/* Section 1: Left Empty Space (30%) */}
-            <div></div>
+          <div className="grid grid-cols-[25%_50%_25%] items-center h-22 gap-2 sm:gap-3 md:gap-4">
+            {/* Section 1: Logo (25%) */}
+            <div className="flex justify-start p-2">
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/assets/logo/logo2.png"
+                  alt="Company Logo"
+                  width={120}
+                  height={80}
+                  className="h-8 sm:h-20 w-36 object-contain"
+                  priority
+                />
+              </Link>
+            </div>
 
             {/* Section 2: Logo (Center - 40%) */}
             <div className="flex justify-center">
               <Link href="/" className="flex items-center gap-2 sm:gap-3">
                 <div>
                   <h1 className="text-lg sm:text-3xl font-bold bg-linear-to-l from-[#212121] to-[#222222] bg-clip-text text-transparent">
-                    Nav Nit Textiles
+                    M2C MarkDowns Private Limited
                   </h1>
                 </div>
               </Link>

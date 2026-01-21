@@ -8,16 +8,27 @@ import { useState, useRef } from 'react';
 const About = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const togglePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
+  const togglePlayPause = async () => {
+    if (videoRef.current && !isLoading) {
+      setIsLoading(true);
+      try {
+        if (isPlaying) {
+          videoRef.current.pause();
+          setIsPlaying(false);
+        } else {
+          await videoRef.current.play();
+          setIsPlaying(true);
+        }
+      } catch (error) {
+        console.log("Video play/pause error:", error);
+        // Reset state if there's an error
+        setIsPlaying(videoRef.current ? !videoRef.current.paused : false);
+      } finally {
+        setIsLoading(false);
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
@@ -28,24 +39,31 @@ const About = () => {
     }
   };
 
-  const handleVideoLoad = () => {
+  const handleVideoLoad = async () => {
     // Auto-play when video is loaded
-    if (videoRef.current) {
-      videoRef.current.play().then(() => {
+    if (videoRef.current && !isLoading) {
+      setIsLoading(true);
+      try {
+        await videoRef.current.play();
         setIsPlaying(true);
-      }).catch((error) => {
+      } catch (error) {
         console.log("Auto-play prevented by browser:", error);
         // Auto-play was prevented, user interaction required
-      });
+        setIsPlaying(false);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   const handleVideoPlay = () => {
     setIsPlaying(true);
+    setIsLoading(false);
   };
 
   const handleVideoPause = () => {
     setIsPlaying(false);
+    setIsLoading(false);
   };
   return (
     <div className="bg-white font-sans">
@@ -110,7 +128,6 @@ const About = () => {
             <video
               ref={videoRef}
               className="w-full h-auto max-h-120 object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out"
-              autoPlay
               muted
               loop
               playsInline
@@ -122,12 +139,13 @@ const About = () => {
                 // Fallback if poster image doesn't exist
                 const video = e.target as HTMLVideoElement;
                 video.poster = "";
+                setIsLoading(false);
               }}
             >
-              <source src="/assets/videos/About.mp4" type="video/mp4" />
+              <source src="/assets/videos/About1.mp4" type="video/mp4" />
               <p className="text-white p-8 text-center">
                 Your browser does not support the video tag. 
-                <a href="/assets/videos/About.mp4" className="text-gray-400 underline ml-2">
+                <a href="/assets/videos/About1.mp4" className="text-gray-400 underline ml-2">
                   Download the video instead
                 </a>
               </p>
@@ -140,10 +158,13 @@ const About = () => {
             <div className="absolute inset-0 flex items-center justify-center">
               <button
                 onClick={togglePlayPause}
-                className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110 group/btn"
+                disabled={isLoading}
+                className={`w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110 group/btn ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 aria-label={isPlaying ? "Pause video" : "Play video"}
               >
-                {isPlaying ? (
+                {isLoading ? (
+                  <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : isPlaying ? (
                   <Pause className="w-8 h-8 text-white group-hover/btn:scale-110 transition-transform" />
                 ) : (
                   <Play className="w-8 h-8 text-white ml-1 group-hover/btn:scale-110 transition-transform" />
@@ -180,35 +201,6 @@ const About = () => {
             </div>
           </div>
           
-          {/* Video Description */}
-          <div className="mt-8 text-center">
-            {/* <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Take a journey with us as we explore the rich heritage of textile craftsmanship, 
-              meet the talented artisans behind our products, and witness the meticulous process 
-              that brings each piece to life.
-            </p> */}
-            
-            {/* Video Controls Info */}
-            {/* <div className="mt-4 text-sm text-gray-500">
-              <p>Video auto-plays on page load • Click center button to play/pause • Click volume icon to mute/unmute</p>
-            </div> */}
-            
-            {/* Video Stats */}
-            {/* <div className="flex justify-center items-center gap-8 mt-6 text-sm text-gray-500">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-gray-500 rounded-full animate-pulse"></div>
-                <span>Behind the Scenes</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                <span>Artisan Stories</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span>Craftsmanship Process</span>
-              </div>
-            </div> */}
-          </div>
         </div>
       </section>
 
@@ -265,7 +257,7 @@ const About = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-8 bg-white">
+      {/* <section className="py-8 bg-white">
         <div className="max-w-7xl bg-gray-800 p-5 mx-auto px-4 sm:px-6 lg:px-8 text-center rounded-full">
           <h2 className="text-3xl font-bold text-white mb-4">
             Join Our B Too C Journey
@@ -288,7 +280,7 @@ const About = () => {
             </a>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

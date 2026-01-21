@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Instagram, Facebook, Youtube } from "lucide-react";
 
 const MainFooterContent = () => {
@@ -10,11 +11,16 @@ const MainFooterContent = () => {
           <div className="text-start">
             <h4 className="text-white text-center font-semibold mb-6 text-base h-6">Our Company</h4>
             <div className="space-y-4">
-              <div>
-                <Link href="/" className="inline-block">
-                  <h1 className="text-xl font-bold text-white mb-2">
-                    Nav Nit Textile
-                  </h1>
+              <div className="bg-white p-2 rounded-lg inline-block">
+                <Link href="/" className="block">
+                  <Image
+                    src="/assets/logo/logo2.png"
+                    alt="Nav Nit Textile Logo"
+                    width={190}
+                    height={50}
+                    className="object-cover"
+                    priority
+                  />
                 </Link>
               </div>
 
@@ -22,26 +28,7 @@ const MainFooterContent = () => {
                 Premium home textiles manufacturer specializing in high-quality towels, kitchen aprons, table linens, and bath accessories. Crafted with finest cotton and sustainable materials for everyday comfort and durability.
               </p>
 
-              <div className="flex justify-center space-x-4 pt-2">
-                <a
-                  href="#"
-                  className="w-8 h-8 bg-[#3d3d3d] p-2 rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
-                >
-                  <Instagram className="w-5 h-5" />
-                </a>
-                <a
-                  href="#"
-                  className="w-8 h-8 bg-[#3d3d3d] p-2 rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
-                >
-                  <Facebook className="w-5 h-5" />
-                </a>
-                <a
-                  href="#"
-                  className="w-8 h-8 bg-[#3d3d3d] p-2 rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
-                >
-                  <Youtube className="w-5 h-5" />
-                </a>
-              </div>
+              
             </div>
           </div>
 
@@ -150,6 +137,26 @@ const MainFooterContent = () => {
                   307/A, Gumasta Marg, Pul, Jaipur Disawer, Rajasthan-Jaipur, 
                   Rajasthan, Rajasthan 302001
                 </p>
+              </div>
+              <div className="flex justify-start space-x-4 pt-2">
+                <a
+                  href="#"
+                  className="w-8 h-8 bg-[#3d3d3d] p-2 rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+                <a
+                  href="#"
+                  className="w-8 h-8 bg-[#3d3d3d] p-2 rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
+                >
+                  <Facebook className="w-5 h-5" />
+                </a>
+                <a
+                  href="#"
+                  className="w-8 h-8 bg-[#3d3d3d] p-2 rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
+                >
+                  <Youtube className="w-5 h-5" />
+                </a>
               </div>
             </div>
           </div>

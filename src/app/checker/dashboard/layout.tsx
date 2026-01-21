@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import Header from '@/components/Checker/Header/Header'
-import Sidebar from '@/components/Checker/Sidebar/Sidebar'
-import Footer from '@/components/Checker/Footer/Footer'
+import Header from '@/components/Checker/CheckerHeader/CheckerHeader'
+import Sidebar from '@/components/Checker/CheckerSidebar/CheckerSidebar'
+import Footer from '@/components/Checker/CheckerFooter/CheckerFooter'
 
 export default function DashboardLayout({
   children,

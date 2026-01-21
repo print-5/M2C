@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import LoginPage from "@/components/Checker/Login/Login"
+import LoginPage from "@/components/Checker/CheckerLogin/CheckerLogin"
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)

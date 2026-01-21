@@ -137,7 +137,7 @@ export default function VendorPanel() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-blue-50 to-indigo-50 font-sans">
+    <div className="min-h-screen bg-linear-to-b from-gray-100 to-slate-100 font-sans">
       <div className="flex h-full">
         {/* Left Sidebar - Progress Steps (20% width) */}
         <div className="w-1/5 bg-white shadow-lg border-r border-gray-200">
@@ -149,7 +149,7 @@ export default function VendorPanel() {
                   key={index}
                   className={`flex items-center space-x-3 cursor-pointer p-3 rounded-lg transition-all duration-200 ${
                     index === currentStep
-                      ? 'bg-[#eceff1] border-r-6 border-[#607d8b]'
+                      ? 'bg-gray-200 border-r-6 border-[#3d3d3d]'
                       : index < currentStep
                       ? 'bg-green-50 hover:bg-green-100'
                       : 'hover:bg-gray-50'
@@ -160,7 +160,7 @@ export default function VendorPanel() {
                   <div
                     className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
                       index === currentStep
-                        ? 'bg-[#607d8b] text-white'
+                        ? 'bg-[#313131] text-white'
                         : index < currentStep
                         ? 'bg-green-600 text-white'
                         : 'bg-gray-200 text-gray-600'
@@ -180,7 +180,7 @@ export default function VendorPanel() {
                     <p
                       className={`text-base font-bold ${
                         index === currentStep
-                          ? 'text-[#607d8b]'
+                          ? 'text-[#313131]'
                           : index < currentStep
                           ? 'text-green-900'
                           : 'text-gray-600'
@@ -189,7 +189,7 @@ export default function VendorPanel() {
                       {step}
                     </p>
                     {index === currentStep && (
-                      <p className="text-sm text-[#607d8b] mt-1">Current Step</p>
+                      <p className="text-sm text-[#313131] mt-1">Current Step</p>
                     )}
                     {index < currentStep && (
                       <p className="text-sm text-green-600 mt-1">Completed</p>
@@ -209,7 +209,7 @@ export default function VendorPanel() {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  className="bg-gray-700 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${((currentStep) / (steps.length - 1)) * 100}%` }}
                 ></div>
               </div>
@@ -224,17 +224,17 @@ export default function VendorPanel() {
               {/* Step Header */}
               <div className="mb-8">
                 <div className="flex items-center space-x-4 mb-4">
-                  <div className="flex items-center justify-center w-10 h-10 bg-[#607d8b] text-white rounded-full font-semibold">
+                  <div className="flex items-center justify-center w-10 h-10 bg-[#313131] text-white rounded-full font-semibold">
                     {currentStep + 1}
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900">{steps[currentStep]}</h1>
-                    <p className="text-gray-600">Step {currentStep + 1} of {steps.length}</p>
+                    <p className="text-gray-700">Step {currentStep + 1} of {steps.length}</p>
                   </div>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-1">
                   <div
-                    className="bg-[#607d8b] h-1 rounded-full transition-all duration-300"
+                    className="bg-gray-700 h-1 rounded-full transition-all duration-300"
                     style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
                   ></div>
                 </div>

@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Dashboard from "@/components/Checker/Dashboard/Dashboard"
-import Footer from "@/components/Checker/Footer/Footer"
+import Dashboard from "@/components/Checker/CheckerDashboard/CheckerDashboard"
 
 export default function DashboardPage() {
   const [checkerID, setCheckerID] = useState("")

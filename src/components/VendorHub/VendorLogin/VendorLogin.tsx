@@ -125,24 +125,24 @@ export default function VendorLogin() {
   return (
     <div className="min-h-screen flex bg-white font-sans">
       {/* Left Side - Professional Branding */}
-      <div className="hidden lg:flex lg:flex-1 relative bg-[#607d8b]">
+      <div className="hidden lg:flex lg:flex-1 relative bg-[#000000]">
         <div className="flex items-center justify-center w-full p-12">
           <div className="max-w-lg text-center text-white">
             {/* Logo Section */}
             <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-40 h-28 bg-white rounded-2xl mb-6 shadow-xl">
+              <div className="inline-flex items-center justify-center w-44 h-36 bg-white rounded-2xl mb-6 shadow-xl">
                 <Image
-                  src="/assets/logo/BtooClogo.png"
+                  src="/assets/logo/logo2.png"
                   alt="Company Logo"
-                  width={170}
-                  height={140}
+                  width={190}
+                  height={150}
                   className="object-contain"
                 />
               </div>
               <h1 className="text-4xl font-bold mb-3">
                 Vendor Portal
               </h1>
-              <p className="text-xl text-blue-100 font-medium">
+              <p className="text-xl text-gray-100 font-medium">
                 Grow your business with our platform
               </p>
             </div>
@@ -334,7 +334,7 @@ export default function VendorLogin() {
                   <label className="flex items-center cursor-pointer">
                     <input
                       type="checkbox"
-                      className="w-4 h-4 text-[#607d8b] border-gray-300 rounded focus:ring-[#455a64]"
+                      className="w-4 h-4 text-gray-700 border-gray-300 rounded focus:ring-[#455a64]"
                     />
                     <span className="ml-2 text-sm text-gray-700">
                       Remember me
@@ -342,7 +342,7 @@ export default function VendorLogin() {
                   </label>
                   <Link
                     href="/forgot-password"
-                    className="text-sm text-[#607d8b] hover:text-[#455a64] font-medium transition-colors"
+                    className="text-sm text-gray-700 hover:text-gray-900 font-medium transition-colors"
                   >
                     Forgot password?
                   </Link>
@@ -350,7 +350,7 @@ export default function VendorLogin() {
 
                 {/* Sign In Button - Primary */}
                 <Link href="/vendor/dashboard">
-                  <Button className="w-full bg-[#607d8b] hover:bg-[#516c7a] text-white py-3 text-sm font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg">
+                  <Button className="w-full bg-gray-900 hover:bg-gray-700 text-white py-3 text-sm font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg">
                     <Lock className="w-4 h-4 mr-2" />
                     Sign In to Dashboard
                   </Button>
@@ -370,7 +370,7 @@ export default function VendorLogin() {
                 <Link href="/vendor/vendorpanel" className="block">
                   <Button
                     variant="outline"
-                    className="w-full border border-[#607d8b] text-[#607d8b] bg-white hover:bg-blue-50 hover:border-[#516c7a] py-3 text-sm font-semibold rounded-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-md"
+                    className="w-full border border-gray-900 text-gray-900 bg-white hover:bg-gray-200 hover:border-gray-700 py-3 text-sm font-semibold rounded-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-md"
                   >
                     <Users className="w-4 h-4 mr-2" />
                     Create Vendor Account
