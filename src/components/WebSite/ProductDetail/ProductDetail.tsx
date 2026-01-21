@@ -338,13 +338,13 @@ const ProductDetail = ({ productId }: ProductDetailProps) => {
                         <div className="flex space-x-2">
                           <button
                             onClick={handleAddToCart}
-                            className="flex-1 bg-linear-to-r from-yellow-400 to-amber-500 text-whoite py-2.5 px-3 rounded-lg hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 font-semibold text-sm shadow-lg transform hover:scale-105"
+                            className="flex-1 bg-white text-black border-2 border-gray-700 py-2.5 px-3 rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-300 font-semibold text-sm shadow-lg transform hover:scale-105"
                           >
                             Add to cart
                           </button>
                           <button
                             onClick={handleBuyNow}
-                            className="flex-1 bg-linear-to-r from-orange-500 to-gray-500 text-white py-2.5 px-3 rounded-lg hover:from-orange-600 hover:to-gray-600 transition-all duration-300 font-semibold text-sm shadow-lg transform hover:scale-105"
+                            className="flex-1 bg-[#1d1d1d] text-white py-2.5 px-3 rounded-lg hover:from-orange-600 hover:to-gray-600 transition-all duration-300 font-semibold text-sm shadow-lg transform hover:scale-105"
                           >
                             Buy Now
                           </button>
@@ -488,7 +488,7 @@ const ProductDetail = ({ productId }: ProductDetailProps) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {product.careInstructions.map((instruction, index) => (
                 <div key={index} className="flex items-start space-x-3 p-4 bg-gray-50 rounded-xl">
-                  <span className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">
+                  <span className="w-6 h-6 bg-gray-700 text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">
                     {index + 1}
                   </span>
                   <span className="text-gray-700">{instruction}</span>
