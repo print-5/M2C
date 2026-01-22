@@ -1,40 +1,78 @@
-'use client';
+'use client'
 
-import { useState, useEffect, useRef } from 'react';
-import { Bell, Menu, Search, User, ChevronDown, X, Settings, LogOut, HelpCircle } from 'lucide-react';
-import { Button } from '@/components/UI/Button';
+import { useState, useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
+import { Button } from '@/components/UI/Button'
+import { Badge } from '@/components/UI/Badge'
+import {
+  Bell,
+  Settings,
+  User,
+  LogOut,
+  Menu,
+  X,
+  ChevronDown,
+  Search,
+  HelpCircle,
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+  BarChart3,
+  FileText,
+  Truck,
+} from 'lucide-react'
 
 interface VendorHeaderProps {
-  onMenuToggle: () => void;
-  isSidebarOpen: boolean;
+  onMenuToggle?: () => void
+  isSidebarOpen?: boolean
 }
 
-export default function VendorHeader({ onMenuToggle, isSidebarOpen }: VendorHeaderProps) {
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const notificationsRef = useRef<HTMLDivElement>(null);
-  const userMenuRef = useRef<HTMLDivElement>(null);
+export default function VendorHeader({ onMenuToggle, isSidebarOpen = true }: VendorHeaderProps) {
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [showUserMenu, setShowUserMenu] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const pathname = usePathname()
+  const notificationsRef = useRef<HTMLDivElement>(null)
+  const userMenuRef = useRef<HTMLDivElement>(null)
 
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
-        setShowNotifications(false);
+        setShowNotifications(false)
       }
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
-        setShowUserMenu(false);
+        setShowUserMenu(false)
       }
-    };
+    }
 
     if (showNotifications || showUserMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside)
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showNotifications, showUserMenu]);
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showNotifications, showUserMenu])
+
+  // Map pathnames to titles and icons
+  const getPageInfo = () => {
+    const pageMap: Record<string, { title: string; icon: React.ComponentType<any> }> = {
+      '/vendor/dashboard': { title: 'Dashboard', icon: LayoutDashboard },
+      '/vendor/dashboard/products': { title: 'Products', icon: Package },
+      '/vendor/dashboard/orders': { title: 'Orders', icon: ShoppingCart },
+      '/vendor/dashboard/customers': { title: 'Customers', icon: Users },
+      '/vendor/dashboard/analytics': { title: 'Analytics', icon: BarChart3 },
+      '/vendor/dashboard/reports': { title: 'Reports', icon: FileText },
+      '/vendor/dashboard/shipping': { title: 'Shipping', icon: Truck },
+      '/vendor/dashboard/settings': { title: 'Settings', icon: Settings },
+    }
+
+    return pageMap[pathname] || { title: 'Dashboard', icon: LayoutDashboard }
+  }
+
+  const { title, icon: PageIcon } = getPageInfo()
 
   const notifications = [
     {
@@ -58,46 +96,59 @@ export default function VendorHeader({ onMenuToggle, isSidebarOpen }: VendorHead
       time: '2 hours ago',
       unread: false,
     },
-  ];
+  ]
 
-  const unreadCount = notifications.filter(n => n.unread).length;
+  const unreadCount = notifications.filter(n => n.unread).length
 
   return (
-    <header className="bg-white border-b border-red-200 font-sans sticky top-0 z-30 shadow-sm">
-      <div className="px-4 sm:px-6 lg:px-8 py-4">
+    <header className="bg-white/30 border-b border-gray-200 p-2 font-sans sticky top-0 z-30">
+      <div className="px-6 py-4 bg-white rounded-full border border-gray-300 p-2 mb-2 shadow-md">
         <div className="flex items-center justify-between">
-          {/* Left side */}
-          <div className="flex items-center space-x-3 sm:space-x-4">
+          {/* Left Section */}
+          <div className="flex items-center space-x-4">
+            {/* Mobile Menu Toggle */}
             <Button
               variant="ghost"
               size="sm"
               onClick={onMenuToggle}
-              className="lg:hidden text-slate-700 hover:bg-red-50 hover:text-red-800"
+              className="lg:hidden text-gray-700 hover:bg-gray-100"
             >
-              {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
-            
-            <div className="relative hidden md:block">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+
+            {/* Page Title with Icon */}
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-[#222222] rounded-lg">
+                <PageIcon className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-[#222222]">{title}</h1>
+                <p className="text-sm text-gray-500">Vendor Portal</p>
+              </div>
+            </div>
+
+            {/* Search Bar - Desktop */}
+            <div className="relative hidden lg:block ml-8">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search products, orders..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 w-64 text-sm transition-all"
+                className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#222222] focus:border-[#222222] w-64 text-sm transition-all"
               />
             </div>
           </div>
 
-          {/* Right side */}
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Search icon for mobile */}
+          {/* Right Section */}
+          <div className="flex items-center space-x-3">
+            {/* Search Button - Mobile */}
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden text-slate-700 hover:bg-red-50 hover:text-red-800"
+              className="lg:hidden text-gray-700 hover:bg-gray-100"
             >
-              <Search className="w-5 h-5" />
+              <Search className="h-5 w-5" />
             </Button>
 
             {/* Notifications */}
@@ -106,28 +157,23 @@ export default function VendorHeader({ onMenuToggle, isSidebarOpen }: VendorHead
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="relative text-slate-700 hover:bg-red-50 hover:text-red-800"
+                className="relative text-gray-700 hover:bg-gray-100"
               >
-                <Bell className="w-5 h-5" />
+                <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-800 text-white rounded-full text-xs flex items-center justify-center font-semibold">
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[#222222] text-white text-xs flex items-center justify-center p-0">
                     {unreadCount}
-                  </span>
+                  </Badge>
                 )}
               </Button>
 
               {/* Notifications Dropdown */}
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-red-200 z-50">
-                  <div className="p-4 border-b border-red-200 bg-red-50">
+                <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                  <div className="p-4 border-b border-gray-200 bg-gray-50">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-red-800">Notifications</h3>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-red-700 hover:text-red-800 text-xs"
-                        onClick={() => setShowNotifications(false)}
-                      >
+                      <h3 className="text-lg font-semibold text-[#222222]">Notifications</h3>
+                      <Button variant="ghost" size="sm" className="text-gray-600 hover:text-[#222222]">
                         Mark all read
                       </Button>
                     </div>
@@ -136,25 +182,25 @@ export default function VendorHeader({ onMenuToggle, isSidebarOpen }: VendorHead
                     {notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className={`border-b border-red-100 p-4 hover:bg-red-50 cursor-pointer transition-colors ${
-                          notification.unread ? 'bg-red-50' : ''
+                        className={`border-b border-gray-100 p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
+                          notification.unread ? 'bg-gray-50' : ''
                         }`}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h4 className="font-semibold text-red-800 text-sm">{notification.title}</h4>
-                            <p className="text-sm text-slate-600 mt-1">{notification.message}</p>
-                            <p className="text-xs text-slate-400 mt-2">{notification.time}</p>
+                            <h4 className="font-medium text-[#222222]">{notification.title}</h4>
+                            <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+                            <p className="text-xs text-gray-400 mt-2">{notification.time}</p>
                           </div>
                           {notification.unread && (
-                            <div className="w-2 h-2 bg-red-800 rounded-full mt-1 ml-2"></div>
+                            <div className="w-2 h-2 bg-[#222222] rounded-full mt-1 ml-2"></div>
                           )}
                         </div>
                       </div>
                     ))}
                   </div>
-                  <div className="border-t border-red-200 p-3 bg-red-50">
-                    <button className="text-red-800 text-sm font-medium hover:text-red-700 w-full text-left">
+                  <div className="border-t border-gray-200 p-3 bg-gray-50">
+                    <button className="text-[#222222] text-sm font-medium hover:text-gray-700">
                       View all notifications
                     </button>
                   </div>
@@ -162,49 +208,45 @@ export default function VendorHeader({ onMenuToggle, isSidebarOpen }: VendorHead
               )}
             </div>
 
-            {/* User menu */}
+            {/* User Menu */}
             <div className="relative" ref={userMenuRef}>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center space-x-2 text-slate-700 hover:bg-red-50 hover:text-red-800"
+                className="flex items-center space-x-2 text-gray-700 hover:bg-gray-100"
               >
-                <div className="w-8 h-8 bg-red-800 rounded-full flex items-center justify-center">
-                  <User className="w-4 h-4 text-white" />
+                <div className="h-8 w-8 rounded-full bg-[#222222] flex items-center justify-center">
+                  <User className="h-5 w-5 text-white" />
                 </div>
-                <div className="hidden md:block text-left">
-                  <div className="text-sm font-semibold text-red-800">John Smith</div>
-                  <div className="text-xs text-slate-500">Vendor Account</div>
-                </div>
-                <ChevronDown className="w-4 h-4 hidden md:block" />
+                <ChevronDown className="h-4 w-4" />
               </Button>
 
               {/* User Dropdown */}
               {showUserMenu && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-red-200 z-50">
-                  <div className="p-4 border-b border-red-200 bg-red-50">
-                    <p className="font-semibold text-red-800">John Smith</p>
-                    <p className="text-sm text-slate-500">Vendor Account</p>
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                  <div className="p-3 border-b border-gray-200 bg-gray-50">
+                    <p className="font-semibold text-[#222222]">John Smith</p>
+                    <p className="text-sm text-gray-500">Vendor Account</p>
                   </div>
                   <div className="py-2">
-                    <button className="flex items-center w-full px-4 py-2 text-slate-700 hover:bg-red-50 hover:text-red-800 transition-colors text-sm">
+                    <button className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
                       <User className="mr-3 h-4 w-4" />
-                      <span>Profile</span>
+                      <span className="text-sm">Profile</span>
                     </button>
-                    <button className="flex items-center w-full px-4 py-2 text-slate-700 hover:bg-red-50 hover:text-red-800 transition-colors text-sm">
+                    <button className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
                       <Settings className="mr-3 h-4 w-4" />
-                      <span>Settings</span>
+                      <span className="text-sm">Settings</span>
                     </button>
-                    <button className="flex items-center w-full px-4 py-2 text-slate-700 hover:bg-red-50 hover:text-red-800 transition-colors text-sm">
+                    <button className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
                       <HelpCircle className="mr-3 h-4 w-4" />
-                      <span>Help & Support</span>
+                      <span className="text-sm">Help & Support</span>
                     </button>
                   </div>
-                  <div className="border-t border-red-200 p-2 bg-red-50">
-                    <button className="flex items-center w-full px-4 py-2 text-red-800 hover:bg-red-100 transition-colors font-medium text-sm">
+                  <div className="border-t border-gray-200 p-2 bg-gray-50">
+                    <button className="flex items-center w-full px-4 py-2 text-[#222222] hover:bg-gray-100 transition-colors font-medium">
                       <LogOut className="mr-3 h-4 w-4" />
-                      <span>Sign out</span>
+                      <span className="text-sm">Sign out</span>
                     </button>
                   </div>
                 </div>
@@ -214,5 +256,5 @@ export default function VendorHeader({ onMenuToggle, isSidebarOpen }: VendorHead
         </div>
       </div>
     </header>
-  );
+  )
 }

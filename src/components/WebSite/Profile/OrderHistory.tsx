@@ -218,7 +218,7 @@ export default function OrderHistory() {
                 )}
                 <button className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors">
                   <Download className="w-4 h-4" />
-                  Download Invoice
+                  Download Invoice / Packing List
                 </button>
               </div>
 

@@ -106,17 +106,17 @@ export default function AddProductModal({ isOpen, onClose, onSave, editProduct }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-red-200 shadow-2xl">
-        <CardHeader className="bg-red-50 border-b border-red-200 sticky top-0 z-10">
+      <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-gray-200 shadow-2xl">
+        <CardHeader className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-red-800 text-xl font-bold">
+            <CardTitle className="text-[#222222] text-xl font-bold">
               {editProduct ? 'Edit Product' : 'Add New Product'}
             </CardTitle>
             <Button
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="hover:bg-red-100 hover:text-red-800"
+              className="hover:bg-gray-50 hover:text-[#222222]"
             >
               <X className="w-5 h-5" />
             </Button>
@@ -126,54 +126,54 @@ export default function AddProductModal({ isOpen, onClose, onSave, editProduct }
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-red-800 border-b border-red-200 pb-2">
+              <h3 className="text-lg font-semibold text-[#222222] border-b border-gray-200 pb-2">
                 Basic Information
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
-                    Product Name <span className="text-red-600">*</span>
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
+                    Product Name <span className="text-gray-700">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleChange('name', e.target.value)}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                      errors.name ? 'border-red-500' : 'border-red-200'
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                      errors.name ? 'border-gray-500' : 'border-gray-200'
                     }`}
                     placeholder="Enter product name"
                   />
-                  {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name}</p>}
+                  {errors.name && <p className="text-gray-700 text-xs mt-1">{errors.name}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
-                    SKU <span className="text-red-600">*</span>
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
+                    SKU <span className="text-gray-700">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.sku}
                     onChange={(e) => handleChange('sku', e.target.value)}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                      errors.sku ? 'border-red-500' : 'border-red-200'
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                      errors.sku ? 'border-gray-500' : 'border-gray-200'
                     }`}
                     placeholder="e.g., CKT-001"
                   />
-                  {errors.sku && <p className="text-red-600 text-xs mt-1">{errors.sku}</p>}
+                  {errors.sku && <p className="text-gray-700 text-xs mt-1">{errors.sku}</p>}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
-                    Category <span className="text-red-600">*</span>
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
+                    Category <span className="text-gray-700">*</span>
                   </label>
                   <select
                     value={formData.category}
                     onChange={(e) => handleChange('category', e.target.value)}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                      errors.category ? 'border-red-500' : 'border-red-200'
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                      errors.category ? 'border-gray-500' : 'border-gray-200'
                     }`}
                   >
                     <option value="">Select category</option>
@@ -183,17 +183,17 @@ export default function AddProductModal({ isOpen, onClose, onSave, editProduct }
                     <option value="Aprons">Aprons</option>
                     <option value="Decorative">Decorative</option>
                   </select>
-                  {errors.category && <p className="text-red-600 text-xs mt-1">{errors.category}</p>}
+                  {errors.category && <p className="text-gray-700 text-xs mt-1">{errors.category}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
                     Status
                   </label>
                   <select
                     value={formData.status}
                     onChange={(e) => handleChange('status', e.target.value as ProductFormData['status'])}
-                    className="w-full px-4 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700"
                   >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -203,14 +203,14 @@ export default function AddProductModal({ isOpen, onClose, onSave, editProduct }
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-red-800 mb-2">
+                <label className="block text-sm font-medium text-[#222222] mb-2">
                   Description
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => handleChange('description', e.target.value)}
                   rows={3}
-                  className="w-full px-4 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700"
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700"
                   placeholder="Enter product description"
                 />
               </div>
@@ -218,14 +218,14 @@ export default function AddProductModal({ isOpen, onClose, onSave, editProduct }
 
             {/* Pricing & Inventory */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-red-800 border-b border-red-200 pb-2">
+              <h3 className="text-lg font-semibold text-[#222222] border-b border-gray-200 pb-2">
                 Pricing & Inventory
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
-                    Price ($) <span className="text-red-600">*</span>
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
+                    Price ($) <span className="text-gray-700">*</span>
                   </label>
                   <input
                     type="number"
@@ -233,43 +233,43 @@ export default function AddProductModal({ isOpen, onClose, onSave, editProduct }
                     min="0"
                     value={formData.price}
                     onChange={(e) => handleChange('price', e.target.value)}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                      errors.price ? 'border-red-500' : 'border-red-200'
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                      errors.price ? 'border-gray-500' : 'border-gray-200'
                     }`}
                     placeholder="0.00"
                   />
-                  {errors.price && <p className="text-red-600 text-xs mt-1">{errors.price}</p>}
+                  {errors.price && <p className="text-gray-700 text-xs mt-1">{errors.price}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
-                    Stock Quantity <span className="text-red-600">*</span>
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
+                    Stock Quantity <span className="text-gray-700">*</span>
                   </label>
                   <input
                     type="number"
                     min="0"
                     value={formData.stock}
                     onChange={(e) => handleChange('stock', e.target.value)}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                      errors.stock ? 'border-red-500' : 'border-red-200'
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                      errors.stock ? 'border-gray-500' : 'border-gray-200'
                     }`}
                     placeholder="0"
                   />
-                  {errors.stock && <p className="text-red-600 text-xs mt-1">{errors.stock}</p>}
+                  {errors.stock && <p className="text-gray-700 text-xs mt-1">{errors.stock}</p>}
                 </div>
               </div>
             </div>
 
             {/* Product Image */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-red-800 border-b border-red-200 pb-2">
+              <h3 className="text-lg font-semibold text-[#222222] border-b border-gray-200 pb-2">
                 Product Image
               </h3>
               
-              <div className="border-2 border-dashed border-red-200 rounded-lg p-8 text-center hover:border-red-300 transition-colors">
-                <Upload className="w-12 h-12 text-red-400 mx-auto mb-4" />
+              <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center hover:border-gray-200 transition-colors">
+                <Upload className="w-12 h-12 text-gray-500 mx-auto mb-4" />
                 <p className="text-sm text-slate-600 mb-2">
-                  <span className="text-red-800 font-medium">Click to upload</span> or drag and drop
+                  <span className="text-[#222222] font-medium">Click to upload</span> or drag and drop
                 </p>
                 <p className="text-xs text-slate-500">PNG, JPG, GIF up to 10MB</p>
                 <input
@@ -289,7 +289,7 @@ export default function AddProductModal({ isOpen, onClose, onSave, editProduct }
                   <Button
                     type="button"
                     variant="outline"
-                    className="mt-4 hover:bg-red-50 hover:border-red-300"
+                    className="mt-4 hover:bg-gray-50 hover:border-gray-200"
                   >
                     Select Image
                   </Button>
@@ -298,18 +298,18 @@ export default function AddProductModal({ isOpen, onClose, onSave, editProduct }
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-end gap-3 pt-4 border-t border-red-200">
+            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="hover:bg-red-50 hover:border-red-300"
+                className="hover:bg-gray-50 hover:border-gray-200"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="bg-red-800 hover:bg-red-700 text-white"
+                className="bg-[#222222] hover:bg-[#313131] text-white"
               >
                 <Save className="w-4 h-4 mr-2" />
                 {editProduct ? 'Update Product' : 'Add Product'}

@@ -144,10 +144,10 @@ export default function Dropdown({ id, label, value, options, placeholder, onCha
                 aria-selected={selected}
                 onClick={() => (multiple ? onToggleMultiple(opt.value) : onSelectSingle(opt.value))}
                 onMouseEnter={() => setFocusedIndex(idx)}
-                className={`px-4 py-2 cursor-pointer flex items-center justify-between ${focusedIndex === idx ? 'bg-red-50 text-red-700' : 'text-gray-700 hover:bg-gray-100'}`}
+                className={`px-4 py-2 cursor-pointer flex items-center justify-between ${focusedIndex === idx ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-100'}`}
               >
                 <span>{opt.label}</span>
-                {multiple && selected && <svg className="w-4 h-4 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 13l4 4L19 7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                {multiple && selected && <svg className="w-4 h-4 text-gray-900" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 13l4 4L19 7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
               </li>
             );
           })}

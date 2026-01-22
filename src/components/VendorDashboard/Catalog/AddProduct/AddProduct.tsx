@@ -143,13 +143,13 @@ export default function AddProduct({ editId }: AddProductProps) {
           <Button
             variant="ghost"
             onClick={() => router.back()}
-            className="hover:bg-red-50 hover:text-red-800"
+            className="hover:bg-gray-50 hover:text-[#222222]"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-red-800">
+            <h1 className="text-2xl font-bold text-[#222222]">
               {isEditMode ? 'Edit Product' : 'Add New Product'}
             </h1>
             <p className="text-slate-600">
@@ -160,9 +160,9 @@ export default function AddProduct({ editId }: AddProductProps) {
       </div>
 
       {/* Form Card */}
-      <Card className="border border-red-200">
-        <CardHeader className="bg-red-50 border-b border-red-200">
-          <CardTitle className="text-red-800 text-xl font-bold">
+      <Card className="border border-gray-200">
+        <CardHeader className="bg-gray-50 border-b border-gray-200">
+          <CardTitle className="text-[#222222] text-xl font-bold">
             Product Details
           </CardTitle>
         </CardHeader>
@@ -170,54 +170,54 @@ export default function AddProduct({ editId }: AddProductProps) {
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Basic Information */}
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-red-800 border-b border-red-200 pb-2">
+              <h3 className="text-lg font-semibold text-[#222222] border-b border-gray-200 pb-2">
                 Basic Information
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
-                    Product Name <span className="text-red-600">*</span>
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
+                    Product Name <span className="text-gray-700">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleChange('name', e.target.value)}
-                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 transition-colors ${
-                      errors.name ? 'border-red-500' : 'border-red-200'
+                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 transition-colors ${
+                      errors.name ? 'border-gray-500' : 'border-gray-200'
                     }`}
                     placeholder="Enter product name"
                   />
-                  {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name}</p>}
+                  {errors.name && <p className="text-gray-700 text-xs mt-1">{errors.name}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
-                    SKU <span className="text-red-600">*</span>
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
+                    SKU <span className="text-gray-700">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.sku}
                     onChange={(e) => handleChange('sku', e.target.value)}
-                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 transition-colors ${
-                      errors.sku ? 'border-red-500' : 'border-red-200'
+                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 transition-colors ${
+                      errors.sku ? 'border-gray-500' : 'border-gray-200'
                     }`}
                     placeholder="e.g., CKT-001"
                   />
-                  {errors.sku && <p className="text-red-600 text-xs mt-1">{errors.sku}</p>}
+                  {errors.sku && <p className="text-gray-700 text-xs mt-1">{errors.sku}</p>}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
-                    Category <span className="text-red-600">*</span>
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
+                    Category <span className="text-gray-700">*</span>
                   </label>
                   <select
                     value={formData.category}
                     onChange={(e) => handleChange('category', e.target.value)}
-                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 transition-colors ${
-                      errors.category ? 'border-red-500' : 'border-red-200'
+                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 transition-colors ${
+                      errors.category ? 'border-gray-500' : 'border-gray-200'
                     }`}
                   >
                     <option value="">Select category</option>
@@ -227,17 +227,17 @@ export default function AddProduct({ editId }: AddProductProps) {
                     <option value="Aprons">Aprons</option>
                     <option value="Decorative">Decorative</option>
                   </select>
-                  {errors.category && <p className="text-red-600 text-xs mt-1">{errors.category}</p>}
+                  {errors.category && <p className="text-gray-700 text-xs mt-1">{errors.category}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
                     Status
                   </label>
                   <select
                     value={formData.status}
                     onChange={(e) => handleChange('status', e.target.value as ProductFormData['status'])}
-                    className="w-full px-4 py-2.5 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 transition-colors"
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 transition-colors"
                   >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -247,14 +247,14 @@ export default function AddProduct({ editId }: AddProductProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-red-800 mb-2">
+                <label className="block text-sm font-medium text-[#222222] mb-2">
                   Description
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => handleChange('description', e.target.value)}
                   rows={4}
-                  className="w-full px-4 py-2.5 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 transition-colors resize-none"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 transition-colors resize-none"
                   placeholder="Enter product description"
                 />
               </div>
@@ -262,14 +262,14 @@ export default function AddProduct({ editId }: AddProductProps) {
 
             {/* Pricing & Inventory */}
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-red-800 border-b border-red-200 pb-2">
+              <h3 className="text-lg font-semibold text-[#222222] border-b border-gray-200 pb-2">
                 Pricing & Inventory
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
-                    Price ($) <span className="text-red-600">*</span>
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
+                    Price ($) <span className="text-gray-700">*</span>
                   </label>
                   <input
                     type="number"
@@ -277,43 +277,43 @@ export default function AddProduct({ editId }: AddProductProps) {
                     min="0"
                     value={formData.price}
                     onChange={(e) => handleChange('price', e.target.value)}
-                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 transition-colors ${
-                      errors.price ? 'border-red-500' : 'border-red-200'
+                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 transition-colors ${
+                      errors.price ? 'border-gray-500' : 'border-gray-200'
                     }`}
                     placeholder="0.00"
                   />
-                  {errors.price && <p className="text-red-600 text-xs mt-1">{errors.price}</p>}
+                  {errors.price && <p className="text-gray-700 text-xs mt-1">{errors.price}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
-                    Stock Quantity <span className="text-red-600">*</span>
+                  <label className="block text-sm font-medium text-[#222222] mb-2">
+                    Stock Quantity <span className="text-gray-700">*</span>
                   </label>
                   <input
                     type="number"
                     min="0"
                     value={formData.stock}
                     onChange={(e) => handleChange('stock', e.target.value)}
-                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 transition-colors ${
-                      errors.stock ? 'border-red-500' : 'border-red-200'
+                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 transition-colors ${
+                      errors.stock ? 'border-gray-500' : 'border-gray-200'
                     }`}
                     placeholder="0"
                   />
-                  {errors.stock && <p className="text-red-600 text-xs mt-1">{errors.stock}</p>}
+                  {errors.stock && <p className="text-gray-700 text-xs mt-1">{errors.stock}</p>}
                 </div>
               </div>
             </div>
 
             {/* Product Image */}
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-red-800 border-b border-red-200 pb-2">
+              <h3 className="text-lg font-semibold text-[#222222] border-b border-gray-200 pb-2">
                 Product Image
               </h3>
               
-              <div className="border-2 border-dashed border-red-200 rounded-lg p-12 text-center hover:border-red-300 transition-colors bg-red-50/50">
-                <Upload className="w-16 h-16 text-red-400 mx-auto mb-4" />
+              <div className="border-2 border-dashed border-gray-200 rounded-lg p-12 text-center hover:border-gray-200 transition-colors bg-gray-50/50">
+                <Upload className="w-16 h-16 text-gray-500 mx-auto mb-4" />
                 <p className="text-sm text-slate-600 mb-2">
-                  <span className="text-red-800 font-medium">Click to upload</span> or drag and drop
+                  <span className="text-[#222222] font-medium">Click to upload</span> or drag and drop
                 </p>
                 <p className="text-xs text-slate-500 mb-4">PNG, JPG, GIF up to 10MB</p>
                 <input
@@ -333,32 +333,32 @@ export default function AddProduct({ editId }: AddProductProps) {
                   <Button
                     type="button"
                     variant="outline"
-                    className="hover:bg-red-50 hover:border-red-300"
+                    className="hover:bg-gray-50 hover:border-gray-200"
                   >
                     Select Image
                   </Button>
                 </label>
                 {formData.image && (
                   <div className="mt-4">
-                    <img src={formData.image} alt="Preview" className="max-w-xs mx-auto rounded-lg border border-red-200" />
+                    <img src={formData.image} alt="Preview" className="max-w-xs mx-auto rounded-lg border border-gray-200" />
                   </div>
                 )}
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-end gap-4 pt-6 border-t border-red-200">
+            <div className="flex justify-end gap-4 pt-6 border-t border-gray-200">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => router.back()}
-                className="px-6 hover:bg-red-50 hover:border-red-300"
+                className="px-6 hover:bg-gray-50 hover:border-gray-200"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="bg-red-800 hover:bg-red-700 text-white px-6"
+                className="bg-[#222222] hover:bg-[#313131] text-white px-6"
               >
                 <Save className="w-4 h-4 mr-2" />
                 {isEditMode ? 'Update Product' : 'Add Product'}

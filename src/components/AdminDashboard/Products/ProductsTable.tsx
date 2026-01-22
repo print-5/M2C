@@ -76,7 +76,7 @@ const getStatusBadge = (status: string) => {
     case "pending":
       return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
     case "out_of_stock":
-      return <Badge className="bg-red-100 text-red-800">Out of Stock</Badge>
+      return <Badge className="bg-gray-50 text-[#222222]">Out of Stock</Badge>
     case "suspended":
       return <Badge className="bg-gray-100 text-gray-800">Suspended</Badge>
     default:
@@ -93,7 +93,7 @@ export default function ProductsTable() {
         <div className="flex items-center justify-between">
           <CardTitle>Products Management</CardTitle>
           <Link href="/dashboard/products/add">
-            <Button className="bg-red-700 text-white hover:bg-red-800">
+            <Button className="bg-[#313131] text-white hover:bg-[#222222]">
               Add Product
             </Button>
           </Link>
@@ -101,7 +101,7 @@ export default function ProductsTable() {
       </CardHeader>
       <CardContent>
         <Table>
-          <TableHeader className="bg-red-700 text-white">
+          <TableHeader className="bg-[#313131] text-white">
             <TableRow>
               <TableHead>Product</TableHead>
               <TableHead>Category</TableHead>
@@ -135,7 +135,7 @@ export default function ProductsTable() {
                 <TableCell>
                   <span
                     className={
-                      product.stock === 0 ? "text-red-600" : "text-gray-900"
+                      product.stock === 0 ? "text-gray-700" : "text-gray-900"
                     }
                   >
                     {product.stock}
@@ -165,13 +165,13 @@ export default function ProductsTable() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-red-600"
+                          className="text-gray-700"
                         >
                           <XCircle className="h-4 w-4" />
                         </Button>
                       </>
                     )}
-                    <Button variant="ghost" size="sm" className="text-red-600">
+                    <Button variant="ghost" size="sm" className="text-gray-700">
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

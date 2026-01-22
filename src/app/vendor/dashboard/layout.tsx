@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import VendorSidebar from '@/components/VendorDashboard/Sidebar/Sidebar'
 import VendorHeader from '@/components/VendorDashboard/Header/Header'
+import VendorFooter from '@/components/VendorDashboard/Footer/Footer'
 
 export default function VendorDashboardLayout({
   children,
@@ -40,6 +41,7 @@ export default function VendorDashboardLayout({
             {children}
           </div>
         </main>
+        <VendorFooter />
       </div>
     </div>
   )

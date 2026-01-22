@@ -68,7 +68,7 @@ export default function CreateShipment() {
       <div className="flex items-center gap-3">
         <Button
           variant="outline"
-          className="hover:bg-red-50 hover:border-red-300"
+          className="hover:bg-gray-50 hover:border-gray-200"
           onClick={() => router.back()}
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -76,21 +76,21 @@ export default function CreateShipment() {
         </Button>
         <div>
           <p className="text-xs uppercase tracking-wide text-slate-500">Shipping</p>
-          <h1 className="text-2xl font-bold text-red-800">Create Shipment</h1>
+          <h1 className="text-2xl font-bold text-[#222222]">Create Shipment</h1>
           <p className="text-slate-600">Generate a shipment for an order</p>
         </div>
       </div>
 
-      <Card className="border border-red-200">
-        <CardHeader className="bg-red-50 border-b border-red-200">
-          <CardTitle className="text-red-800 text-lg">Shipment Details</CardTitle>
+      <Card className="border border-gray-200">
+        <CardHeader className="bg-gray-50 border-b border-gray-200">
+          <CardTitle className="text-[#222222] text-lg">Shipment Details</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-red-800 mb-2">
-                  Order ID <span className="text-red-600">*</span>
+                <label className="block text-sm font-medium text-[#222222] mb-2">
+                  Order ID <span className="text-gray-700">*</span>
                 </label>
                 <div className="relative">
                   <Hash className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
@@ -98,52 +98,52 @@ export default function CreateShipment() {
                     type="text"
                     value={form.orderId}
                     onChange={(e) => handleChange('orderId', e.target.value)}
-                    className={`w-full pl-9 pr-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                      errors.orderId ? 'border-red-500' : 'border-red-200'
+                    className={`w-full pl-9 pr-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                      errors.orderId ? 'border-gray-500' : 'border-gray-200'
                     }`}
                     placeholder="ORD-001"
                   />
                 </div>
-                {errors.orderId && <p className="text-red-600 text-xs mt-1">{errors.orderId}</p>}
+                {errors.orderId && <p className="text-gray-700 text-xs mt-1">{errors.orderId}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-red-800 mb-2">
-                  Customer Name <span className="text-red-600">*</span>
+                <label className="block text-sm font-medium text-[#222222] mb-2">
+                  Customer Name <span className="text-gray-700">*</span>
                 </label>
                 <input
                   type="text"
                   value={form.customer}
                   onChange={(e) => handleChange('customer', e.target.value)}
-                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                    errors.customer ? 'border-red-500' : 'border-red-200'
+                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                    errors.customer ? 'border-gray-500' : 'border-gray-200'
                   }`}
                   placeholder="John Doe"
                 />
-                {errors.customer && <p className="text-red-600 text-xs mt-1">{errors.customer}</p>}
+                {errors.customer && <p className="text-gray-700 text-xs mt-1">{errors.customer}</p>}
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-red-800 mb-2">
-                  Customer Email <span className="text-red-600">*</span>
+                <label className="block text-sm font-medium text-[#222222] mb-2">
+                  Customer Email <span className="text-gray-700">*</span>
                 </label>
                 <input
                   type="email"
                   value={form.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                    errors.email ? 'border-red-500' : 'border-red-200'
+                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                    errors.email ? 'border-gray-500' : 'border-gray-200'
                   }`}
                   placeholder="customer@example.com"
                 />
-                {errors.email && <p className="text-red-600 text-xs mt-1">{errors.email}</p>}
+                {errors.email && <p className="text-gray-700 text-xs mt-1">{errors.email}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-red-800 mb-2">
-                  Carrier <span className="text-red-600">*</span>
+                <label className="block text-sm font-medium text-[#222222] mb-2">
+                  Carrier <span className="text-gray-700">*</span>
                 </label>
                 <div className="relative">
                   <Truck className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
@@ -151,20 +151,20 @@ export default function CreateShipment() {
                     type="text"
                     value={form.carrier}
                     onChange={(e) => handleChange('carrier', e.target.value)}
-                    className={`w-full pl-9 pr-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                      errors.carrier ? 'border-red-500' : 'border-red-200'
+                    className={`w-full pl-9 pr-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                      errors.carrier ? 'border-gray-500' : 'border-gray-200'
                     }`}
                     placeholder="FedEx, UPS..."
                   />
                 </div>
-                {errors.carrier && <p className="text-red-600 text-xs mt-1">{errors.carrier}</p>}
+                {errors.carrier && <p className="text-gray-700 text-xs mt-1">{errors.carrier}</p>}
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-red-800 mb-2">
-                  Tracking Number <span className="text-red-600">*</span>
+                <label className="block text-sm font-medium text-[#222222] mb-2">
+                  Tracking Number <span className="text-gray-700">*</span>
                 </label>
                 <div className="relative">
                   <Package className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
@@ -172,23 +172,23 @@ export default function CreateShipment() {
                     type="text"
                     value={form.trackingNumber}
                     onChange={(e) => handleChange('trackingNumber', e.target.value)}
-                    className={`w-full pl-9 pr-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                      errors.trackingNumber ? 'border-red-500' : 'border-red-200'
+                    className={`w-full pl-9 pr-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                      errors.trackingNumber ? 'border-gray-500' : 'border-gray-200'
                     }`}
                     placeholder="TRK123456789"
                   />
                 </div>
-                {errors.trackingNumber && <p className="text-red-600 text-xs mt-1">{errors.trackingNumber}</p>}
+                {errors.trackingNumber && <p className="text-gray-700 text-xs mt-1">{errors.trackingNumber}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-red-800 mb-2">
+                <label className="block text-sm font-medium text-[#222222] mb-2">
                   Status
                 </label>
                 <select
                   value={form.status}
                   onChange={(e) => handleChange('status', e.target.value as ShipmentForm['status'])}
-                  className="w-full px-4 py-2.5 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700"
                 >
                   <option value="Pending">Pending</option>
                   <option value="In Transit">In Transit</option>
@@ -199,8 +199,8 @@ export default function CreateShipment() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-red-800 mb-2">
-                  Estimated Delivery <span className="text-red-600">*</span>
+                <label className="block text-sm font-medium text-[#222222] mb-2">
+                  Estimated Delivery <span className="text-gray-700">*</span>
                 </label>
                 <div className="relative">
                   <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
@@ -208,55 +208,55 @@ export default function CreateShipment() {
                     type="date"
                     value={form.estimatedDelivery}
                     onChange={(e) => handleChange('estimatedDelivery', e.target.value)}
-                    className={`w-full pl-9 pr-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                      errors.estimatedDelivery ? 'border-red-500' : 'border-red-200'
+                    className={`w-full pl-9 pr-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                      errors.estimatedDelivery ? 'border-gray-500' : 'border-gray-200'
                     }`}
                   />
                 </div>
-                {errors.estimatedDelivery && <p className="text-red-600 text-xs mt-1">{errors.estimatedDelivery}</p>}
+                {errors.estimatedDelivery && <p className="text-gray-700 text-xs mt-1">{errors.estimatedDelivery}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-red-800 mb-2">
-                  Items <span className="text-red-600">*</span>
+                <label className="block text-sm font-medium text-[#222222] mb-2">
+                  Items <span className="text-gray-700">*</span>
                 </label>
                 <input
                   type="number"
                   min={1}
                   value={form.items}
                   onChange={(e) => handleChange('items', e.target.value)}
-                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 ${
-                    errors.items ? 'border-red-500' : 'border-red-200'
+                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 ${
+                    errors.items ? 'border-gray-500' : 'border-gray-200'
                   }`}
                   placeholder="3"
                 />
-                {errors.items && <p className="text-red-600 text-xs mt-1">{errors.items}</p>}
+                {errors.items && <p className="text-gray-700 text-xs mt-1">{errors.items}</p>}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-red-800 mb-2">
+              <label className="block text-sm font-medium text-[#222222] mb-2">
                 Notes
               </label>
               <textarea
                 value={form.notes}
                 onChange={(e) => handleChange('notes', e.target.value)}
                 rows={4}
-                className="w-full px-4 py-2.5 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 resize-none"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 resize-none"
                 placeholder="Optional notes for this shipment"
               />
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t border-red-200">
+            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
               <Button
                 type="button"
                 variant="outline"
-                className="hover:bg-red-50 hover:border-red-300"
+                className="hover:bg-gray-50 hover:border-gray-200"
                 onClick={() => router.back()}
               >
                 Cancel
               </Button>
-              <Button type="submit" className="bg-red-800 hover:bg-red-700 text-white">
+              <Button type="submit" className="bg-[#222222] hover:bg-[#313131] text-white">
                 <Save className="w-4 h-4 mr-2" />
                 Create Shipment
               </Button>

@@ -13,8 +13,6 @@ interface Product {
   sku: string;
   category: string;
   stock: number;
-  onlineStock: number;
-  offlineStock: number;
   price: number;
   status: 'In Stock' | 'Low Stock' | 'Out of Stock';
   lastUpdated: string;
@@ -29,8 +27,6 @@ export default function Inventory() {
       sku: 'CKT-001',
       category: 'Kitchen Linen',
       stock: 45,
-      onlineStock: 30,
-      offlineStock: 15,
       price: 12.99,
       status: 'In Stock',
       lastUpdated: '2024-01-15'
@@ -41,8 +37,6 @@ export default function Inventory() {
       sku: 'HBT-002',
       category: 'Bath Linen',
       stock: 8,
-      onlineStock: 5,
-      offlineStock: 3,
       price: 24.99,
       status: 'Low Stock',
       lastUpdated: '2024-01-14'
@@ -53,8 +47,6 @@ export default function Inventory() {
       sku: 'AA-003',
       category: 'Aprons',
       stock: 0,
-      onlineStock: 0,
-      offlineStock: 0,
       price: 18.99,
       status: 'Out of Stock',
       lastUpdated: '2024-01-13'
@@ -71,26 +63,15 @@ export default function Inventory() {
     router.push(`/vendor/dashboard/products/edit/${product.id}`);
   };
 
-  const handleQuantityChange = (productId: string, type: 'online' | 'offline', delta: number) => {
+  const handleQuantityChange = (productId: string, delta: number) => {
     setProducts(prev => prev.map(p => {
       if (p.id === productId) {
-        let newOnlineStock = p.onlineStock;
-        let newOfflineStock = p.offlineStock;
-
-        if (type === 'online') {
-          newOnlineStock = Math.max(0, p.onlineStock + delta);
-        } else {
-          newOfflineStock = Math.max(0, p.offlineStock + delta);
-        }
-
-        const newTotalStock = newOnlineStock + newOfflineStock;
-        const newStatus = newTotalStock === 0 ? 'Out of Stock' : newTotalStock < 10 ? 'Low Stock' : 'In Stock';
+        const newStock = Math.max(0, p.stock + delta);
+        const newStatus = newStock === 0 ? 'Out of Stock' : newStock < 10 ? 'Low Stock' : 'In Stock';
 
         return {
           ...p,
-          stock: newTotalStock,
-          onlineStock: newOnlineStock,
-          offlineStock: newOfflineStock,
+          stock: newStock,
           status: newStatus,
           lastUpdated: new Date().toISOString().split('T')[0]
         };
@@ -109,7 +90,7 @@ export default function Inventory() {
     switch (status) {
       case 'In Stock': return 'text-green-600 bg-green-100';
       case 'Low Stock': return 'text-yellow-600 bg-yellow-100';
-      case 'Out of Stock': return 'text-red-600 bg-red-100';
+      case 'Out of Stock': return 'text-gray-700 bg-gray-50';
       default: return 'text-gray-600 bg-gray-100';
     }
   };
@@ -123,12 +104,12 @@ export default function Inventory() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-red-800">Inventory Management</h1>
+          <h1 className="text-2xl font-bold text-[#222222]">Inventory Management</h1>
           <p className="text-slate-600">Manage your product inventory and stock levels</p>
         </div>
         <Button 
           onClick={handleAddProduct}
-          className="bg-red-800 text-white text-base font-semibold hover:bg-red-700"
+          className="bg-[#222222] text-white text-base font-semibold hover:bg-[#313131]"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Product
@@ -136,25 +117,25 @@ export default function Inventory() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
-              <Package className="w-8 h-8 text-red-700" />
+              <Package className="w-8 h-8 text-gray-700" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">Total Products</p>
-                <p className="text-2xl font-bold text-red-800">{products.length}</p>
+                <p className="text-2xl font-bold text-[#222222]">{products.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <AlertTriangle className="w-8 h-8 text-yellow-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">Low Stock</p>
-                <p className="text-2xl font-bold text-red-800">
+                <p className="text-2xl font-bold text-[#222222]">
                   {products.filter(p => p.status === 'Low Stock').length}
                 </p>
               </div>
@@ -162,13 +143,13 @@ export default function Inventory() {
           </CardContent>
         </Card>
 
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
-              <AlertTriangle className="w-8 h-8 text-red-600" />
+              <AlertTriangle className="w-8 h-8 text-gray-700" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">Out of Stock</p>
-                <p className="text-2xl font-bold text-red-800">
+                <p className="text-2xl font-bold text-[#222222]">
                   {products.filter(p => p.status === 'Out of Stock').length}
                 </p>
               </div>
@@ -176,13 +157,13 @@ export default function Inventory() {
           </CardContent>
         </Card>
 
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Package className="w-8 h-8 text-green-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">Total Value</p>
-                <p className="text-2xl font-bold text-red-800">
+                <p className="text-2xl font-bold text-[#222222]">
                   ${products.reduce((sum, p) => sum + (p.stock * p.price), 0).toFixed(2)}
                 </p>
               </div>
@@ -191,7 +172,7 @@ export default function Inventory() {
         </Card>
       </div>
 
-      <Card className="border border-red-200">
+      <Card className="border border-gray-200">
         <CardContent className="p-6">
           <div className="flex gap-4">
             <div className="flex-1 relative">
@@ -199,12 +180,12 @@ export default function Inventory() {
               <input
                 type="text"
                 placeholder="Search products..."
-                className="w-full pl-10 pr-4 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700"
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Button variant="outline" className="hover:bg-red-50 hover:border-red-300">
+            <Button variant="outline" className="hover:bg-gray-50 hover:border-gray-200">
               <Filter className="w-4 h-4 mr-2" />
               Filter
             </Button>
@@ -212,81 +193,54 @@ export default function Inventory() {
         </CardContent>
       </Card>
 
-      <Card className="border border-red-200">
-        <CardHeader className="bg-red-50 border-b border-red-200">
-          <CardTitle className="text-red-800">Products</CardTitle>
+      <Card className="border border-gray-200">
+        <CardHeader className="bg-gray-50 border-b border-gray-200">
+          <CardTitle className="text-[#222222]">Products</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-red-800">Product</TableHead>
-                <TableHead className="text-red-800">SKU</TableHead>
-                <TableHead className="text-red-800">Category</TableHead>
-                <TableHead className="text-red-800">Total Stock</TableHead>
-                <TableHead className="text-red-800">Online Stock</TableHead>
-                <TableHead className="text-red-800">Offline Stock</TableHead>
-                <TableHead className="text-red-800">Price</TableHead>
-                <TableHead className="text-red-800">Status</TableHead>
-                <TableHead className="text-red-800">Actions</TableHead>
+                <TableHead className="text-[#222222]">Product</TableHead>
+                <TableHead className="text-[#222222]">SKU</TableHead>
+                <TableHead className="text-[#222222]">Category</TableHead>
+                <TableHead className="text-[#222222]">Stock</TableHead>
+                <TableHead className="text-[#222222]">Price</TableHead>
+                <TableHead className="text-[#222222]">Status</TableHead>
+                <TableHead className="text-[#222222]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredProducts.map((product) => (
-                <TableRow key={product.id} className="hover:bg-red-50">
+                <TableRow key={product.id} className="hover:bg-gray-50">
                   <TableCell>
-                    <div className="font-medium text-red-800">{product.name}</div>
+                    <div className="font-medium text-[#222222]">{product.name}</div>
                   </TableCell>
                   <TableCell className="text-slate-600">{product.sku}</TableCell>
                   <TableCell className="text-slate-600">{product.category}</TableCell>
                   <TableCell>
-                    <div className="font-semibold text-red-800">{product.stock}</div>
-                  </TableCell>
-                  <TableCell>
                     <div className="flex items-center gap-2">
-                      <span className="text-slate-600 min-w-10">{product.onlineStock}</span>
+                      <span className="text-slate-600 min-w-10 font-semibold">{product.stock}</span>
                       <div className="flex flex-col gap-1">
                         <button
-                          onClick={() => handleQuantityChange(product.id, 'online', 1)}
-                          className="w-6 h-6 flex items-center justify-center border border-red-200 rounded hover:bg-red-50 hover:border-red-300 transition-colors"
-                          title="Increase online stock"
+                          onClick={() => handleQuantityChange(product.id, 1)}
+                          className="w-6 h-6 flex items-center justify-center border border-gray-200 rounded hover:bg-gray-50 hover:border-gray-200 transition-colors"
+                          title="Increase stock"
                         >
-                          <Plus className="w-3 h-3 text-red-700" />
+                          <Plus className="w-3 h-3 text-gray-700" />
                         </button>
                         <button
-                          onClick={() => handleQuantityChange(product.id, 'online', -1)}
-                          disabled={product.onlineStock === 0}
-                          className="w-6 h-6 flex items-center justify-center border border-red-200 rounded hover:bg-red-50 hover:border-red-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                          title="Decrease online stock"
+                          onClick={() => handleQuantityChange(product.id, -1)}
+                          disabled={product.stock === 0}
+                          className="w-6 h-6 flex items-center justify-center border border-gray-200 rounded hover:bg-gray-50 hover:border-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          title="Decrease stock"
                         >
-                          <Minus className="w-3 h-3 text-red-700" />
+                          <Minus className="w-3 h-3 text-gray-700" />
                         </button>
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="text-slate-600 min-w-10">{product.offlineStock}</span>
-                      <div className="flex flex-col gap-1">
-                        <button
-                          onClick={() => handleQuantityChange(product.id, 'offline', 1)}
-                          className="w-6 h-6 flex items-center justify-center border border-red-200 rounded hover:bg-red-50 hover:border-red-300 transition-colors"
-                          title="Increase offline stock"
-                        >
-                          <Plus className="w-3 h-3 text-red-700" />
-                        </button>
-                        <button
-                          onClick={() => handleQuantityChange(product.id, 'offline', -1)}
-                          disabled={product.offlineStock === 0}
-                          className="w-6 h-6 flex items-center justify-center border border-red-200 rounded hover:bg-red-50 hover:border-red-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                          title="Decrease offline stock"
-                        >
-                          <Minus className="w-3 h-3 text-red-700" />
-                        </button>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-red-700 font-medium">${product.price.toFixed(2)}</TableCell>
+                  <TableCell className="text-gray-700 font-medium">${product.price.toFixed(2)}</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(product.status)}`}>
                       {product.status}
@@ -297,7 +251,7 @@ export default function Inventory() {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="hover:bg-red-50 hover:border-red-300"
+                        className="hover:bg-gray-50 hover:border-gray-200"
                         onClick={() => handleEditProduct(product)}
                       >
                         <Edit className="w-4 h-4" />
@@ -305,7 +259,7 @@ export default function Inventory() {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="hover:bg-red-50 hover:border-red-300"
+                        className="hover:bg-gray-50 hover:border-gray-200"
                         onClick={() => handleDeleteProduct(product.id)}
                       >
                         <Trash2 className="w-4 h-4" />

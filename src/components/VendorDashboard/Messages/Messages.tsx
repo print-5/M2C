@@ -57,7 +57,7 @@ export default function Messages() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Unread': return 'text-red-600 bg-red-100';
+      case 'Unread': return 'text-gray-700 bg-gray-50';
       case 'Read': return 'text-blue-600 bg-blue-100';
       case 'Replied': return 'text-green-600 bg-green-100';
       case 'Archived': return 'text-gray-600 bg-gray-100';
@@ -67,7 +67,7 @@ export default function Messages() {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'High': return 'text-red-600';
+      case 'High': return 'text-gray-700';
       case 'Medium': return 'text-yellow-600';
       case 'Low': return 'text-green-600';
       default: return 'text-gray-600';
@@ -107,7 +107,7 @@ export default function Messages() {
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center">
-              <Clock className="w-8 h-8 text-red-600" />
+              <Clock className="w-8 h-8 text-gray-700" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Unread</p>
                 <p className="text-2xl font-bold text-gray-900">

@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="flex items-center space-x-1 text-sm text-gray-600">
           <span>© {currentYear} Vendor Marketplace.</span>
           <span>Made with</span>
-          <Heart className="h-4 w-4 text-red-500 fill-current" />
+          <Heart className="h-4 w-4 text-gray-500 fill-current" />
           <span>by Admin Team</span>
         </div>
 

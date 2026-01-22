@@ -24,12 +24,12 @@ export default function Analytics() {
     return change >= 0 ? (
       <ArrowUpRight className="w-4 h-4 text-green-600" />
     ) : (
-      <ArrowDownRight className="w-4 h-4 text-red-600" />
+      <ArrowDownRight className="w-4 h-4 text-gray-700" />
     );
   };
 
   const getChangeColor = (change: number) => {
-    return change >= 0 ? 'text-green-600' : 'text-red-600';
+    return change >= 0 ? 'text-green-600' : 'text-gray-700';
   };
 
   return (

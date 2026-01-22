@@ -24,7 +24,7 @@ const getStatusBadge = (status: string) => {
     case 'pending':
       return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
     case 'suspended':
-      return <Badge className="bg-red-100 text-red-800">Suspended</Badge>
+      return <Badge className="bg-gray-50 text-[#222222]">Suspended</Badge>
     default:
       return <Badge className="bg-gray-100 text-gray-800">Unknown</Badge>
   }
@@ -39,7 +39,7 @@ export default function VendorsTable() {
         <div className="flex items-center justify-between">
           <CardTitle>Vendors Management</CardTitle>
           <Link href="/dashboard/vendors/add">
-            <Button className="bg-red-700 text-white hover:bg-red-800">
+            <Button className="bg-[#313131] text-white hover:bg-[#222222]">
               Add Vendor
             </Button>
           </Link>
@@ -47,7 +47,7 @@ export default function VendorsTable() {
       </CardHeader>
       <CardContent>
         <Table>
-          <TableHeader className='bg-red-700 text-white rounded-t-lg'>
+          <TableHeader className='bg-[#313131] text-white rounded-t-lg'>
             <TableRow>
               <TableHead>Vendor</TableHead>
               <TableHead>Location</TableHead>
@@ -94,7 +94,7 @@ export default function VendorsTable() {
                         <Button variant="ghost" size="sm" className="text-green-600">
                           <CheckCircle className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-red-600">
+                        <Button variant="ghost" size="sm" className="text-gray-700">
                           <XCircle className="h-4 w-4" />
                         </Button>
                       </>

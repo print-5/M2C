@@ -63,7 +63,7 @@ export default function Dashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-red-800 mb-2">Vendor Dashboard</h1>
+        <h1 className="text-3xl font-bold text-[#222222] mb-2">Vendor Dashboard</h1>
         <p className="text-slate-600">Welcome back! Here's what's happening with your store.</p>
       </div>
 

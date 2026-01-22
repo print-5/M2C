@@ -167,7 +167,7 @@ export default function AddEditVendor({ vendorId, isEdit = false }: AddEditVendo
         <Card>
           <CardContent className="p-8">
             <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-700"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-700"></div>
               <span className="ml-3 text-gray-600">Loading vendor data...</span>
             </div>
           </CardContent>
@@ -214,7 +214,7 @@ export default function AddEditVendor({ vendorId, isEdit = false }: AddEditVendo
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       placeholder="Enter vendor name"
                     />
                   </div>
@@ -228,7 +228,7 @@ export default function AddEditVendor({ vendorId, isEdit = false }: AddEditVendo
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       placeholder="vendor@example.com"
                     />
                   </div>
@@ -245,7 +245,7 @@ export default function AddEditVendor({ vendorId, isEdit = false }: AddEditVendo
                       value={formData.location}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       placeholder="City, State/Country"
                     />
                   </div>
@@ -261,7 +261,7 @@ export default function AddEditVendor({ vendorId, isEdit = false }: AddEditVendo
                       required
                       min="1900"
                       max={new Date().getFullYear()}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -276,7 +276,7 @@ export default function AddEditVendor({ vendorId, isEdit = false }: AddEditVendo
                     onChange={handleInputChange}
                     required
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                     placeholder="Brief description of the vendor"
                   />
                 </div>
@@ -290,7 +290,7 @@ export default function AddEditVendor({ vendorId, isEdit = false }: AddEditVendo
                     value={formData.story}
                     onChange={handleInputChange}
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                     placeholder="Tell the story of this vendor..."
                   />
                 </div>
@@ -310,7 +310,7 @@ export default function AddEditVendor({ vendorId, isEdit = false }: AddEditVendo
                       value={newSpecialty}
                       onChange={(e) => setNewSpecialty(e.target.value)}
                       placeholder="Add a specialty"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSpecialty())}
                     />
                     <Button type="button" onClick={addSpecialty}>
@@ -351,7 +351,7 @@ export default function AddEditVendor({ vendorId, isEdit = false }: AddEditVendo
                       value={newCertification}
                       onChange={(e) => setNewCertification(e.target.value)}
                       placeholder="Add a certification"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCertification())}
                     />
                     <Button type="button" onClick={addCertification}>
@@ -395,7 +395,7 @@ export default function AddEditVendor({ vendorId, isEdit = false }: AddEditVendo
                     name="status"
                     value={formData.status}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                   >
                     <option value="pending">Pending</option>
                     <option value="active">Active</option>
@@ -414,7 +414,7 @@ export default function AddEditVendor({ vendorId, isEdit = false }: AddEditVendo
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-red-700 text-white hover:bg-red-800"
+                  className="w-full bg-[#313131] text-white hover:bg-[#222222]"
                 >
                   <Save className="h-4 w-4 mr-2" />
                   {isLoading ? 'Saving...' : (isEdit ? 'Update Vendor' : 'Create Vendor')}

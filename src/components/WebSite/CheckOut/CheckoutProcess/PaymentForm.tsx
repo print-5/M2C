@@ -1,7 +1,7 @@
 "use client"
 
 import { Shield, Smartphone } from "lucide-react"
-import { CheckoutFormData } from "../types"
+import { CheckoutFormData } from "../Checkout"
 
 interface PaymentFormProps {
   formData: CheckoutFormData

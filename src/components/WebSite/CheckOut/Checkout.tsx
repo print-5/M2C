@@ -11,10 +11,35 @@ import {
   Lock,
   Shield
 } from "lucide-react"
-import { CheckoutFormData } from "./types"
 import ShippingForm from "./CheckoutProcess/ShippingForm"
 import PaymentForm from "./CheckoutProcess/PaymentForm"
 import ReviewOrder from "./CheckoutProcess/ReviewOrder"
+
+export interface CheckoutFormData {
+  // Shipping Information
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  address: string
+  city: string
+  state: string
+  zipCode: string
+  country: string
+  
+  // Payment Information
+  paymentMethod: "card" | "upi"
+  cardNumber: string
+  expiryDate: string
+  cvv: string
+  cardName: string
+  upiId: string
+  
+  // Options
+  saveInfo: boolean
+  sameAsBilling: boolean
+  shippingMethod: string
+}
 
 export default function Checkout() {
   const router = useRouter()
@@ -47,7 +72,7 @@ export default function Checkout() {
     total: 151.17
   }
 
-  const updateFormData = (field: keyof CheckoutFormData, value: string | boolean) => {
+  const updateFormData = <K extends keyof CheckoutFormData>(field: K, value: CheckoutFormData[K]) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 

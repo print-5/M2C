@@ -47,7 +47,7 @@ const getStatusColor = (status: string) => {
     case 'approved':
       return 'bg-green-100 text-green-800'
     case 'urgent':
-      return 'bg-red-100 text-red-800'
+      return 'bg-gray-50 text-[#222222]'
     case 'suspended':
       return 'bg-gray-100 text-gray-800'
     case 'completed':

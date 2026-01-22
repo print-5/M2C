@@ -47,12 +47,12 @@ export default function StoreSettings() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-red-800">Store Settings</h1>
+          <h1 className="text-2xl font-bold text-[#222222]">Store Settings</h1>
           <p className="text-slate-600">Manage your store information and preferences</p>
         </div>
         <Button 
           onClick={() => isEditing ? handleSave() : setIsEditing(true)}
-          className="bg-red-800 hover:bg-red-700"
+          className="bg-[#222222] hover:bg-[#313131]"
         >
           {isEditing ? (
             <>
@@ -67,9 +67,9 @@ export default function StoreSettings() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <Card className="border border-red-200">
-            <CardHeader className="bg-red-50 border-b border-red-200">
-              <CardTitle className="flex items-center text-red-800">
+          <Card className="border border-gray-200">
+            <CardHeader className="bg-gray-50 border-b border-gray-200">
+              <CardTitle className="flex items-center text-[#222222]">
                 <Store className="w-5 h-5 mr-2" />
                 Basic Information
               </CardTitle>
@@ -82,7 +82,7 @@ export default function StoreSettings() {
                   value={storeInfo.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   disabled={!isEditing}
-                  className="w-full px-3 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                 />
               </div>
 
@@ -93,7 +93,7 @@ export default function StoreSettings() {
                   onChange={(e) => handleInputChange('description', e.target.value)}
                   disabled={!isEditing}
                   rows={3}
-                  className="w-full px-3 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                 />
               </div>
 
@@ -105,7 +105,7 @@ export default function StoreSettings() {
                     value={storeInfo.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                   />
                 </div>
 
@@ -116,7 +116,7 @@ export default function StoreSettings() {
                     value={storeInfo.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                   />
                 </div>
               </div>
@@ -128,15 +128,15 @@ export default function StoreSettings() {
                   value={storeInfo.website}
                   onChange={(e) => handleInputChange('website', e.target.value)}
                   disabled={!isEditing}
-                  className="w-full px-3 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                 />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border border-red-200">
-            <CardHeader className="bg-red-50 border-b border-red-200">
-              <CardTitle className="flex items-center text-red-800">
+          <Card className="border border-gray-200">
+            <CardHeader className="bg-gray-50 border-b border-gray-200">
+              <CardTitle className="flex items-center text-[#222222]">
                 <MapPin className="w-5 h-5 mr-2" />
                 Address Information
               </CardTitle>
@@ -149,7 +149,7 @@ export default function StoreSettings() {
                   value={storeInfo.address}
                   onChange={(e) => handleInputChange('address', e.target.value)}
                   disabled={!isEditing}
-                  className="w-full px-3 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                 />
               </div>
 
@@ -161,7 +161,7 @@ export default function StoreSettings() {
                     value={storeInfo.city}
                     onChange={(e) => handleInputChange('city', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                   />
                 </div>
 
@@ -172,7 +172,7 @@ export default function StoreSettings() {
                     value={storeInfo.state}
                     onChange={(e) => handleInputChange('state', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                   />
                 </div>
               </div>
@@ -185,7 +185,7 @@ export default function StoreSettings() {
                     value={storeInfo.zipCode}
                     onChange={(e) => handleInputChange('zipCode', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                   />
                 </div>
 
@@ -195,7 +195,7 @@ export default function StoreSettings() {
                     value={storeInfo.country}
                     onChange={(e) => handleInputChange('country', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                   >
                     <option value="United States">United States</option>
                     <option value="Canada">Canada</option>
@@ -207,9 +207,9 @@ export default function StoreSettings() {
             </CardContent>
           </Card>
 
-          <Card className="border border-red-200">
-            <CardHeader className="bg-red-50 border-b border-red-200">
-              <CardTitle className="flex items-center text-red-800">
+          <Card className="border border-gray-200">
+            <CardHeader className="bg-gray-50 border-b border-gray-200">
+              <CardTitle className="flex items-center text-[#222222]">
                 <Clock className="w-5 h-5 mr-2" />
                 Business Hours
               </CardTitle>
@@ -220,20 +220,20 @@ export default function StoreSettings() {
                   'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
                 ].map((day) => (
                   <div key={day} className="flex items-center justify-between">
-                    <span className="font-medium text-red-800 w-24">{day}</span>
+                    <span className="font-medium text-[#222222] w-24">{day}</span>
                     <div className="flex items-center gap-2">
                       <input
                         type="time"
                         defaultValue="09:00"
                         disabled={!isEditing}
-                        className="px-2 py-1 border border-red-200 rounded focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                        className="px-2 py-1 border border-gray-200 rounded focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                       />
                       <span className="text-slate-500">to</span>
                       <input
                         type="time"
                         defaultValue="17:00"
                         disabled={!isEditing}
-                        className="px-2 py-1 border border-red-200 rounded focus:ring-2 focus:ring-red-700 focus:border-red-700 disabled:bg-red-50"
+                        className="px-2 py-1 border border-gray-200 rounded focus:ring-2 focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-50"
                       />
                       <label className="flex items-center ml-2">
                         <input
@@ -252,15 +252,15 @@ export default function StoreSettings() {
         </div>
 
         <div className="space-y-6">
-          <Card className="border border-red-200">
-            <CardHeader className="bg-red-50 border-b border-red-200">
-              <CardTitle className="text-red-800">Store Logo</CardTitle>
+          <Card className="border border-gray-200">
+            <CardHeader className="bg-gray-50 border-b border-gray-200">
+              <CardTitle className="text-[#222222]">Store Logo</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <div className="w-32 h-32 mx-auto bg-red-50 rounded-lg flex items-center justify-center mb-4">
-                <Store className="w-12 h-12 text-red-400" />
+              <div className="w-32 h-32 mx-auto bg-gray-50 rounded-lg flex items-center justify-center mb-4">
+                <Store className="w-12 h-12 text-gray-500" />
               </div>
-              <Button variant="outline" className="w-full hover:bg-red-50 hover:border-red-300">
+              <Button variant="outline" className="w-full hover:bg-gray-50 hover:border-gray-200">
                 <Upload className="w-4 h-4 mr-2" />
                 Upload Logo
               </Button>
@@ -270,51 +270,51 @@ export default function StoreSettings() {
             </CardContent>
           </Card>
 
-          <Card className="border border-red-200">
-            <CardHeader className="bg-red-50 border-b border-red-200">
-              <CardTitle className="text-red-800">Store Status</CardTitle>
+          <Card className="border border-gray-200">
+            <CardHeader className="bg-gray-50 border-b border-gray-200">
+              <CardTitle className="text-[#222222]">Store Status</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-red-800">Store Active</span>
+                <span className="text-sm font-medium text-[#222222]">Store Active</span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" defaultChecked className="sr-only peer" />
-                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-800"></div>
+                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#222222]"></div>
                 </label>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-red-800">Accept Orders</span>
+                <span className="text-sm font-medium text-[#222222]">Accept Orders</span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" defaultChecked className="sr-only peer" />
-                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-800"></div>
+                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#222222]"></div>
                 </label>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-red-800">Vacation Mode</span>
+                <span className="text-sm font-medium text-[#222222]">Vacation Mode</span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" className="sr-only peer" />
-                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-800"></div>
+                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#222222]"></div>
                 </label>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border border-red-200">
-            <CardHeader className="bg-red-50 border-b border-red-200">
-              <CardTitle className="text-red-800">Quick Actions</CardTitle>
+          <Card className="border border-gray-200">
+            <CardHeader className="bg-gray-50 border-b border-gray-200">
+              <CardTitle className="text-[#222222]">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button variant="outline" className="w-full justify-start hover:bg-red-50 hover:border-red-300">
+              <Button variant="outline" className="w-full justify-start hover:bg-gray-50 hover:border-gray-200">
                 <Globe className="w-4 h-4 mr-2" />
                 View Store Front
               </Button>
-              <Button variant="outline" className="w-full justify-start hover:bg-red-50 hover:border-red-300">
+              <Button variant="outline" className="w-full justify-start hover:bg-gray-50 hover:border-gray-200">
                 <Phone className="w-4 h-4 mr-2" />
                 Contact Support
               </Button>
-              <Button variant="outline" className="w-full justify-start hover:bg-red-50 hover:border-red-300">
+              <Button variant="outline" className="w-full justify-start hover:bg-gray-50 hover:border-gray-200">
                 <Mail className="w-4 h-4 mr-2" />
                 Email Settings
               </Button>

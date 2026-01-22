@@ -1,6 +1,7 @@
-import Order from "@/components/WebSite/Order/Order"
+// import Order from "@/components/WebSite/Order/Order"
 import Header from "@/components/WebSite/Header/Header"
 import Footer from "@/components/WebSite/Footer/Footer"
+import Order from "@/components/WebSite/Order/Order"
 
 export default function OrderPage() {
   return (
@@ -12,6 +13,6 @@ export default function OrderPage() {
   )
 }
 export const metadata = {
-  title: "Shopping Cart - Your Order",
-  description: "Review your items and proceed to checkout. Secure shopping with fast delivery and easy returns.",
+  title: "Order Page - M2C E-commerce",
+  description: "View and manage your orders on M2C E-commerce.",
 }

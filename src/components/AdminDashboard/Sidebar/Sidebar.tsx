@@ -92,15 +92,15 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="flex h-full w-64 flex-col font-sans bg-white border-r border-red-200 shadow-sm">
+    <div className="flex h-full w-64 flex-col font-sans bg-white border-r border-gray-200 shadow-sm">
       {/* Logo */}
-      <div className="flex h-18 items-center justify-center border-b border-red-200 px-4 bg-red-50">
+      <div className="flex h-18 items-center justify-center border-b border-gray-200 px-4 bg-gray-50">
         <Link href="/dashboard" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-          <div className="h-9 w-9 rounded-lg bg-red-800 flex items-center justify-center shadow-md">
+          <div className="h-9 w-9 rounded-lg bg-[#222222] flex items-center justify-center shadow-md">
             <span className="text-white text-base font-bold">A</span>
           </div>
           <div>
-            <span className="text-lg font-bold text-red-800 block">Admin Panel</span>
+            <span className="text-lg font-bold text-[#222222] block">Admin Panel</span>
             <span className="text-xs text-slate-500">Control Center</span>
           </div>
         </Link>
@@ -119,8 +119,8 @@ export default function Sidebar() {
               className={cn(
                 'group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
                 isActive
-                  ? 'bg-red-800 text-white shadow-md'
-                  : 'text-slate-700 hover:bg-red-50 hover:text-red-800'
+                  ? 'bg-[#222222] text-white shadow-md'
+                  : 'text-slate-700 hover:bg-gray-50 hover:text-[#222222]'
               )}
             >
               <Icon
@@ -136,17 +136,17 @@ export default function Sidebar() {
       </nav>
 
       {/* User section */}
-      <div className="border-t border-red-200 p-4 bg-red-50">
+      <div className="border-t border-gray-200 p-4 bg-gray-50">
         <div className="flex items-center">
-          <div className="h-10 w-10 rounded-full bg-red-800 flex items-center justify-center shadow-md">
+          <div className="h-10 w-10 rounded-full bg-[#222222] flex items-center justify-center shadow-md">
             <span className="text-sm font-semibold text-white">SA</span>
           </div>
           <div className="ml-3 flex-1">
-            <p className="text-sm font-semibold text-red-800">Super Admin</p>
+            <p className="text-sm font-semibold text-[#222222]">Super Admin</p>
             <p className="text-xs text-slate-500">admin@example.com</p>
           </div>
         </div>
-        <button className="mt-3 flex w-full items-center px-3 py-2 text-sm font-medium text-red-800 rounded-lg hover:bg-red-100 hover:text-red-900 transition-colors">
+        <button className="mt-3 flex w-full items-center px-3 py-2 text-sm font-medium text-[#222222] rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
           <LogOut className="mr-3 h-4 w-4" />
           Sign out
         </button>

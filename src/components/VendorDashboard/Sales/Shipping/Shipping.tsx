@@ -44,11 +44,11 @@ export default function Shipping() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-red-800">Shipping Management</h1>
+          <h1 className="text-2xl font-bold text-[#222222]">Shipping Management</h1>
           <p className="text-slate-600">Track and manage your shipments</p>
         </div>
         <Button
-          className="bg-red-800 text-white text-base font-semibold hover:bg-red-700"
+          className="bg-[#222222] text-white text-base font-semibold hover:bg-[#313131]"
           onClick={() => router.push('/vendor/dashboard/shipping/create')}
         >
           <Package className="w-4 h-4 mr-2" />
@@ -57,90 +57,90 @@ export default function Shipping() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
-              <Package className="w-8 h-8 text-red-700" />
+              <Package className="w-8 h-8 text-gray-700" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">Total Shipments</p>
-                <p className="text-2xl font-bold text-red-800">24</p>
+                <p className="text-2xl font-bold text-[#222222]">24</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Clock className="w-8 h-8 text-yellow-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">Pending</p>
-                <p className="text-2xl font-bold text-red-800">3</p>
+                <p className="text-2xl font-bold text-[#222222]">3</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Truck className="w-8 h-8 text-blue-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">In Transit</p>
-                <p className="text-2xl font-bold text-red-800">8</p>
+                <p className="text-2xl font-bold text-[#222222]">8</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <CheckCircle className="w-8 h-8 text-green-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">Delivered</p>
-                <p className="text-2xl font-bold text-red-800">13</p>
+                <p className="text-2xl font-bold text-[#222222]">13</p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="border border-red-200">
+      <Card className="border border-gray-200">
         <CardContent className="p-6">
           <div className="relative">
             <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
             <input
               type="text"
               placeholder="Search shipments..."
-              className="w-full pl-10 pr-4 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700"
             />
           </div>
         </CardContent>
       </Card>
 
-      <Card className="border border-red-200">
-        <CardHeader className="bg-red-50 border-b border-red-200">
-          <CardTitle className="text-red-800">Recent Shipments</CardTitle>
+      <Card className="border border-gray-200">
+        <CardHeader className="bg-gray-50 border-b border-gray-200">
+          <CardTitle className="text-[#222222]">Recent Shipments</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-red-200">
-                  <th className="text-left py-3 px-4 text-red-800">Shipment ID</th>
-                  <th className="text-left py-3 px-4 text-red-800">Order</th>
-                  <th className="text-left py-3 px-4 text-red-800">Customer</th>
-                  <th className="text-left py-3 px-4 text-red-800">Carrier</th>
-                  <th className="text-left py-3 px-4 text-red-800">Tracking</th>
-                  <th className="text-left py-3 px-4 text-red-800">Status</th>
-                  <th className="text-left py-3 px-4 text-red-800">ETA</th>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-4 text-[#222222]">Shipment ID</th>
+                  <th className="text-left py-3 px-4 text-[#222222]">Order</th>
+                  <th className="text-left py-3 px-4 text-[#222222]">Customer</th>
+                  <th className="text-left py-3 px-4 text-[#222222]">Carrier</th>
+                  <th className="text-left py-3 px-4 text-[#222222]">Tracking</th>
+                  <th className="text-left py-3 px-4 text-[#222222]">Status</th>
+                  <th className="text-left py-3 px-4 text-[#222222]">ETA</th>
                 </tr>
               </thead>
               <tbody>
                 {shipments.map((shipment) => (
-                  <tr key={shipment.id} className="border-b border-red-100 hover:bg-red-50">
-                    <td className="py-3 px-4 font-medium text-red-800">{shipment.id}</td>
+                  <tr key={shipment.id} className="border-b border-gray-200 hover:bg-gray-50">
+                    <td className="py-3 px-4 font-medium text-[#222222]">{shipment.id}</td>
                     <td className="py-3 px-4 text-slate-600">{shipment.orderId}</td>
                     <td className="py-3 px-4 text-slate-600">{shipment.customer}</td>
                     <td className="py-3 px-4 text-slate-600">{shipment.carrier}</td>

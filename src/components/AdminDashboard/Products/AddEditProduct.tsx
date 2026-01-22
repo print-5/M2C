@@ -184,7 +184,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
         <Card>
           <CardContent className="p-8">
             <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-700"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-700"></div>
               <span className="ml-3 text-gray-600">Loading product data...</span>
             </div>
           </CardContent>
@@ -230,7 +230,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                     placeholder="Enter product name"
                   />
                 </div>
@@ -245,7 +245,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                     onChange={handleInputChange}
                     required
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                     placeholder="Product description"
                   />
                 </div>
@@ -263,7 +263,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       required
                       min="0"
                       step="0.01"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -277,7 +277,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -291,7 +291,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       onChange={handleInputChange}
                       min="0"
                       max="100"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -306,7 +306,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       value={formData.category}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                     >
                       <option value="">Select Category</option>
                       {categories.map((category) => (
@@ -327,7 +327,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       onChange={handleInputChange}
                       required
                       min="0"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -342,7 +342,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       name="material"
                       value={formData.material}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       placeholder="e.g., Cotton, Linen"
                     />
                   </div>
@@ -355,7 +355,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       name="dimensions"
                       value={formData.dimensions}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       placeholder="e.g., 10x10x5 cm"
                     />
                   </div>
@@ -368,7 +368,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       name="weight"
                       value={formData.weight}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       placeholder="e.g., 200g"
                     />
                   </div>
@@ -389,7 +389,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       value={newTag}
                       onChange={(e) => setNewTag(e.target.value)}
                       placeholder="Add a tag"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                     />
                     <Button type="button" onClick={addTag}>
@@ -430,7 +430,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       value={newCareInstruction}
                       onChange={(e) => setNewCareInstruction(e.target.value)}
                       placeholder="Add care instruction"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCareInstruction())}
                     />
                     <Button type="button" onClick={addCareInstruction}>
@@ -447,7 +447,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                         <button
                           type="button"
                           onClick={() => removeCareInstruction(instruction)}
-                          className="text-red-600 hover:text-red-800"
+                          className="text-gray-700 hover:text-[#222222]"
                         >
                           <X className="h-4 w-4" />
                         </button>
@@ -474,7 +474,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                     name="status"
                     value={formData.status}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                   >
                     <option value="pending">Pending</option>
                     <option value="active">Active</option>
@@ -489,7 +489,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                     name="inStock"
                     checked={formData.inStock}
                     onChange={handleInputChange}
-                    className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    className="rounded border-gray-300 text-gray-700 focus:ring-gray-700"
                   />
                   <label className="ml-2 text-sm text-gray-700">
                     In Stock
@@ -524,7 +524,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-red-700 text-white hover:bg-red-800"
+                  className="w-full bg-[#313131] text-white hover:bg-[#222222]"
                 >
                   <Save className="h-4 w-4 mr-2" />
                   {isLoading ? 'Saving...' : (isEdit ? 'Update Product' : 'Create Product')}

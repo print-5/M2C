@@ -76,7 +76,7 @@ const getStatusBadge = (status: string) => {
     case 'delivered':
       return <Badge className="bg-green-100 text-green-800">Delivered</Badge>
     case 'cancelled':
-      return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>
+      return <Badge className="bg-gray-50 text-[#222222]">Cancelled</Badge>
     default:
       return <Badge className="bg-gray-100 text-gray-800">Unknown</Badge>
   }

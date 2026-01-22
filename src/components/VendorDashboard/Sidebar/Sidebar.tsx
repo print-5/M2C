@@ -97,16 +97,12 @@ export default function VendorSidebar() {
   }
 
   return (
-    <div className="flex h-full w-64 flex-col font-sans bg-white border-r border-red-200 shadow-sm">
+    <div className="flex h-full w-64 flex-col font-sans bg-white border-r border-gray-400 shadow-sm">
       {/* Logo */}
-      <div className="flex h-18 items-center justify-center border-b border-red-200 px-4 bg-red-50">
+      <div className="flex h-18 items-center justify-center border-b border-gray-400 px-4 ">
         <Link href="/vendor/dashboard" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-          <div className="h-9 w-9 rounded-lg bg-red-800 flex items-center justify-center shadow-md">
-            <span className="text-white text-base font-bold">V</span>
-          </div>
           <div>
-            <span className="text-lg font-bold text-red-800 block">Vendor Store</span>
-            <span className="text-xs text-slate-500">Dashboard</span>
+            <span className="text-lg text-center font-bold text-[#222222] block">Vendor Management</span>
           </div>
         </Link>
       </div>
@@ -126,8 +122,8 @@ export default function VendorSidebar() {
                 className={cn(
                   'w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
                   isActive(item.href)
-                    ? 'bg-red-800 text-white shadow-md'
-                    : 'text-slate-700 hover:bg-red-50 hover:text-red-800'
+                    ? 'bg-[#313131] text-white font-bold'
+                    : 'text-gray-800 hover:bg-gray-300 hover:text-gray-900'
                 )}
               >
                 <Icon className={cn(
@@ -147,8 +143,8 @@ export default function VendorSidebar() {
                 onClick={() => toggleExpanded(item.title)}
                 className={cn(
                   'w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
-                  'text-slate-700 hover:bg-red-50 hover:text-red-800',
-                  'focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2'
+                  'text-slate-700 hover:bg-gray-50 hover:text-[#222222]',
+                  'focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2'
                 )}
               >
                 <div className="flex items-center">
@@ -164,7 +160,7 @@ export default function VendorSidebar() {
 
               {/* Sub Menu Items */}
               {isExpanded && item.subItems && (
-                <div className="ml-4 space-y-1 border-l-2 border-red-200 pl-3">
+                <div className="ml-4 space-y-1 border-l-2 border-gray-200 pl-3">
                   {item.subItems.map((subItem) => (
                     <Link
                       key={subItem.href}
@@ -172,8 +168,8 @@ export default function VendorSidebar() {
                       className={cn(
                         'flex items-center px-3 py-2 text-sm rounded-lg transition-all duration-200',
                         isActive(subItem.href)
-                          ? 'bg-red-800 text-white shadow-md font-semibold'
-                          : 'text-slate-600 hover:bg-red-50 hover:text-red-800 font-medium'
+                            ? 'bg-[#313131] text-white font-bold'
+                            : 'text-gray-800 hover:bg-gray-300 hover:text-gray-900'
                       )}
                     >
                       <div>{subItem.title}</div>
@@ -187,13 +183,13 @@ export default function VendorSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-red-200 p-4 bg-red-50">
+      <div className="border-t border-gray-400 p-4 ">
         <div className="flex items-center">
-          <div className="h-10 w-10 rounded-full bg-red-800 flex items-center justify-center shadow-md">
+          <div className="h-10 w-10 rounded-full bg-[#222222] flex items-center justify-center shadow-md">
             <User className="h-5 w-5 text-white" />
           </div>
           <div className="ml-3 flex-1">
-            <p className="text-sm font-semibold text-red-800">Vendor Store</p>
+            <p className="text-sm font-semibold text-[#222222]">Vendor Store</p>
             <p className="text-xs text-slate-500">Premium Plan</p>
           </div>
         </div>

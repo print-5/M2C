@@ -1,7 +1,7 @@
 "use client"
 
 import { Calendar } from "lucide-react"
-import { CheckoutFormData } from "../types"
+import { CheckoutFormData } from "../Checkout"
 
 interface ReviewOrderProps {
   formData: CheckoutFormData

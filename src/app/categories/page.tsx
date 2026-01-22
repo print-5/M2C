@@ -17,3 +17,8 @@ export default function CategoriesPage() {
     </>
   );
 }
+
+export const metadata = {
+  title: 'Categories - M2C E-commerce',
+  description: 'Browse our wide range of product categories on M2C E-commerce.',
+};

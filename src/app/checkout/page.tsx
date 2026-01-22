@@ -1,4 +1,4 @@
-import Checkout from "@/components/WebSite/Order/Checkout"
+import Checkout from "@/components/WebSite/CheckOut/Checkout"
 import Header from "@/components/WebSite/Header/Header"
 import Footer from "@/components/WebSite/Footer/Footer"
 

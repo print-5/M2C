@@ -84,19 +84,19 @@ export default function Reviews() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-red-800">Reviews & Ratings</h1>
+        <h1 className="text-2xl font-bold text-[#222222]">Reviews & Ratings</h1>
         <p className="text-slate-600">Manage customer feedback and reviews</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Star className="w-8 h-8 text-yellow-400" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">Average Rating</p>
                 <div className="flex items-center">
-                  <p className="text-2xl font-bold text-red-800">{averageRating.toFixed(1)}</p>
+                  <p className="text-2xl font-bold text-[#222222]">{averageRating.toFixed(1)}</p>
                   <div className="flex ml-2">
                     {renderStars(Math.round(averageRating))}
                   </div>
@@ -106,25 +106,25 @@ export default function Reviews() {
           </CardContent>
         </Card>
 
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <MessageSquare className="w-8 h-8 text-blue-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">Total Reviews</p>
-                <p className="text-2xl font-bold text-red-800">{reviews.length}</p>
+                <p className="text-2xl font-bold text-[#222222]">{reviews.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <ThumbsUp className="w-8 h-8 text-green-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">Positive Reviews</p>
-                <p className="text-2xl font-bold text-red-800">
+                <p className="text-2xl font-bold text-[#222222]">
                   {reviews.filter(r => r.rating >= 4).length}
                 </p>
               </div>
@@ -132,13 +132,13 @@ export default function Reviews() {
           </CardContent>
         </Card>
 
-        <Card className="border border-red-200 hover:border-red-300">
+        <Card className="border border-gray-200 hover:border-gray-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Reply className="w-8 h-8 text-purple-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-slate-600">Pending Response</p>
-                <p className="text-2xl font-bold text-red-800">
+                <p className="text-2xl font-bold text-[#222222]">
                   {reviews.filter(r => r.status === 'Pending').length}
                 </p>
               </div>
@@ -147,7 +147,7 @@ export default function Reviews() {
         </Card>
       </div>
 
-      <Card className="border border-red-200">
+      <Card className="border border-gray-200">
         <CardContent className="p-6">
           <div className="flex gap-4">
             <div className="flex-1 relative">
@@ -155,13 +155,13 @@ export default function Reviews() {
               <input
                 type="text"
                 placeholder="Search reviews..."
-                className="w-full pl-10 pr-4 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700"
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <select
-              className="px-4 py-2 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-red-700"
+              className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-700 focus:border-gray-700"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
@@ -176,12 +176,12 @@ export default function Reviews() {
 
       <div className="space-y-4">
         {filteredReviews.map((review) => (
-          <Card key={review.id} className="border border-red-200 hover:border-red-300">
+          <Card key={review.id} className="border border-gray-200 hover:border-gray-200">
             <CardContent className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-medium text-red-800">{review.customer}</h3>
+                    <h3 className="font-medium text-[#222222]">{review.customer}</h3>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(review.status)}`}>
                       {review.status}
                     </span>
@@ -207,12 +207,12 @@ export default function Reviews() {
                 </div>
                 <div className="flex gap-2">
                   {review.status === 'Pending' && (
-                    <Button variant="outline" size="sm" className="hover:bg-red-50 hover:border-red-300">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-50 hover:border-gray-200">
                       <Reply className="w-4 h-4 mr-1" />
                       Reply
                     </Button>
                   )}
-                  <Button variant="outline" size="sm" className="hover:bg-red-50 hover:border-red-300">
+                  <Button variant="outline" size="sm" className="hover:bg-gray-50 hover:border-gray-200">
                     View Details
                   </Button>
                 </div>

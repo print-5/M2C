@@ -1,6 +1,6 @@
 "use client"
 
-import { CheckoutFormData } from "../types"
+import { CheckoutFormData } from "../Checkout"
 
 interface ShippingFormProps {
   formData: CheckoutFormData
