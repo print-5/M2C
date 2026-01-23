@@ -12,10 +12,34 @@ interface TestingProps {
       pass: boolean
       fail: boolean
       photos: string[]
-      rightPhotos: Array<{ file?: File; name: string; url: string; id: string | number }>
-      wrongPhotos: Array<{ file?: File; name: string; url: string; id: string | number }>
+      rightPhotos: Array<{ 
+        file?: File; 
+        name: string; 
+        url: string; 
+        id: string | number;
+        uploadedAt: string;
+        uploadedDate: string;
+        uploadedTime: string;
+      }>
+      wrongPhotos: Array<{ 
+        file?: File; 
+        name: string; 
+        url: string; 
+        id: string | number;
+        uploadedAt: string;
+        uploadedDate: string;
+        uploadedTime: string;
+      }>
     }>
-    testingPhotos: Array<{ file?: File; name: string; url: string; id: string | number }>
+    testingPhotos: Array<{ 
+      file?: File; 
+      name: string; 
+      url: string; 
+      id: string | number;
+      uploadedAt: string;
+      uploadedDate: string;
+      uploadedTime: string;
+    }>
   }
   setFormData: (data: any) => void
 }
@@ -27,15 +51,35 @@ export default function Testing({ formData, setFormData }: TestingProps) {
   const generalTestingPhotoInputRef = useRef<HTMLInputElement | null>(null)
   const [loadingPhotos, setLoadingPhotos] = useState<{ [key: string]: boolean }>({})
 
+  // Helper function to create timestamp data
+  const createTimestamp = () => {
+    const now = new Date()
+    return {
+      uploadedAt: now.toISOString(),
+      uploadedDate: now.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit' 
+      }),
+      uploadedTime: now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: true 
+      })
+    }
+  }
+
   const handleGeneralTestingPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     
-    // Create preview URLs for the new files
+    // Create preview URLs for the new files with timestamp
     const newImages = files.map((file) => ({
       file,
       name: file.name,
       url: URL.createObjectURL(file),
-      id: Date.now() + Math.random()
+      id: Date.now() + Math.random(),
+      ...createTimestamp()
     }))
 
     setFormData({
@@ -105,12 +149,13 @@ export default function Testing({ formData, setFormData }: TestingProps) {
   const handleRightPhotoUpload = (testId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     
-    // Create preview URLs for the new files
+    // Create preview URLs for the new files with timestamp
     const newImages = files.map((file) => ({
       file,
       name: file.name,
       url: URL.createObjectURL(file),
-      id: Date.now() + Math.random()
+      id: Date.now() + Math.random(),
+      ...createTimestamp()
     }))
 
     const test = tests.find(t => t.id === testId)
@@ -123,12 +168,13 @@ export default function Testing({ formData, setFormData }: TestingProps) {
   const handleWrongPhotoUpload = (testId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     
-    // Create preview URLs for the new files
+    // Create preview URLs for the new files with timestamp
     const newImages = files.map((file) => ({
       file,
       name: file.name,
       url: URL.createObjectURL(file),
-      id: Date.now() + Math.random()
+      id: Date.now() + Math.random(),
+      ...createTimestamp()
     }))
 
     const test = tests.find(t => t.id === testId)
@@ -251,9 +297,14 @@ export default function Testing({ formData, setFormData }: TestingProps) {
                   {/* Right Photos List */}
                   {test.rightPhotos && test.rightPhotos.length > 0 && (
                     <div className="mt-6">
-                      <h4 className="font-medium text-gray-900 mb-4">
+                      <h4 className="font-medium text-gray-900 mb-2">
                         Uploaded Images ({test.rightPhotos.length}):
                       </h4>
+                      {test.rightPhotos.length > 0 && test.rightPhotos[test.rightPhotos.length - 1].uploadedDate && (
+                        <p className="text-xs text-gray-500 mb-4">
+                          Last uploaded: {test.rightPhotos[test.rightPhotos.length - 1].uploadedDate} at {test.rightPhotos[test.rightPhotos.length - 1].uploadedTime}
+                        </p>
+                      )}
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {test.rightPhotos.map((image: any, index: number) => (
                           <div key={image.id || index} className="relative group">
@@ -281,14 +332,20 @@ export default function Testing({ formData, setFormData }: TestingProps) {
                               <X className="w-4 h-4" />
                             </button>
 
-                            {/* Image name */}
+                            {/* Image name and timestamp */}
                             <div className="mt-2">
                               <p
-                                className="text-xs text-gray-600 truncate"
+                                className="text-xs text-gray-600 truncate font-medium"
                                 title={image.name}
                               >
                                 {image.name}
                               </p>
+                              {image.uploadedDate && image.uploadedTime && (
+                                <div className="text-xs text-gray-500 mt-1">
+                                  <div>{image.uploadedDate}</div>
+                                  <div>{image.uploadedTime}</div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -324,9 +381,14 @@ export default function Testing({ formData, setFormData }: TestingProps) {
                   {/* Wrong Photos List */}
                   {test.wrongPhotos && test.wrongPhotos.length > 0 && (
                     <div className="mt-6">
-                      <h4 className="font-medium text-gray-900 mb-4">
+                      <h4 className="font-medium text-gray-900 mb-2">
                         Uploaded Images ({test.wrongPhotos.length}):
                       </h4>
+                      {test.wrongPhotos.length > 0 && test.wrongPhotos[test.wrongPhotos.length - 1].uploadedDate && (
+                        <p className="text-xs text-gray-500 mb-4">
+                          Last uploaded: {test.wrongPhotos[test.wrongPhotos.length - 1].uploadedDate} at {test.wrongPhotos[test.wrongPhotos.length - 1].uploadedTime}
+                        </p>
+                      )}
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {test.wrongPhotos.map((image: any, index: number) => (
                           <div key={image.id || index} className="relative group">
@@ -354,14 +416,20 @@ export default function Testing({ formData, setFormData }: TestingProps) {
                               <X className="w-4 h-4" />
                             </button>
 
-                            {/* Image name */}
+                            {/* Image name and timestamp */}
                             <div className="mt-2">
                               <p
-                                className="text-xs text-gray-600 truncate"
+                                className="text-xs text-gray-600 truncate font-medium"
                                 title={image.name}
                               >
                                 {image.name}
                               </p>
+                              {image.uploadedDate && image.uploadedTime && (
+                                <div className="text-xs text-gray-500 mt-1">
+                                  <div>{image.uploadedDate}</div>
+                                  <div>{image.uploadedTime}</div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -402,9 +470,14 @@ export default function Testing({ formData, setFormData }: TestingProps) {
         {/* Uploaded Photos List */}
         {formData.testingPhotos && formData.testingPhotos.length > 0 && (
           <div className="mt-6">
-            <h4 className="font-medium text-gray-900 mb-4">
+            <h4 className="font-medium text-gray-900 mb-2">
               Uploaded Images ({formData.testingPhotos.length}):
             </h4>
+            {formData.testingPhotos.length > 0 && formData.testingPhotos[formData.testingPhotos.length - 1].uploadedDate && (
+              <p className="text-xs text-gray-500 mb-4">
+                Last uploaded: {formData.testingPhotos[formData.testingPhotos.length - 1].uploadedDate} at {formData.testingPhotos[formData.testingPhotos.length - 1].uploadedTime}
+              </p>
+            )}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {formData.testingPhotos.map((image: any, index: number) => (
                 <div key={image.id || index} className="relative group">
@@ -432,14 +505,20 @@ export default function Testing({ formData, setFormData }: TestingProps) {
                     <X className="w-4 h-4" />
                   </button>
 
-                  {/* Image name */}
+                  {/* Image name and timestamp */}
                   <div className="mt-2">
                     <p
-                      className="text-xs text-gray-600 truncate"
+                      className="text-xs text-gray-600 truncate font-medium"
                       title={image.name}
                     >
                       {image.name}
                     </p>
+                    {image.uploadedDate && image.uploadedTime && (
+                      <div className="text-xs text-gray-500 mt-1">
+                        <div>{image.uploadedDate}</div>
+                        <div>{image.uploadedTime}</div>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

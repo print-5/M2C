@@ -5,41 +5,43 @@ import { Instagram, Facebook, Youtube } from "lucide-react";
 const MainFooterContent = () => {
   return (
     <div className="bg-[#000000] text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl 2xl:max-w-420 mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-10 md:py-12 lg:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 :grid-cols-2 xl:grid-cols-4 gap-6 sm:gap-8 md:gap-10 lg:gap-12">
           {/* Company Info */}
-          <div className="text-start">
-            <h4 className="text-white text-center font-semibold mb-6 text-base h-6">Our Company</h4>
-            <div className="space-y-4">
-              <div className="bg-white p-2 rounded-lg inline-block">
+          <div className="text-center sm:text-left lg:col-span-1">
+            <h4 className="text-white font-semibold mb-4 sm:mb-6 text-sm sm:text-base md:text-lg">
+              Our Company
+            </h4>
+            <div className="space-y-3 sm:space-y-4 md:space-y-6">
+              <div className="bg-white p-2 sm:p-3 rounded-lg inline-block">
                 <Link href="/" className="block">
                   <Image
                     src="/assets/logo/logo2.png"
                     alt="Nav Nit Textile Logo"
                     width={190}
                     height={50}
-                    className="object-cover"
+                    className="object-cover w-32 sm:w-40 md:w-48 lg:w-52 h-auto"
                     priority
                   />
                 </Link>
               </div>
 
-              <p className="text-gray-200 text-sm leading-relaxed">
+              <p className="text-gray-200 text-xs sm:text-sm md:text-base leading-relaxed max-w-xs sm:max-w-sm mx-auto sm:mx-0">
                 Premium home textiles manufacturer specializing in high-quality towels, kitchen aprons, table linens, and bath accessories. Crafted with finest cotton and sustainable materials for everyday comfort and durability.
               </p>
-
-              
             </div>
           </div>
 
           {/* Navigation Links */}
           <div className="text-center">
-            <h4 className="text-white font-semibold mb-6 text-base h-6">Navigation</h4>
-            <ul className="space-y-4">
+            <h4 className="text-white font-semibold mb-4 sm:mb-6 text-sm sm:text-base md:text-lg">
+              Navigation
+            </h4>
+            <ul className="space-y-2 sm:space-y-3 md:space-y-4">
               <li>
                 <Link
                   href="/"
-                  className="text-gray-200 text-sm hover:text-white transition-colors block"
+                  className="text-gray-200 text-xs sm:text-sm md:text-base hover:text-white transition-colors block py-1"
                 >
                   Home
                 </Link>
@@ -47,7 +49,7 @@ const MainFooterContent = () => {
               <li>
                 <Link
                   href="/about"
-                  className="text-gray-200 text-sm hover:text-white transition-colors block"
+                  className="text-gray-200 text-xs sm:text-sm md:text-base hover:text-white transition-colors block py-1"
                 >
                   About
                 </Link>
@@ -55,7 +57,7 @@ const MainFooterContent = () => {
               <li>
                 <Link
                   href="/products"
-                  className="text-gray-200 text-sm hover:text-white transition-colors block"
+                  className="text-gray-200 text-xs sm:text-sm md:text-base hover:text-white transition-colors block py-1"
                 >
                   Products
                 </Link>
@@ -63,7 +65,7 @@ const MainFooterContent = () => {
                <li>
                 <Link
                   href="/contact"
-                  className="text-gray-200 text-sm hover:text-white transition-colors block"
+                  className="text-gray-200 text-xs sm:text-sm md:text-base hover:text-white transition-colors block py-1"
                 >
                   Contact Us
                 </Link>
@@ -73,12 +75,22 @@ const MainFooterContent = () => {
 
           {/* Categories */}
           <div className="text-center">
-            <h4 className="text-white font-semibold mb-6 text-base h-6">Categories</h4>
-            <ul className="space-y-4">
+            <h4 className="text-white font-semibold mb-4 sm:mb-6 text-sm sm:text-base md:text-lg">
+              Categories
+            </h4>
+            <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+              <li>
+                <Link
+                  href="/categories"
+                  className="text-gray-200 text-xs sm:text-sm md:text-base hover:text-white transition-colors block py-1"
+                >
+                 All Categories
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/categories/towels"
-                  className="text-gray-200 text-sm hover:text-white transition-colors block"
+                  className="text-gray-200 text-xs sm:text-sm md:text-base hover:text-white transition-colors block py-1"
                 >
                   Towels
                 </Link>
@@ -86,7 +98,7 @@ const MainFooterContent = () => {
               <li>
                 <Link
                   href="/categories/kitchen-linen"
-                  className="text-gray-200 text-sm hover:text-white transition-colors block"
+                  className="text-gray-200 text-xs sm:text-sm md:text-base hover:text-white transition-colors block py-1"
                 >
                   Kitchen Linen
                 </Link>
@@ -94,7 +106,7 @@ const MainFooterContent = () => {
               <li>
                 <Link
                   href="/categories/bath-linen"
-                  className="text-gray-200 text-sm hover:text-white transition-colors block"
+                  className="text-gray-200 text-xs sm:text-sm md:text-base hover:text-white transition-colors block py-1"
                 >
                   Bath Linen
                 </Link>
@@ -102,7 +114,7 @@ const MainFooterContent = () => {
               <li>
                 <Link
                   href="/categories/table-linen"
-                  className="text-gray-200 text-sm hover:text-white transition-colors block"
+                  className="text-gray-200 text-xs sm:text-sm md:text-base hover:text-white transition-colors block py-1"
                 >
                   Table Linen
                 </Link>
@@ -110,7 +122,7 @@ const MainFooterContent = () => {
               <li>
                 <Link
                   href="/categories/cotton-jute-bags"
-                  className="text-gray-200 text-sm hover:text-white transition-colors block"
+                  className="text-gray-200 text-xs sm:text-sm md:text-base hover:text-white transition-colors block py-1"
                 >
                   Cotton & Jute Bags
                 </Link>
@@ -119,43 +131,50 @@ const MainFooterContent = () => {
           </div>
 
           {/* Contact Info */}
-          <div className="text-start">
-            <h4 className="text-white text-center font-semibold mb-6 text-base h-6">Contact Info</h4>
-            <div className="space-y-4">
+          <div className="text-center sm:text-left">
+            <h4 className="text-white font-semibold mb-4 sm:mb-6 text-sm sm:text-base md:text-lg">
+              Contact Info
+            </h4>
+            <div className="space-y-3 sm:space-y-4 md:space-y-6">
               <div>
-                <p className="text-gray-200 text-sm">
+                <p className="text-gray-200 text-xs sm:text-sm md:text-base break-all sm:break-normal">
                   info@navnittextiles.com
                 </p>
               </div>
               <div>
-                <p className="text-gray-200 text-sm">
+                <p className="text-gray-200 text-xs sm:text-sm md:text-base">
                   Jaipur Raj 302012
                 </p>
               </div>
               <div>
-                <p className="text-gray-200 text-sm leading-relaxed">
+                <p className="text-gray-200 text-xs sm:text-sm md:text-base leading-relaxed max-w-xs sm:max-w-sm mx-auto sm:mx-0">
                   307/A, Gumasta Marg, Pul, Jaipur Disawer, Rajasthan-Jaipur, 
                   Rajasthan, Rajasthan 302001
                 </p>
               </div>
-              <div className="flex justify-start space-x-4 pt-2">
+              
+              {/* Social Media Icons */}
+              <div className="flex justify-center sm:justify-start space-x-3 sm:space-x-4 pt-2 sm:pt-4">
                 <a
                   href="#"
-                  className="w-8 h-8 bg-[#3d3d3d] p-2 rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
+                  className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-[#3d3d3d] rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
+                  aria-label="Instagram"
                 >
-                  <Instagram className="w-5 h-5" />
+                  <Instagram className="w-4 h-4 sm:w-5 sm:h-5" />
                 </a>
                 <a
                   href="#"
-                  className="w-8 h-8 bg-[#3d3d3d] p-2 rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
+                  className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-[#3d3d3d] rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
+                  aria-label="Facebook"
                 >
-                  <Facebook className="w-5 h-5" />
+                  <Facebook className="w-4 h-4 sm:w-5 sm:h-5" />
                 </a>
                 <a
                   href="#"
-                  className="w-8 h-8 bg-[#3d3d3d] p-2 rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
+                  className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-[#3d3d3d] rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600 hover:text-white transition-colors"
+                  aria-label="YouTube"
                 >
-                  <Youtube className="w-5 h-5" />
+                  <Youtube className="w-4 h-4 sm:w-5 sm:h-5" />
                 </a>
               </div>
             </div>

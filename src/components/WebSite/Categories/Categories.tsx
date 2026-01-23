@@ -6,38 +6,53 @@ const categories = [
   {
     id: 'towels',
     name: 'Towels',
-    image: '/assets/images/categories/c1.jpg'
+    image: '/assets/images/categories/cs5.jpg'
   },
   {
     id: 'kitchen-linen',
     name: 'Kitchen Linen',
-    image: '/assets/images/categories/c2.jpg'
+    image: '/assets/images/categories/cs1.jpg'
   },
   {
     id: 'bath-linen',
     name: 'Bath Linen',
-    image: '/assets/images/categories/c3.jpg'
+    image: '/assets/images/categories/cs7.jpg'
   },
   {
     id: 'table-linen',
     name: 'Table Linen',
-    image: '/assets/images/categories/c4.jpg'
+    image: '/assets/images/categories/cs3.jpg'
   },
   {
     id: 'cotton-jute-bags',
     name: 'Cotton & Jute Bags',
-    image: '/assets/images/categories/c5.jpg'
+    image: '/assets/images/categories/cs9.webp'
   },
   {
     id: 'pillow-covers',
     name: 'Pillow & Covers',
-    image: '/assets/images/categories/c6.jpg'
+    image: '/assets/images/categories/cs4.jpg'
   },
   {
-    id: 'non-terry-towels',
-    name: 'Non Terry Towels',
-    image: '/assets/images/categories/c7.jpg'
-  }
+    id: 'bed-linen',
+    name: 'Bed Linen',
+    image: '/assets/images/categories/cs12.webp'
+  },
+  {
+    id: 'shopping-bags',
+    name: 'Shopping Bags',
+    image: '/assets/images/categories/cs8.webp'
+  },
+  {
+    id: 'curtains',
+    name: 'Curtains',
+    image: '/assets/images/categories/cs11.webp'
+  },
+  {
+    id: 'home-decor',
+    name: 'Home Decor',
+    image: '/assets/images/categories/cs10.webp'
+  },
 ];
 
 export default function Categories() {
@@ -66,7 +81,7 @@ export default function Categories() {
 
       {/* Categories Content */}
       <div className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl 2xl:max-w-420 mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-start mb-12">
             <h2 className="text-2xl font-bold font-sans text-gray-700">Browse Our Collections</h2>
             <p className="text-lg text-gray-600 max-w-2xl">

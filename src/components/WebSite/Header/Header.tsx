@@ -95,47 +95,49 @@ const Header = () => {
   return (
     <div className="sticky top-0 z-50 font-sans">
          {/* Top Section */}
-      <div className="h-12 bg-[#222222] flex items-center justify-center">
-        <p className="text-white text-sm sm:text-base font-medium">Bath Towel Collection on 50% off</p>
+      <div className="h-8 sm:h-10 md:h-12 bg-[#222222] flex items-center justify-center px-2 sm:px-4">
+        <p className="text-white text-xs sm:text-sm md:text-base font-medium text-center px-2">
+          Bath Towel Collection on 50% off
+        </p>
       </div>
       {/* Main Header */}
       <header className="bg-white shadow-lg border-b border-gray-100 transition-all duration-300">
-        <div className="max-w-7xl xl:max-w-420 mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-          <div className="grid grid-cols-[25%_50%_25%] items-center h-22 gap-2 sm:gap-3 md:gap-4">
-            {/* Section 1: Logo (25%) */}
-            <div className="flex justify-start p-2">
+        <div className="max-w-7xl 2xl:max-w-420 mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-18 md:h-20 lg:h-22 gap-2 sm:gap-3 md:gap-4">
+            {/* Section 1: Logo */}
+            <div className="flex justify-start shrink-0">
               <Link href="/" className="flex items-center">
                 <Image
                   src="/assets/logo/logo2.png"
                   alt="Company Logo"
                   width={120}
                   height={80}
-                  className="h-8 sm:h-20 w-36 object-contain"
+                  className="h-8 sm:h-10 md:h-12 lg:h-16 xl:h-20 w-auto object-contain"
                   priority
                 />
               </Link>
             </div>
 
-            {/* Section 2: Logo (Center - 40%) */}
-            <div className="flex justify-center">
-              <Link href="/" className="flex items-center gap-2 sm:gap-3">
-                <div>
-                  <h1 className="text-lg sm:text-3xl font-bold bg-linear-to-l from-[#212121] to-[#222222] bg-clip-text text-transparent">
+            {/* Section 2: Company Name (Center) */}
+            <div className="hidden md:flex justify-center flex-1 px-2 lg:px-4">
+              <Link href="/" className="flex items-center">
+                <div className="text-center">
+                  <h1 className="text-sm lg:text-lg xl:text-xl 2xl:text-2xl 3xl:text-3xl font-bold bg-gradient-to-r from-[#212121] to-[#222222] bg-clip-text text-transparent leading-tight">
                     M2C MarkDowns Private Limited
                   </h1>
                 </div>
               </Link>
             </div>
 
-            {/* Section 3: Wishlist, Cart, Search, Globe, Account*/}
-            <div className="flex items-center justify-end gap-2">
+            {/* Section 3: Action Icons */}
+            <div className="flex items-center justify-end gap-1 sm:gap-2 md:gap-3 shrink-0">
               {/* Wishlist */}
               <Link
                 href="/wishlist"
-                className="relative p-2 text-[#222222] hover:text-white hover:bg-[#212121] rounded-lg transition-all duration-200 transform hover:scale-105"
+                className="relative p-1.5 sm:p-2 text-[#222222] hover:text-white hover:bg-[#212121] rounded-lg transition-all duration-200 transform hover:scale-105"
               >
-                <Heart className="w-4 h-4 sm:w-6 sm:h-6" />
-                <span className="absolute -top-0.5 -right-0.5 sm:-top-1.5 sm:-right-1.5 bg-[#212121] text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium text-xs">
+                <Heart className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                <span className="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 bg-[#212121] text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium text-xs">
                   0
                 </span>
               </Link>
@@ -143,10 +145,10 @@ const Header = () => {
               {/* Cart */}
               <Link
                 href="/cart"
-                className="relative p-2 text-[#222222] hover:text-white hover:bg-[#212121] rounded-lg transition-all duration-200 transform hover:scale-105"
+                className="relative p-1.5 sm:p-2 text-[#222222] hover:text-white hover:bg-[#212121] rounded-lg transition-all duration-200 transform hover:scale-105"
               >
-                <ShoppingCart className="w-4 h-4 sm:w-6 sm:h-6" />
-                <span className="absolute -top-0.5 -right-0.5 sm:-top-1.5 sm:-right-1.5 bg-[#212121] text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium text-xs">
+                <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                <span className="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 bg-[#212121] text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium text-xs">
                   0
                 </span>
               </Link>
@@ -154,10 +156,10 @@ const Header = () => {
               {/* Search Icon */}
               <button
                 onClick={() => setShowSearchModal(true)}
-                className="p-2.5 text-[#222222] hover:text-white hover:bg-[#212121] rounded-lg transition-all duration-200 transform hover:scale-110"
+                className="p-1.5 sm:p-2 text-[#222222] hover:text-white hover:bg-[#212121] rounded-lg transition-all duration-200 transform hover:scale-110"
                 aria-label="Search"
               >
-                <Search className="w-4 h-4 sm:w-6 sm:h-6" />
+                <Search className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
               </button>
 
               {/* Globe Icon - Language & Currency Selector */}
@@ -166,44 +168,44 @@ const Header = () => {
                   onClick={() =>
                     setIsLanguageCurrencyOpen(!isLanguageCurrencyOpen)
                   }
-                  className="p-2.5 text-[#222222] hover:text-white hover:bg-[#212121] rounded-xl transition-all duration-200 transform hover:scale-110"
+                  className="p-1.5 sm:p-2 text-[#222222] hover:text-white hover:bg-[#212121] rounded-xl transition-all duration-200 transform hover:scale-110"
                   aria-label="Language and Currency"
                 >
-                  <Globe className="w-4 h-4 sm:w-6 sm:h-6" />
+                  <Globe className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </button>
 
                 {/* Language & Currency Modal */}
                 {isLanguageCurrencyOpen && (
                   <div
                     ref={modalRef}
-                    className="absolute top-full -right-4 mt-2 w-full sm:w-64 bg-white rounded-xl shadow-xl z-50 overflow-visible animate-in fade-in slide-in-from-top-2 duration-200"
+                    className="absolute top-full -right-2 sm:-right-4 mt-2 w-72 sm:w-80 bg-white rounded-xl shadow-xl z-50 overflow-visible animate-in fade-in slide-in-from-top-2 duration-200"
                   >
                     {/* Triangle indicator pointing to Globe icon */}
                     <div className="absolute -top-2 right-4 sm:right-6 w-4 h-4 bg-gray-50 transform rotate-45 z-10"></div>
 
-                    <div className="bg-gray-50 p-4 sm:p-6">
-                      <h3 className="font-bold text-gray-900 text-lg">
+                    <div className="bg-gray-50 p-3 sm:p-4 md:p-6">
+                      <h3 className="font-bold text-gray-900 text-base sm:text-lg">
                         Preferences
                       </h3>
-                      <p className="text-sm text-slate-900 mt-1">
+                      <p className="text-xs sm:text-sm text-slate-900 mt-1">
                         Customize your language and currency
                       </p>
                     </div>
 
-                    <div className="p-4 sm:p-6 space-y-5">
+                    <div className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5">
                       {/* Language Selection */}
                       <div ref={languageDropdownRef} className="relative">
-                        <label className="block text-sm font-semibold text-slate-800 mb-3">
+                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-2 sm:mb-3">
                           Language
                         </label>
                         <button
                           onClick={() =>
                             setShowLanguageDropdown(!showLanguageDropdown)
                           }
-                          className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium bg-white border-2 border-slate-200 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                          className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium bg-white border-2 border-slate-200 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
                         >
-                          <span className="flex items-center gap-3">
-                            <span className="text-lg">
+                          <span className="flex items-center gap-2 sm:gap-3">
+                            <span className="text-sm sm:text-lg">
                               {
                                 languages.find(
                                   (l) => l.label === selectedLanguage,
@@ -214,7 +216,7 @@ const Header = () => {
                               {selectedLanguage}
                             </span>
                           </span>
-                          <ChevronDown className="w-4 h-4 text-slate-600" />
+                          <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-slate-600" />
                         </button>
                         {showLanguageDropdown && (
                           <div className="absolute z-20 w-full mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
@@ -225,9 +227,9 @@ const Header = () => {
                                   setSelectedLanguage(lang.label);
                                   setShowLanguageDropdown(false);
                                 }}
-                                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-700 text-left hover:bg-gray-50 hover:text-gray-600 transition-colors duration-150"
+                                className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-700 text-left hover:bg-gray-50 hover:text-gray-600 transition-colors duration-150"
                               >
-                                <span className="text-lg">{lang.flag}</span>
+                                <span className="text-sm sm:text-lg">{lang.flag}</span>
                                 <span className="font-medium">
                                   {lang.label}
                                 </span>
@@ -239,17 +241,17 @@ const Header = () => {
 
                       {/* Currency Selection */}
                       <div ref={currencyDropdownRef} className="relative">
-                        <label className="block text-sm font-semibold text-slate-800 mb-3">
+                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-2 sm:mb-3">
                           Currency
                         </label>
                         <button
                           onClick={() =>
                             setShowCurrencyDropdown(!showCurrencyDropdown)
                           }
-                          className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium bg-white border-2 border-slate-200 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                          className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium bg-white border-2 border-slate-200 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
                         >
-                          <span className="flex items-center gap-3">
-                            <span className="text-lg font-bold text-slate-800">
+                          <span className="flex items-center gap-2 sm:gap-3">
+                            <span className="text-sm sm:text-lg font-bold text-slate-800">
                               {
                                 currencies.find(
                                   (c) => c.value === selectedCurrency,
@@ -260,7 +262,7 @@ const Header = () => {
                               {selectedCurrency}
                             </span>
                           </span>
-                          <ChevronDown className="w-4 h-4 text-slate-600" />
+                          <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-slate-600" />
                         </button>
                         {showCurrencyDropdown && (
                           <div className="absolute z-20 w-full mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
@@ -271,9 +273,9 @@ const Header = () => {
                                   setSelectedCurrency(currency.value);
                                   setShowCurrencyDropdown(false);
                                 }}
-                                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-700 text-left hover:bg-gray-50 hover:text-gray-600 transition-colors duration-150"
+                                className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-700 text-left hover:bg-gray-50 hover:text-gray-600 transition-colors duration-150"
                               >
-                                <span className="w-6 text-center font-bold">
+                                <span className="w-5 sm:w-6 text-center font-bold">
                                   {currency.symbol}
                                 </span>
                                 <span className="font-medium">
@@ -292,7 +294,7 @@ const Header = () => {
                           setShowLanguageDropdown(false);
                           setShowCurrencyDropdown(false);
                         }}
-                        className="w-full bg-[#222222] hover:bg-gray-400 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                        className="w-full bg-[#222222] hover:bg-gray-400 text-white font-semibold py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-xs sm:text-sm"
                       >
                         Save Preferences
                       </button>
@@ -303,33 +305,33 @@ const Header = () => {
 
               {/* User Account Dropdown */}
               <div
-                className="hidden md:block relative"
+                className="hidden lg:block relative"
                 ref={accountDropdownRef}
               >
                 <button
                   onClick={() => setShowAccountDropdown(!showAccountDropdown)}
-                  className="flex items-center gap-2 px-3 sm:px-2.5 py-2.5 text-[#222222] bg-white rounded-lg transition-all duration-200 text-sm sm:text-base font-semibold hover:scale-105 transform"
+                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-[#222222] bg-white rounded-lg transition-all duration-200 text-xs sm:text-sm md:text-base font-semibold hover:scale-105 transform"
                 >
-                  <IconUserFilled className="w-4 h-4 sm:w-6 sm:h-6" />
+                  <IconUserFilled className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </button>
 
                 {showAccountDropdown && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="absolute right-0 mt-2 w-48 sm:w-56 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="p-2 space-y-1">
                       <Link
                         href="/profile"
-                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-slate-700 hover:bg-gray-50 hover:text-gray-600 transition-all duration-150 font-medium"
+                        className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm text-slate-700 hover:bg-gray-50 hover:text-gray-600 transition-all duration-150 font-medium"
                         onClick={() => setShowAccountDropdown(false)}
                       >
-                        <IconUserFilled className="w-6 h-6" />
+                        <IconUserFilled className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                         <span>My Profile</span>
                       </Link>
                       <Link
                         href="/order"
-                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-slate-700 hover:bg-gray-50 hover:text-gray-600 transition-all duration-150 font-medium"
+                        className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm text-slate-700 hover:bg-gray-50 hover:text-gray-600 transition-all duration-150 font-medium"
                         onClick={() => setShowAccountDropdown(false)}
                       >
-                        <ShoppingCart className="w-4 h-4" />
+                        <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
                         <span>My Orders</span>
                       </Link>
                       <hr className="my-2 border-slate-100" />
@@ -338,9 +340,9 @@ const Header = () => {
                           setShowAccountDropdown(false);
                           // Add logout logic here
                         }}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-700 transition-all duration-150 text-left font-medium"
+                        className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-700 transition-all duration-150 text-left font-medium"
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-3 h-3 sm:w-4 sm:h-4" />
                         <span>Logout</span>
                       </button>
                     </div>
@@ -351,7 +353,7 @@ const Header = () => {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden p-2.5 text-slate-700 hover:text-gray-600 hover:bg-slate-100 rounded-lg transition-all duration-200 transform hover:scale-110"
+                className="lg:hidden p-1.5 sm:p-2 text-slate-700 hover:text-gray-600 hover:bg-slate-100 rounded-lg transition-all duration-200 transform hover:scale-110"
                 aria-label="Toggle menu"
               >
                 {isMenuOpen ? (
@@ -367,12 +369,12 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="lg:hidden border-t-2 border-slate-200 bg-white shadow-lg animate-in fade-in slide-in-from-top-2 duration-200">
-            <div className="px-3 sm:px-4 py-3 sm:py-4 space-y-1 sm:space-y-2 max-h-[calc(100vh-100px)] overflow-y-auto">
+            <div className="px-3 sm:px-4 py-3 sm:py-4 space-y-1 sm:space-y-2 max-h-[calc(100vh-120px)] overflow-y-auto">
               <Link
                 href="/"
-                className={`block px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                className={`block px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   isActiveLink("/")
-                    ? "bg-linear-to-r from-gray-500 to-gray-600 text-white shadow-md"
+                    ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md"
                     : "text-slate-700 hover:bg-slate-100 hover:text-gray-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
@@ -382,9 +384,9 @@ const Header = () => {
 
               <Link
                 href="/products"
-                className={`block px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                className={`block px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   isActiveLink("/products")
-                    ? "bg-linear-to-r from-gray-500 to-gray-600 text-white shadow-md"
+                    ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md"
                     : "text-slate-700 hover:bg-slate-100 hover:text-gray-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
@@ -393,9 +395,9 @@ const Header = () => {
               </Link>
               <Link
                 href="/about"
-                className={`block px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                className={`block px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   isActiveLink("/about")
-                    ? "bg-linear-to-r from-gray-500 to-gray-600 text-white shadow-md"
+                    ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md"
                     : "text-slate-700 hover:bg-slate-100 hover:text-gray-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
@@ -404,9 +406,9 @@ const Header = () => {
               </Link>
               <Link
                 href="/contact"
-                className={`block px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                className={`block px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   isActiveLink("/contact")
-                    ? "bg-linear-to-r from-gray-500 to-gray-600 text-white shadow-md"
+                    ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md"
                     : "text-slate-700 hover:bg-slate-100 hover:text-gray-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
@@ -414,10 +416,10 @@ const Header = () => {
                 Contact
               </Link>
               <Link
-                href="/orders"
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
-                  isActiveLink("/orders")
-                    ? "bg-linear-to-rrom-gray-500 to-gray-600 text-white shadow-md"
+                href="/order"
+                className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
+                  isActiveLink("/order")
+                    ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md"
                     : "text-slate-700 hover:bg-slate-100 hover:text-gray-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
@@ -432,8 +434,8 @@ const Header = () => {
               <hr className="my-3 sm:my-4 border-slate-200" />
 
               <Link
-                href="/account"
-                className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-100 hover:text-gray-600 rounded-lg font-medium transition-all duration-200"
+                href="/profile"
+                className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-slate-700 hover:bg-slate-100 hover:text-gray-600 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <IconUserFilled className="w-4 h-4" />
@@ -450,51 +452,51 @@ const Header = () => {
       {/* Search Modal */}
       {showSearchModal && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-12 sm:pt-16 md:pt-20 px-3 sm:px-4 animate-in fade-in duration-200"
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-8 sm:pt-12 md:pt-16 lg:pt-20 px-3 sm:px-4 animate-in fade-in duration-200"
           onClick={() => setShowSearchModal(false)}
         >
           <div
             ref={searchModalRef}
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl mx-auto overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-100"
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl lg:max-w-3xl mx-auto overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-100"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 sm:p-8">
+            <div className="p-4 sm:p-6 md:p-8">
               {/* Search Input Section */}
-              <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 bg-linear-to-r from-gray-600 to-gray-700 px-5 py-4 sm:py-5 rounded-xl shadow-lg">
-                <Search className="w-5 h-5 sm:w-6 sm:h-6 text-white shrink-0" />
+              <div className="flex items-center gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8 bg-gradient-to-r from-gray-600 to-gray-700 px-3 sm:px-4 md:px-5 py-3 sm:py-4 md:py-5 rounded-xl shadow-lg">
+                <Search className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white shrink-0" />
                 <input
                   type="text"
                   placeholder="Search for products, categories, brands..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 text-base sm:text-lg font-medium outline-none bg-transparent text-white placeholder-ble-100"
+                  className="flex-1 text-sm sm:text-base md:text-lg font-medium outline-none bg-transparent text-white placeholder-blue-100"
                   autoFocus
                 />
                 <button
                   onClick={() => setShowSearchModal(false)}
-                  className="p-2 sm:p-2.5 hover:bg-gray-600 rounded-lg transition-all duration-200 shrink-0"
+                  className="p-1.5 sm:p-2 md:p-2.5 hover:bg-gray-600 rounded-lg transition-all duration-200 shrink-0"
                   aria-label="Close search"
                 >
-                  <X className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
                 </button>
               </div>
 
               {searchQuery && (
-                <div className="space-y-4">
-                  <p className="text-xs sm:text-sm font-medium text-slate-600 mb-4">
+                <div className="space-y-3 sm:space-y-4">
+                  <p className="text-xs sm:text-sm font-medium text-slate-600 mb-3 sm:mb-4">
                     Search results for{" "}
                     <span className="text-gray-600 font-bold">
                       "{searchQuery}"
                     </span>
                   </p>
-                  <div className="text-center py-12 sm:py-16">
-                    <div className="mb-3 sm:mb-4 flex justify-center">
-                      <Search className="w-12 h-12 sm:w-16 sm:h-16 text-slate-300" />
+                  <div className="text-center py-8 sm:py-12 md:py-16">
+                    <div className="mb-2 sm:mb-3 md:mb-4 flex justify-center">
+                      <Search className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 text-slate-300" />
                     </div>
                     <p className="text-sm sm:text-base text-slate-700 font-semibold">
                       No results found
                     </p>
-                    <p className="text-xs sm:text-sm text-slate-500 mt-2">
+                    <p className="text-xs sm:text-sm text-slate-500 mt-1 sm:mt-2">
                       Try searching with different keywords
                     </p>
                   </div>
@@ -502,9 +504,9 @@ const Header = () => {
               )}
 
               {!searchQuery && (
-                <div className="space-y-6 sm:space-y-8">
+                <div className="space-y-4 sm:space-y-6 md:space-y-8">
                   <div>
-                    <p className="text-xs sm:text-sm font-bold text-slate-800 mb-4 uppercase tracking-widest">
+                    <p className="text-xs sm:text-sm font-bold text-slate-800 mb-3 sm:mb-4 uppercase tracking-widest">
                       Popular Searches
                     </p>
                     <div className="flex flex-wrap gap-2 sm:gap-3">
@@ -519,7 +521,7 @@ const Header = () => {
                         <button
                           key={term}
                           onClick={() => setSearchQuery(term)}
-                          className="px-4 sm:px-5 py-2.5 sm:py-3 bg-linear-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-2 border-gray-200 hover:border-gray-400 rounded-xl text-xs sm:text-sm font-semibold text-gray-700 transition-all duration-200 transform hover:scale-105 hover:shadow-md"
+                          className="px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-3 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-2 border-gray-200 hover:border-gray-400 rounded-xl text-xs sm:text-sm font-semibold text-gray-700 transition-all duration-200 transform hover:scale-105 hover:shadow-md"
                         >
                           {term}
                         </button>

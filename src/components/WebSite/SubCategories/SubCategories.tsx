@@ -8,14 +8,14 @@ const getSubCategories = (categoryId: string) => {
     towels: {
       categoryName: 'Towels',
       subcategories: [
-        { id: 'terry-one-side-printed', name: 'Terry One Side Printed Towels', description: 'Premium printed terry towels with vibrant designs on one side', productCount: 45, image: '/assets/images/categories/towels/t1.jpeg' },
-        { id: 'terry-mono-checked', name: 'Terry Mono Checked Towels', description: 'Classic monochrome checked pattern terry towels', productCount: 38, image: '/assets/images/categories/towels/t2.jpg' },
-        { id: 'terry-hand-towels', name: 'Terry Hand Towels', description: 'Soft and absorbent hand-sized terry towels', productCount: 52, image: '/assets/images/categories/towels/t3.jpg' },
-        { id: 'terry-bath-towels', name: 'Terry Bath Towels', description: 'Luxurious full-size terry bath towels for ultimate comfort', productCount: 48, image: '/assets/images/categories/towels/t4.jpeg' },
-        { id: 'non-terry-honey-comb', name: 'Non Terry Honey Comb Towels', description: 'Lightweight honey comb textured towels', productCount: 35, image: '/assets/images/categories/towels/t5.jpg' },
-        { id: 'dish-cloth', name: 'Dish Cloth', description: 'Practical and durable dish cloths for kitchen use', productCount: 42, image: '/assets/images/categories/towels/t6.jpg' },
-        { id: 'checked-terry-towels', name: 'Checked Terry Towels', description: 'Elegant checked pattern terry towels', productCount: 40, image: '/assets/images/categories/towels/t7.jpeg' },
-        { id: 'border-terry-towels', name: 'Border Terry Towels', description: 'Premium terry towels with decorative borders', productCount: 47, image: '/assets/images/categories/towels/t8.jpg' }
+        { id: 'terry-one-side-printed', name: 'Terry One Side Printed Towels', description: 'Premium printed terry towels with vibrant designs on one side', productCount: 45, image: '/assets/images/categories/towels/tc1.webp' },
+        { id: 'terry-mono-checked', name: 'Terry Mono Checked Towels', description: 'Classic monochrome checked pattern terry towels', productCount: 38, image: '/assets/images/categories/towels/tc2.jpg' },
+        { id: 'terry-hand-towels', name: 'Terry Hand Towels', description: 'Soft and absorbent hand-sized terry towels', productCount: 52, image: '/assets/images/categories/towels/tc3.jpg' },
+        { id: 'terry-bath-towels', name: 'Terry Bath Towels', description: 'Luxurious full-size terry bath towels for ultimate comfort', productCount: 48, image: '/assets/images/categories/towels/tc4.webp' },
+        { id: 'non-terry-honey-comb', name: 'Non Terry Honey Comb Towels', description: 'Lightweight honey comb textured towels', productCount: 35, image: '/assets/images/categories/towels/tc9.jpg' },
+        { id: 'dish-cloth', name: 'Dish Cloth', description: 'Practical and durable dish cloths for kitchen use', productCount: 42, image: '/assets/images/categories/towels/tc6.webp' },
+        { id: 'checked-terry-towels', name: 'Checked Terry Towels', description: 'Elegant checked pattern terry towels', productCount: 40, image: '/assets/images/categories/towels/tc7.webp' },
+        { id: 'border-terry-towels', name: 'Border Terry Towels', description: 'Premium terry towels with decorative borders', productCount: 47, image: '/assets/images/categories/towels/tc8.jpg' }
       ]
     },
     'kitchen-linen': {
@@ -83,7 +83,7 @@ export default function SubCategories({ categoryId }: { categoryId: string }) {
   return (
     <div className="min-h-screen bg-white">
       {/* Banner Header Section */}
-      <div className="relative h-52 md:h-60 lg:h-62 overflow-hidden">
+      <div className="relative h-52 md:h-60 lg:h-64 overflow-hidden">
         <Image
           src="/assets/images/categories/cb3.jpg"
           alt={`${categoryName} Banner`}
@@ -108,7 +108,7 @@ export default function SubCategories({ categoryId }: { categoryId: string }) {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl 2xl:max-w-420 mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Subcategories Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {subcategories.map((subcategory, index) => (
@@ -118,7 +118,7 @@ export default function SubCategories({ categoryId }: { categoryId: string }) {
               className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-gray-200 transform hover:-translate-y-2"
             >
               {/* Image Section */}
-              <div className="relative h-48 overflow-hidden rounded-t-2xl">
+              <div className="relative h-56 overflow-hidden rounded-t-2xl">
                 {subcategory.image ? (
                   <Image
                     src={subcategory.image}
@@ -146,7 +146,7 @@ export default function SubCategories({ categoryId }: { categoryId: string }) {
               {/* Content Section */}
               <div className="p-6">
                 <div className="mb-4">
-                  <h3 className="text-lg font-sans font-bold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors duration-300 line-clamp-2">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors duration-300 line-clamp-2">
                     {subcategory.name}
                   </h3>
                   <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">

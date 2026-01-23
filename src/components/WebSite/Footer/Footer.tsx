@@ -4,7 +4,7 @@ import BottomBar from "./BottomBar";
 
 const Footer = () => {
   return (
-    <footer className="font-sans">
+    <footer className="font-sans w-full">
       <NewsletterSection />
       <MainFooterContent />
       <BottomBar />

@@ -63,7 +63,6 @@ const navigation: NavigationItem[] = [
     title: 'Marketing',
     icon: Megaphone,
     subItems: [
-      { title: 'Coupons', href: '/vendor/dashboard/coupons' },
       { title: 'Reviews', href: '/vendor/dashboard/reviews' },
     ]
   },

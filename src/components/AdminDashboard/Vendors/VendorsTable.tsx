@@ -81,20 +81,32 @@ export default function VendorsTable() {
                 <TableCell>{formatDate(vendor.joinDate)}</TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-2">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-4 w-4" />
-                    </Button>
+                    <Link href={`/dashboard/vendors/view/${vendor.id}`}>
+                      <Button variant="ghost" size="sm" title="View Details">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </Link>
                     <Link href={`/dashboard/vendors/edit/${vendor.id}`}>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-4 w-4 text-blue-500 bg-blue-50" />
+                      <Button variant="ghost" size="sm" title="Edit Vendor">
+                        <Edit className="h-4 w-4 text-blue-500" />
                       </Button>
                     </Link>
                     {vendor.status === 'pending' && (
                       <>
-                        <Button variant="ghost" size="sm" className="text-green-600">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-green-600 hover:bg-green-50"
+                          title="Approve Vendor"
+                        >
                           <CheckCircle className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-gray-700">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-red-600 hover:bg-red-50"
+                          title="Reject Vendor"
+                        >
                           <XCircle className="h-4 w-4" />
                         </Button>
                       </>

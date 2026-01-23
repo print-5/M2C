@@ -59,7 +59,7 @@ const Category = () => {
             <Link
               key={category.id}
               href={`/categories/${category.id}`}
-              className={`px-3 sm:px-4 py-2 rounded-lg whitespace-nowrap transition-all duration-200 shrink-0 ${
+              className={`px-2 sm:px-3 py-1 rounded-lg whitespace-nowrap transition-all duration-200 shrink-0 ${
                 isActiveCategory(category.id)
                   ? 'text-white bg-[#222222] shadow-sm text-lg font-semibold transform scale-105'
                   : 'text-[#444444] hover:text-white hover:bg-[#212121] text-base'

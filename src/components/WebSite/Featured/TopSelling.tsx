@@ -10,28 +10,48 @@ export default function TopSelling() {
     .slice(0, 4);
 
   return (
-    <section className="bg-gray-50 py-16 font-sans">
-      <div className="max-w-420 mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-start mb-12">
-          <div className="text-start flex-1">
-            <h2 className="text-3xl font-bold text-[#1A2830]">Top Selling Products</h2>
-            <p className="text-lg text-gray-600 max-w-2xl">
+    <section className="bg-white py-8 sm:py-12 md:py-16 lg:py-20 font-sans">
+      <div className="max-w-7xl 2xl:max-w-420 mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-10 md:mb-12 lg:mb-16">
+          <div className="text-center lg:text-left flex-1">
+            <h2 className="text-lg sm:text-xl md:text-2xl xl:text-3xl font-bold text-[#313131] mb-2 md:mb-3">
+              Top Selling Products
+            </h2>
+            <p className="text-sm sm:text-sm md:text-base lg:text-lg text-gray-500 max-w-full lg:max-w-2xl xl:max-w-3xl mx-auto lg:mx-0 leading-relaxed">
               Most popular items loved by our customers, proven by sales and reviews
             </p>
           </div>
-          <div className="ml-8">
+          
+          {/* View All Button */}
+          <div className="flex justify-center lg:justify-end lg:ml-8 shrink-0">
             <Link 
               href="/products"
-              className="inline-block bg-gray-700 text-white px-8 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold whitespace-nowrap"
+              className="inline-block bg-gray-700 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold text-xs sm:text-sm md:text-base whitespace-nowrap transform hover:scale-105 duration-200"
             >
-              View All Products
+              <span className="hidden sm:inline">View All Products</span>
+              <span className="sm:hidden">View All</span>
             </Link>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        {/* Products Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
           {topSellingProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <div key={product.id} className="w-full">
+              <ProductCard product={product} />
+            </div>
           ))}
+        </div>
+
+        {/* Mobile View All Button (Bottom) */}
+        <div className="flex justify-center mt-8 sm:mt-10 md:mt-12 lg:hidden">
+          <Link 
+            href="/products"
+            className="inline-block bg-gray-700 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg hover:bg-gray-400 transition-colors font-semibold text-sm sm:text-base transform hover:scale-105 duration-200"
+          >
+            View All Products
+          </Link>
         </div>
       </div>
     </section>
