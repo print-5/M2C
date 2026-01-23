@@ -122,7 +122,7 @@ const Header = () => {
             <div className="hidden md:flex justify-center flex-1 px-2 lg:px-4">
               <Link href="/" className="flex items-center">
                 <div className="text-center">
-                  <h1 className="text-sm lg:text-lg xl:text-xl 2xl:text-2xl 3xl:text-3xl font-bold bg-gradient-to-r from-[#212121] to-[#222222] bg-clip-text text-transparent leading-tight">
+                  <h1 className="text-sm lg:text-lg xl:text-xl 2xl:text-2xl 3xl:text-3xl font-bold bg-linear-to-r[#212121] to-[#222222] bg-clip-text text-transparent leading-tight">
                     M2C MarkDowns Private Limited
                   </h1>
                 </div>
@@ -374,7 +374,7 @@ const Header = () => {
                 href="/"
                 className={`block px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   isActiveLink("/")
-                    ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md"
+                    ? "bg-linear-to-r from-gray-500 to-gray-600 text-white shadow-md"
                     : "text-slate-700 hover:bg-slate-100 hover:text-gray-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
@@ -386,7 +386,7 @@ const Header = () => {
                 href="/products"
                 className={`block px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   isActiveLink("/products")
-                    ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md"
+                    ? "bg-linear-to-r from-gray-500 to-gray-600 text-white shadow-md"
                     : "text-slate-700 hover:bg-slate-100 hover:text-gray-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
@@ -397,7 +397,7 @@ const Header = () => {
                 href="/about"
                 className={`block px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   isActiveLink("/about")
-                    ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md"
+                    ? "bg-linear-to-r from-gray-500 to-gray-600 text-white shadow-md"
                     : "text-slate-700 hover:bg-slate-100 hover:text-gray-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
@@ -408,7 +408,7 @@ const Header = () => {
                 href="/contact"
                 className={`block px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   isActiveLink("/contact")
-                    ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md"
+                    ? "bg-linear-to-r from-gray-500 to-gray-600 text-white shadow-md"
                     : "text-slate-700 hover:bg-slate-100 hover:text-gray-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
@@ -419,7 +419,7 @@ const Header = () => {
                 href="/order"
                 className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   isActiveLink("/order")
-                    ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md"
+                    ? "bg-linear-to-r from-gray-500 to-gray-600 text-white shadow-md"
                     : "text-slate-700 hover:bg-slate-100 hover:text-gray-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
@@ -462,7 +462,7 @@ const Header = () => {
           >
             <div className="p-4 sm:p-6 md:p-8">
               {/* Search Input Section */}
-              <div className="flex items-center gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8 bg-gradient-to-r from-gray-600 to-gray-700 px-3 sm:px-4 md:px-5 py-3 sm:py-4 md:py-5 rounded-xl shadow-lg">
+              <div className="flex items-center gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8 bg-linear-to-r from-gray-600 to-gray-700 px-3 sm:px-4 md:px-5 py-3 sm:py-4 md:py-5 rounded-xl shadow-lg">
                 <Search className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white shrink-0" />
                 <input
                   type="text"
@@ -521,7 +521,7 @@ const Header = () => {
                         <button
                           key={term}
                           onClick={() => setSearchQuery(term)}
-                          className="px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-3 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-2 border-gray-200 hover:border-gray-400 rounded-xl text-xs sm:text-sm font-semibold text-gray-700 transition-all duration-200 transform hover:scale-105 hover:shadow-md"
+                          className="px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-3 bg-linear-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-2 border-gray-200 hover:border-gray-400 rounded-xl text-xs sm:text-sm font-semibold text-gray-700 transition-all duration-200 transform hover:scale-105 hover:shadow-md"
                         >
                           {term}
                         </button>

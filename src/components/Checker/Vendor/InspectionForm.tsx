@@ -131,8 +131,8 @@ export default function InspectionForm({ vendorName, onComplete }: InspectionFor
         pass: true,
         fail: false,
         photos: [] as string[],
-        rightPhotos: [] as { file?: File; name: string; url: string; id: string | number }[],
-        wrongPhotos: [] as { file?: File; name: string; url: string; id: string | number }[],
+        rightPhotos: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
+        wrongPhotos: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
       },
       {
         id: "colorFastness",
@@ -141,8 +141,8 @@ export default function InspectionForm({ vendorName, onComplete }: InspectionFor
         pass: true,
         fail: false,
         photos: [] as string[],
-        rightPhotos: [] as { file?: File; name: string; url: string; id: string | number }[],
-        wrongPhotos: [] as { file?: File; name: string; url: string; id: string | number }[],
+        rightPhotos: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
+        wrongPhotos: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
       },
       {
         id: "seamStrength",
@@ -151,8 +151,8 @@ export default function InspectionForm({ vendorName, onComplete }: InspectionFor
         pass: true,
         fail: false,
         photos: [] as string[],
-        rightPhotos: [] as { file?: File; name: string; url: string; id: string | number }[],
-        wrongPhotos: [] as { file?: File; name: string; url: string; id: string | number }[],
+        rightPhotos: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
+        wrongPhotos: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
       },
       {
         id: "smell",
@@ -161,15 +161,17 @@ export default function InspectionForm({ vendorName, onComplete }: InspectionFor
         pass: true,
         fail: false,
         photos: [] as string[],
-        rightPhotos: [] as { file?: File; name: string; url: string; id: string | number }[],
-        wrongPhotos: [] as { file?: File; name: string; url: string; id: string | number }[],
+        rightPhotos: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
+        wrongPhotos: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
       },
     ],
-    testingPhotos: [] as { file?: File; name: string; url: string; id: string | number }[],
+    testingPhotos: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
 
     // Final Documentation
     inspectorSignature: "",
-    documentationPhotos: [] as string[],
+    documentationPhotos: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
+    photocopyDocuments: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
+    companyIdCards: [] as { file?: File; name: string; url: string; id: string | number; uploadedAt: string; uploadedDate: string; uploadedTime: string }[],
   })
 
   // Steps ordered to match PDF report structure exactly
