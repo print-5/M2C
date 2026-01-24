@@ -112,17 +112,19 @@ const Header = () => {
                   alt="Company Logo"
                   width={120}
                   height={80}
+                  sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, (max-width: 1024px) 48px, (max-width: 1280px) 64px, 80px"
                   className="h-8 sm:h-10 md:h-12 lg:h-16 xl:h-20 w-auto object-contain"
                   priority
+                  style={{ width: 'auto', height: 'auto' }}
                 />
               </Link>
             </div>
 
             {/* Section 2: Company Name (Center) */}
-            <div className="hidden md:flex justify-center flex-1 px-2 lg:px-4">
+            <div className="hidden sm:flex justify-center flex-1 px-1 sm:px-2 lg:px-4">
               <Link href="/" className="flex items-center">
                 <div className="text-center">
-                  <h1 className="text-sm lg:text-lg xl:text-xl 2xl:text-2xl 3xl:text-3xl font-bold bg-linear-to-r[#212121] to-[#222222] bg-clip-text text-transparent leading-tight">
+                  <h1 className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-bold bg-gradient-to-r from-[#212121] to-[#222222] bg-clip-text text-transparent leading-tight line-clamp-2">
                     M2C MarkDowns Private Limited
                   </h1>
                 </div>

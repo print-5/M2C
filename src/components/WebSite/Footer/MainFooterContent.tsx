@@ -20,6 +20,7 @@ const MainFooterContent = () => {
                     alt="Nav Nit Textile Logo"
                     width={190}
                     height={50}
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                     className="object-cover w-32 sm:w-40 md:w-48 lg:w-52 h-auto"
                     priority
                   />

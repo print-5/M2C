@@ -64,6 +64,7 @@ export default function Categories() {
           src="/assets/images/categories/cb5.jpg"
           alt="Categories Banner"
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover"
           priority
         />
@@ -102,6 +103,7 @@ export default function Categories() {
                     src={category.image}
                     alt={category.name}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
