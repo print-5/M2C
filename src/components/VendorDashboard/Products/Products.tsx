@@ -6,48 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
 import { Button } from '@/components/UI/Button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/UI/Table'
 import { Plus, Edit, Eye, Trash2 } from 'lucide-react'
-
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  price: string;
-  stock: number;
-  status: 'Active' | 'Inactive' | 'Out of Stock';
-  sales: number;
-}
+import { products as initialProducts, Product } from '@/data/products'
 
 export default function Products() {
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: '1',
-      name: 'Handwoven Cotton Kitchen Towel Set',
-      category: 'Kitchen Towels',
-      price: '$25.99',
-      stock: 45,
-      status: 'Active',
-      sales: 127
-    },
-    {
-      id: '2',
-      name: 'Organic Bath Towel Set',
-      category: 'Bath Towels',
-      price: '$89.99',
-      stock: 23,
-      status: 'Active',
-      sales: 89
-    },
-    {
-      id: '3',
-      name: 'Heritage Tea Towel Collection',
-      category: 'Kitchen Towels',
-      price: '$35.99',
-      stock: 0,
-      status: 'Out of Stock',
-      sales: 156
-    }
-  ]);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
 
   const handleAddProduct = () => {
     router.push('/vendor/dashboard/products/add');
@@ -103,7 +66,7 @@ export default function Products() {
                     <div className="font-medium text-[#222222]">{product.name}</div>
                   </TableCell>
                   <TableCell className="text-slate-600">{product.category}</TableCell>
-                  <TableCell className="font-medium text-gray-700">{product.price}</TableCell>
+                  <TableCell className="font-medium text-gray-700">${product.price.toFixed(2)}</TableCell>
                   <TableCell>
                     <span className={product.stock === 0 ? 'text-gray-700' : 'text-[#222222]'}>
                       {product.stock}
