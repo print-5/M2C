@@ -262,7 +262,3 @@ export default function OrderDetailPage() {
   );
 }
 
-export const metadata = {
-  title: 'Order Details - Vendor Dashboard',
-  description: 'View order details',
-};

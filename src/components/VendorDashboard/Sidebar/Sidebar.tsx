@@ -297,7 +297,7 @@ export default function VendorSidebar() {
       {/* Footer */}
       <div className="border-t border-gray-200 p-4">
         <div className="flex items-center">
-          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center shadow-md">
+          <div className="h-10 w-10 rounded-full bg-linear-to-br from-gray-700 to-gray-900 flex items-center justify-center shadow-md">
             <User className="h-5 w-5 text-white" />
           </div>
           <div className="ml-3 flex-1">

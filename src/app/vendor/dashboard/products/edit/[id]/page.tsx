@@ -10,6 +10,6 @@ interface EditProductPageProps {
 }
 
 export default function EditProductPage({ params }: EditProductPageProps) {
-  return <AddProduct productId={params.id} />;
+  return <AddProduct productId={params.id} isEdit={true} />;
 }
 
