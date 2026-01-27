@@ -145,7 +145,7 @@ export default function Header({ onMenuToggle, isSidebarOpen = true }: HeaderPro
                 placeholder="Search vendors, products, orders..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#222222] focus:border-[#222222] w-64 text-sm transition-all"
+                className="pl-10 pr-4 py-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-[#222222] focus:border-[#222222] w-64 md:w-96 text-sm transition-all"
               />
             </div>
           </div>

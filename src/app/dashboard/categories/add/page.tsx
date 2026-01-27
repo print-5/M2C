@@ -1,14 +1,14 @@
 import { Breadcrumb } from '@/components/AdminDashboard/Breadcrumb/Breadcrumb'
-import CategoryLists from '@/components/AdminDashboard/Categories/CategoryLists'
+import AddEditCategory from '@/components/AdminDashboard/Categories/AddEditCategory'
 
-export default function CategoriesPage() {
+export default function AddCategoryPage() {
   return (
     <div className="space-y-6">
       {/* Breadcrumb */}
       <Breadcrumb />
       
-      {/* Categories Management */}
-      <CategoryLists />
+      {/* Add Category Form */}
+      <AddEditCategory />
     </div>
   )
 }

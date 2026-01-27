@@ -124,7 +124,7 @@ const Header = () => {
             <div className="hidden sm:flex justify-center flex-1 px-1 sm:px-2 lg:px-4">
               <Link href="/" className="flex items-center">
                 <div className="text-center">
-                  <h1 className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-bold bg-gradient-to-r from-[#212121] to-[#222222] bg-clip-text text-transparent leading-tight line-clamp-2">
+                  <h1 className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-bold bg-linear-to-r from-[#212121] to-[#222222] bg-clip-text text-transparent leading-tight line-clamp-2">
                     M2C MarkDowns Private Limited
                   </h1>
                 </div>

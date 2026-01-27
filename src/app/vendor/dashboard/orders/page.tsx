@@ -1,5 +1,10 @@
-import Orders from '@/components/VendorDashboard/Sales/Orders/Orders';
+import Orders from '@/components/VendorDashboard/Orders/Orders';
 
 export default function OrdersPage() {
   return <Orders />;
 }
+
+export const metadata = {
+  title: 'Orders - Vendor Dashboard',
+  description: 'Manage your orders',
+};

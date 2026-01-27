@@ -4,7 +4,3 @@ export default function VendorDashboardPage() {
   return <Dashboard />;
 }
 
-export const metadata = {
-  title: 'Vendor Dashboard - Marketplace App',
-  description: 'Vendor Dashboard',
-};
