@@ -33,6 +33,8 @@ app.use(passport.initialize());
 
 // Import routes
 const vendorRoutes = require('./routes/vendorRoutes');
+const vendorSettingsRoutes = require('./routes/vendorSettingsRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -45,6 +47,8 @@ app.get('/health', (req, res) => {
 
 // Routes
 app.use('/api/vendors', vendorRoutes);
+app.use('/api/vendor-settings', vendorSettingsRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // AUTH ROUTES
 // Register

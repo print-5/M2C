@@ -278,19 +278,27 @@ model VendorDocument {
 }
 
 model VendorBankDetails {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  vendorId      String   @unique @db.ObjectId
-  vendor        Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  vendorId          String   @unique @db.ObjectId
+  vendor            Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
   
-  bankName      String
-  accountNumber String
-  ifscCode      String
-  accountType   String   // Savings, Current, etc.
-  branchName    String?
-  branchAddress String?
+  bankName          String
+  accountNumber     String
+  ifscCode          String
+  accountType       String   // Savings, Current, etc.
+  accountHolderName String
+  branchName        String?
+  branchAddress     String?
   
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+
+  
+  // Verification status
+  isVerified        Boolean  @default(false)
+  verifiedAt        DateTime?
+  verifiedBy        String?  // Admin ID who verified
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   @@map("vendor_bank_details")
 }
@@ -359,4 +367,42 @@ enum DocumentType {
   QUALITY_CERTIFICATES
   INSURANCE_CERTIFICATE
   OTHER
+}
+
+// ============================================
+// CATEGORY MANAGEMENT
+// ============================================
+
+model Category {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  description     String
+  slug            String    @unique
+  
+  // Hierarchy support
+  parentId        String?   @db.ObjectId
+  parent          Category? @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subcategories   Category[] @relation("CategoryHierarchy")
+  
+  // SEO fields
+  metaTitle       String?
+  metaDescription String?
+  
+  // Display settings
+  image           String?   // Cloudinary URL
+  sortOrder       Int       @default(0)
+  status          CategoryStatus @default(ACTIVE)
+  
+  // System fields
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdBy       String?   @db.ObjectId // Admin who created
+  updatedBy       String?   @db.ObjectId // Admin who last updated
+
+  @@map("categories")
+}
+
+enum CategoryStatus {
+  ACTIVE
+  INACTIVE
 }

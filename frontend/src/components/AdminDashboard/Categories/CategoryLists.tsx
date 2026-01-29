@@ -1,154 +1,53 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
 import { Button } from '@/components/UI/Button'
 import { Table } from '@/components/UI/Table'
 import { Badge } from '@/components/UI/Badge'
 import { Plus, Edit, Trash2, Eye, Search, Filter } from 'lucide-react'
 import Link from 'next/link'
-
-interface Category {
-  id: string
-  name: string
-  description: string
-  slug: string
-  parentId?: string
-  subcategories: Category[]
-  productCount: number
-  status: 'active' | 'inactive'
-  createdAt: string
-  updatedAt: string
-}
-
-// Mock data for categories
-const mockCategories: Category[] = [
-  {
-    id: '1',
-    name: 'Bed Sheets',
-    description: 'Premium quality bed sheets in various materials and sizes',
-    slug: 'bed-sheets',
-    subcategories: [
-      {
-        id: '1-1',
-        name: 'Cotton Sheets',
-        description: '100% cotton bed sheets',
-        slug: 'cotton-sheets',
-        parentId: '1',
-        subcategories: [],
-        productCount: 45,
-        status: 'active',
-        createdAt: '2024-01-15',
-        updatedAt: '2024-01-20'
-      },
-      {
-        id: '1-2',
-        name: 'Linen Sheets',
-        description: 'Natural linen bed sheets',
-        slug: 'linen-sheets',
-        parentId: '1',
-        subcategories: [],
-        productCount: 23,
-        status: 'active',
-        createdAt: '2024-01-16',
-        updatedAt: '2024-01-21'
-      },
-      {
-        id: '1-3',
-        name: 'Silk Sheets',
-        description: 'Luxury silk bed sheets',
-        slug: 'silk-sheets',
-        parentId: '1',
-        subcategories: [],
-        productCount: 12,
-        status: 'active',
-        createdAt: '2024-01-17',
-        updatedAt: '2024-01-22'
-      }
-    ],
-    productCount: 80,
-    status: 'active',
-    createdAt: '2024-01-10',
-    updatedAt: '2024-01-25'
-  },
-  {
-    id: '2',
-    name: 'Towels',
-    description: 'Absorbent and soft towels for all purposes',
-    slug: 'towels',
-    subcategories: [
-      {
-        id: '2-1',
-        name: 'Bath Towels',
-        description: 'Large bath towels',
-        slug: 'bath-towels',
-        parentId: '2',
-        subcategories: [],
-        productCount: 35,
-        status: 'active',
-        createdAt: '2024-01-18',
-        updatedAt: '2024-01-23'
-      },
-      {
-        id: '2-2',
-        name: 'Hand Towels',
-        description: 'Compact hand towels',
-        slug: 'hand-towels',
-        parentId: '2',
-        subcategories: [],
-        productCount: 28,
-        status: 'active',
-        createdAt: '2024-01-19',
-        updatedAt: '2024-01-24'
-      }
-    ],
-    productCount: 63,
-    status: 'active',
-    createdAt: '2024-01-12',
-    updatedAt: '2024-01-26'
-  },
-  {
-    id: '3',
-    name: 'Curtains',
-    description: 'Decorative and functional curtains',
-    slug: 'curtains',
-    subcategories: [
-      {
-        id: '3-1',
-        name: 'Blackout Curtains',
-        description: 'Light-blocking curtains',
-        slug: 'blackout-curtains',
-        parentId: '3',
-        subcategories: [],
-        productCount: 18,
-        status: 'active',
-        createdAt: '2024-01-20',
-        updatedAt: '2024-01-25'
-      }
-    ],
-    productCount: 42,
-    status: 'active',
-    createdAt: '2024-01-14',
-    updatedAt: '2024-01-27'
-  },
-  {
-    id: '4',
-    name: 'Pillows',
-    description: 'Comfortable pillows for better sleep',
-    slug: 'pillows',
-    subcategories: [],
-    productCount: 25,
-    status: 'inactive',
-    createdAt: '2024-01-16',
-    updatedAt: '2024-01-28'
-  }
-]
+import { categoryService, Category, CategoryStats } from '@/services/categoryService'
 
 export default function CategoryLists() {
-  const [categories] = useState<Category[]>(mockCategories)
+  const [categories, setCategories] = useState<Category[]>([])
+  const [stats, setStats] = useState<CategoryStats | null>(null)
+  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all')
+  const [statusFilter, setStatusFilter] = useState<'all' | 'ACTIVE' | 'INACTIVE'>('all')
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    loadCategories()
+    loadStats()
+  }, [searchTerm, statusFilter])
+
+  const loadCategories = async () => {
+    try {
+      setLoading(true)
+      const response = await categoryService.getCategories({
+        search: searchTerm || undefined,
+        status: statusFilter,
+        includeSubcategories: true,
+        sortBy: 'sortOrder',
+        sortOrder: 'asc'
+      })
+      setCategories(response.data)
+    } catch (error) {
+      console.error('Failed to load categories:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const loadStats = async () => {
+    try {
+      const response = await categoryService.getCategoryStats()
+      setStats(response.data)
+    } catch (error) {
+      console.error('Failed to load stats:', error)
+    }
+  }
 
   // Filter categories based on search and status
   const filteredCategories = categories.filter(category => {
@@ -168,10 +67,15 @@ export default function CategoryLists() {
     setExpandedCategories(newExpanded)
   }
 
-  const handleDelete = (categoryId: string) => {
+  const handleDelete = async (categoryId: string) => {
     if (confirm('Are you sure you want to delete this category? This action cannot be undone.')) {
-      console.log('Deleting category:', categoryId)
-      // Implement delete logic here
+      try {
+        await categoryService.deleteCategory(categoryId)
+        await loadCategories()
+        await loadStats()
+      } catch (error) {
+        alert(error instanceof Error ? error.message : 'Failed to delete category')
+      }
     }
   }
 
@@ -212,10 +116,10 @@ export default function CategoryLists() {
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <Badge 
-          variant={category.status === 'active' ? 'default' : 'secondary'}
-          className={category.status === 'active' ? 'bg-green-100 text-green-800 border-green-200' : ''}
+          variant={category.status === 'ACTIVE' ? 'default' : 'secondary'}
+          className={category.status === 'ACTIVE' ? 'bg-green-100 text-green-800 border-green-200' : ''}
         >
-          {category.status}
+          {category.status.toLowerCase()}
         </Badge>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -282,12 +186,12 @@ export default function CategoryLists() {
               <Filter className="h-4 w-4 text-gray-500" />
               <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
+                onChange={(e) => setStatusFilter(e.target.value as 'all' | 'ACTIVE' | 'INACTIVE')}
                 className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
               >
                 <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
               </select>
             </div>
           </div>
@@ -300,7 +204,13 @@ export default function CategoryLists() {
           <CardTitle>Categories List</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-700"></div>
+              <span className="ml-3 text-gray-600">Loading categories...</span>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -348,6 +258,7 @@ export default function CategoryLists() {
               </tbody>
             </table>
           </div>
+          )}
         </CardContent>
       </Card>
 
@@ -356,7 +267,7 @@ export default function CategoryLists() {
         <Card>
           <CardContent className="p-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900">{categories.length}</div>
+              <div className="text-2xl font-bold text-gray-900">{stats?.total || 0}</div>
               <div className="text-sm text-gray-500">Total Categories</div>
             </div>
           </CardContent>
@@ -365,7 +276,7 @@ export default function CategoryLists() {
           <CardContent className="p-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
-                {categories.filter(c => c.status === 'active').length}
+                {stats?.active || 0}
               </div>
               <div className="text-sm text-gray-500">Active Categories</div>
             </div>
@@ -375,7 +286,7 @@ export default function CategoryLists() {
           <CardContent className="p-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">
-                {categories.reduce((sum, c) => sum + c.subcategories.length, 0)}
+                {stats?.subcategories || 0}
               </div>
               <div className="text-sm text-gray-500">Total Subcategories</div>
             </div>

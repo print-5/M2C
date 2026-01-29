@@ -56,6 +56,11 @@ const vendorUploadFields = upload.fields([
   { name: 'otherDocuments', maxCount: 5 }
 ]);
 
+// Single file upload for specific fields
+const singleFileUpload = (fieldName) => {
+  return upload.single(fieldName);
+};
+
 // Error handling middleware for multer
 const handleUploadError = (error, req, res, next) => {
   if (error instanceof multer.MulterError) {
@@ -88,5 +93,6 @@ const handleUploadError = (error, req, res, next) => {
 module.exports = {
   upload,
   vendorUploadFields,
+  singleFileUpload,
   handleUploadError
 };
