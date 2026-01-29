@@ -105,7 +105,8 @@ export default function Sidebar() {
       <nav className="flex-1 space-y-1 px-3 py-4 overflow-y-auto">
         {sidebarItems.map((item) => {
           const Icon = item.icon
-          const isActive = pathname === item.href
+          // Check if current path starts with the item href (for nested routes)
+          const isActive = pathname === item.href || (item.href !== '/admin/dashboard' && pathname.startsWith(item.href))
           
           return (
             <Link
