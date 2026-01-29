@@ -38,8 +38,7 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [emailError, setEmailError] = useState("")
-  const [passwordError, setPasswordError] = useState("")
-  const [passwordStrength, setPasswordStrength] = useState("")
+
   const emailInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
@@ -66,8 +65,6 @@ export default function AdminLogin() {
     // Real-time validation
     if (name === 'email') {
       validateEmail(value)
-    } else if (name === 'password') {
-      validatePassword(value)
     }
   }
 
@@ -86,61 +83,8 @@ export default function AdminLogin() {
     return true
   }
 
-  // Password validation and strength indicator
-  const validatePassword = (value: string) => {
-    if (!value) {
-      setPasswordError("")
-      setPasswordStrength("")
-      return true
-    }
 
-    if (value.length < 8) {
-      setPasswordError("Password must be at least 8 characters")
-      setPasswordStrength("weak")
-      return false
-    }
 
-    setPasswordError("")
-
-    // Calculate password strength
-    let strength = "weak"
-    if (value.length >= 12 && /[A-Z]/.test(value) && /[0-9]/.test(value) && /[!@#$%^&*]/.test(value)) {
-      strength = "strong"
-    } else if (value.length >= 10 && /[A-Z]/.test(value) && /[0-9]/.test(value)) {
-      strength = "medium"
-    } else if (value.length >= 8) {
-      strength = "weak"
-    }
-
-    setPasswordStrength(strength)
-    return true
-  }
-
-  const getPasswordStrengthColor = (strength: string) => {
-    switch (strength) {
-      case "strong":
-        return "bg-green-500"
-      case "medium":
-        return "bg-yellow-500"
-      case "weak":
-        return "bg-red-500"
-      default:
-        return "bg-gray-300"
-    }
-  }
-
-  const getPasswordStrengthLabel = (strength: string) => {
-    switch (strength) {
-      case "strong":
-        return "Strong"
-      case "medium":
-        return "Medium"
-      case "weak":
-        return "Weak"
-      default:
-        return ""
-    }
-  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -365,12 +309,7 @@ export default function AdminLogin() {
                       name="password"
                       value={loginData.password}
                       onChange={handleLoginChange}
-                      onBlur={() => validatePassword(loginData.password)}
-                      className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:border-[#455a64] transition-all duration-200 bg-white text-gray-900 placeholder-gray-500 ${
-                        passwordError
-                          ? "border-red-500 focus:ring-red-200"
-                          : "border-gray-300 focus:ring-[#455a64]"
-                      }`}
+                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:border-[#455a64] focus:ring-[#455a64] transition-all duration-200 bg-white text-gray-900 placeholder-gray-500"
                       placeholder="Enter your password"
                       required
                     />
@@ -389,51 +328,6 @@ export default function AdminLogin() {
                       )}
                     </button>
                   </div>
-
-                  {/* Password Error Message */}
-                  {passwordError && (
-                    <div className="flex items-center mt-2 text-red-600 text-sm">
-                      <AlertCircle className="w-4 h-4 mr-1.5" />
-                      {passwordError}
-                    </div>
-                  )}
-
-                  {/* Password Strength Indicator */}
-                  {loginData.password && !passwordError && (
-                    <div className="mt-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-medium text-gray-600">
-                          Password Strength
-                        </span>
-                        <span
-                          className={`text-xs font-semibold ${
-                            passwordStrength === "strong"
-                              ? "text-green-600"
-                              : passwordStrength === "medium"
-                              ? "text-yellow-600"
-                              : "text-red-600"
-                          }`}
-                        >
-                          {getPasswordStrengthLabel(passwordStrength)}
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor(
-                            passwordStrength
-                          )}`}
-                          style={{
-                            width:
-                              passwordStrength === "weak"
-                                ? "33%"
-                                : passwordStrength === "medium"
-                                ? "66%"
-                                : "100%",
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 {/* Remember & Forgot */}
