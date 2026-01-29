@@ -201,13 +201,13 @@ export default function Inventory() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[#222222]">Product</TableHead>
-                <TableHead className="text-[#222222]">SKU</TableHead>
-                <TableHead className="text-[#222222]">Category</TableHead>
-                <TableHead className="text-[#222222]">Stock</TableHead>
-                <TableHead className="text-[#222222]">Price</TableHead>
-                <TableHead className="text-[#222222]">Status</TableHead>
-                <TableHead className="text-[#222222]">Actions</TableHead>
+                <TableHead>Product</TableHead>
+                <TableHead >SKU</TableHead>
+                <TableHead >Category</TableHead>
+                <TableHead >Stock</TableHead>
+                <TableHead >Price</TableHead>
+                <TableHead >Status</TableHead>
+                <TableHead >Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

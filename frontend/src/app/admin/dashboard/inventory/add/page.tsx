@@ -1,5 +1,5 @@
 import { Breadcrumb } from '@/components/AdminDashboard/Breadcrumb/Breadcrumb'
-import AddEditCategory from '@/components/AdminDashboard/Categories/AddEditCategory'
+import AddEditInventory from '@/components/AdminDashboard/Inventory/AddEditInventory'
 
 export default function AddCategoryPage() {
   return (
@@ -8,7 +8,7 @@ export default function AddCategoryPage() {
       <Breadcrumb />
       
       {/* Add Category Form */}
-      <AddEditCategory />
+      <AddEditInventory isEdit={false} />
     </div>
   )
 }

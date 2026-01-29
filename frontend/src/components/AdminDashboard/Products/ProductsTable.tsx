@@ -92,7 +92,7 @@ export default function ProductsTable() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Products Management</CardTitle>
-          <Link href="/dashboard/products/add">
+          <Link href="/admin/dashboard/products/add">
             <Button className="bg-[#313131] text-white hover:bg-[#222222]">
               Add Product
             </Button>
