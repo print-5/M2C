@@ -34,7 +34,9 @@ export const useVendorAuth = () => {
       setLoading(true);
       setError(null);
       const result = await VendorService.loginVendor(email, password);
-      setVendor(result.vendor);
+      // Fetch full profile after successful login
+      const profile = await VendorService.getVendorProfile();
+      setVendor(profile.vendor);
       return result;
     } catch (error: any) {
       setError(error.message);
