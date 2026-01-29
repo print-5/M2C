@@ -171,7 +171,103 @@ export interface VendorFilters {
   limit?: number;
 }
 
+// Vendor Settings Interfaces
+export interface VendorBasicInfo {
+  companyName: string;
+  companyDescription?: string;
+  businessPhone: string;
+  businessEmail: string;
+  website?: string;
+  businessAddress: string;
+  businessCity: string;
+  businessState: string;
+  businessZipCode: string;
+  businessCountry: string;
+}
+
+export interface VendorOwnerInfo {
+  ownerName: string;
+  ownerEmail: string;
+  ownerPhone: string;
+  ownerAddress: string;
+  ownerCity: string;
+  ownerState: string;
+  ownerZipCode: string;
+  ownerCountry: string;
+}
+
+export interface VendorBankDetails {
+  id?: string;
+  bankName: string;
+  accountNumber: string;
+  ifscCode: string;
+  accountType: string;
+  accountHolderName: string;
+  branchName?: string;
+  branchAddress?: string;
+  isVerified?: boolean;
+  verifiedAt?: string;
+}
+
+export interface VendorDocument {
+  id: string;
+  type: string;
+  name: string;
+  documentUrl: string;
+  uploadedAt: string;
+}
+
+export interface VendorCertification {
+  id: string;
+  name: string;
+  issuedBy: string;
+  certificateNumber?: string;
+  issuedDate?: string;
+  expiryDate?: string;
+  documentUrl?: string;
+}
+
+export interface VendorPreferences {
+  shippingMethods: string[];
+  deliveryTime?: string;
+  minimumOrderQuantity?: string;
+  paymentTerms: string[];
+  productCategories: string[];
+  specializations: string[];
+}
+
 class VendorService {
+  // Get vendor token from localStorage
+  private static getVendorToken(): string | null {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('vendorToken');
+  }
+
+  // Get vendor auth headers
+  private static getVendorAuthHeaders(): Record<string, string> {
+    const token = this.getVendorToken();
+    if (!token) {
+      throw new Error('No vendor authentication token found');
+    }
+    
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
+  }
+
+  // Get vendor auth headers for FormData
+  private static getVendorAuthHeadersFormData(): Record<string, string> {
+    const token = this.getVendorToken();
+    if (!token) {
+      throw new Error('No vendor authentication token found');
+    }
+    
+    return {
+      'Authorization': `Bearer ${token}`
+    };
+  }
+
   // Get admin token from auth system
   private static getAdminToken(): string | null {
     const auth = getStoredAuth();
@@ -458,6 +554,364 @@ class VendorService {
     if (typeof window === 'undefined') return null;
     const data = localStorage.getItem('vendorData');
     return data ? JSON.parse(data) : null;
+  }
+
+  // ============================================
+  // VENDOR SETTINGS API METHODS
+  // ============================================
+
+  // Update vendor basic information
+  static async updateVendorBasicInfo(basicInfo: VendorBasicInfo) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/profile/basic`, {
+        method: 'PUT',
+        headers: this.getVendorAuthHeaders(),
+        body: JSON.stringify(basicInfo)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update basic information');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Update vendor basic info error:', error);
+      throw error;
+    }
+  }
+
+  // Update vendor owner information
+  static async updateVendorOwnerInfo(ownerInfo: VendorOwnerInfo) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/profile/owner`, {
+        method: 'PUT',
+        headers: this.getVendorAuthHeaders(),
+        body: JSON.stringify(ownerInfo)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update owner information');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Update vendor owner info error:', error);
+      throw error;
+    }
+  }
+
+  // Upload vendor logo
+  static async uploadVendorLogo(logoFile: File) {
+    try {
+      const formData = new FormData();
+      formData.append('logo', logoFile);
+
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/profile/logo`, {
+        method: 'POST',
+        headers: this.getVendorAuthHeadersFormData(),
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to upload logo');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Upload vendor logo error:', error);
+      throw error;
+    }
+  }
+
+  // Update vendor preferences
+  static async updateVendorPreferences(preferences: VendorPreferences) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/preferences`, {
+        method: 'PUT',
+        headers: this.getVendorAuthHeaders(),
+        body: JSON.stringify(preferences)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update preferences');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Update vendor preferences error:', error);
+      throw error;
+    }
+  }
+
+  // Get vendor bank details
+  static async getVendorBankDetails(): Promise<{ bankDetails: VendorBankDetails | null }> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/bank-details`, {
+        method: 'GET',
+        headers: this.getVendorAuthHeaders()
+      });
+
+      if (response.status === 404) {
+        // Return null for bank details if not found, don't throw error
+        return { bankDetails: null };
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch bank details');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Get vendor bank details error:', error);
+      throw error;
+    }
+  }
+
+  // Create or update vendor bank details
+  static async upsertVendorBankDetails(bankDetails: VendorBankDetails) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/bank-details`, {
+        method: 'PUT',
+        headers: this.getVendorAuthHeaders(),
+        body: JSON.stringify(bankDetails)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save bank details');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Upsert vendor bank details error:', error);
+      throw error;
+    }
+  }
+
+  // Get vendor documents
+  static async getVendorDocuments(): Promise<{ documents: VendorDocument[] }> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/documents`, {
+        method: 'GET',
+        headers: this.getVendorAuthHeaders()
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch documents');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Get vendor documents error:', error);
+      throw error;
+    }
+  }
+
+  // Upload vendor document
+  static async uploadVendorDocument(documentFile: File, type: string, name: string) {
+    try {
+      const formData = new FormData();
+      formData.append('document', documentFile);
+      formData.append('type', type);
+      formData.append('name', name);
+
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/documents`, {
+        method: 'POST',
+        headers: this.getVendorAuthHeadersFormData(),
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to upload document');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Upload vendor document error:', error);
+      throw error;
+    }
+  }
+
+  // Delete vendor document
+  static async deleteVendorDocument(documentId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/documents/${documentId}`, {
+        method: 'DELETE',
+        headers: this.getVendorAuthHeaders()
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete document');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Delete vendor document error:', error);
+      throw error;
+    }
+  }
+
+  // Change vendor password
+  static async changeVendorPassword(currentPassword: string, newPassword: string, confirmPassword: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/password`, {
+        method: 'PUT',
+        headers: this.getVendorAuthHeaders(),
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+          confirmPassword
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to change password');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Change vendor password error:', error);
+      throw error;
+    }
+  }
+
+  // Get vendor certifications
+  static async getVendorCertifications(): Promise<{ certifications: VendorCertification[] }> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/certifications`, {
+        method: 'GET',
+        headers: this.getVendorAuthHeaders()
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch certifications');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Get vendor certifications error:', error);
+      throw error;
+    }
+  }
+
+  // Add vendor certification
+  static async addVendorCertification(
+    certificationData: Omit<VendorCertification, 'id'>,
+    certificateFile?: File
+  ) {
+    try {
+      const formData = new FormData();
+      
+      if (certificateFile) {
+        formData.append('certificate', certificateFile);
+      }
+      
+      formData.append('name', certificationData.name);
+      formData.append('issuedBy', certificationData.issuedBy);
+      
+      if (certificationData.certificateNumber) {
+        formData.append('certificateNumber', certificationData.certificateNumber);
+      }
+      if (certificationData.issuedDate) {
+        formData.append('issuedDate', certificationData.issuedDate);
+      }
+      if (certificationData.expiryDate) {
+        formData.append('expiryDate', certificationData.expiryDate);
+      }
+
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/certifications`, {
+        method: 'POST',
+        headers: this.getVendorAuthHeadersFormData(),
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to add certification');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Add vendor certification error:', error);
+      throw error;
+    }
+  }
+
+  // Update vendor certification
+  static async updateVendorCertification(
+    certificationId: string,
+    certificationData: Partial<Omit<VendorCertification, 'id'>>,
+    certificateFile?: File
+  ) {
+    try {
+      const formData = new FormData();
+      
+      if (certificateFile) {
+        formData.append('certificate', certificateFile);
+      }
+      
+      if (certificationData.name) {
+        formData.append('name', certificationData.name);
+      }
+      if (certificationData.issuedBy) {
+        formData.append('issuedBy', certificationData.issuedBy);
+      }
+      if (certificationData.certificateNumber) {
+        formData.append('certificateNumber', certificationData.certificateNumber);
+      }
+      if (certificationData.issuedDate) {
+        formData.append('issuedDate', certificationData.issuedDate);
+      }
+      if (certificationData.expiryDate) {
+        formData.append('expiryDate', certificationData.expiryDate);
+      }
+
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/certifications/${certificationId}`, {
+        method: 'PUT',
+        headers: this.getVendorAuthHeadersFormData(),
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update certification');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Update vendor certification error:', error);
+      throw error;
+    }
+  }
+
+  // Delete vendor certification
+  static async deleteVendorCertification(certificationId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/vendor-settings/certifications/${certificationId}`, {
+        method: 'DELETE',
+        headers: this.getVendorAuthHeaders()
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete certification');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Delete vendor certification error:', error);
+      throw error;
+    }
   }
 }
 
