@@ -91,7 +91,28 @@ const Header = () => {
 
   // Check if admin is logged in
   useEffect(() => {
-    setIsAdminLoggedIn(isAuthenticated());
+    const checkAdminAuth = () => {
+      const adminLoggedIn = isAuthenticated()
+      setIsAdminLoggedIn(adminLoggedIn)
+    }
+    
+    // Check immediately and also on storage changes
+    checkAdminAuth()
+    
+    // Listen for storage changes (in case user logs in/out in another tab)
+    const handleStorageChange = () => {
+      checkAdminAuth()
+    }
+    
+    window.addEventListener('storage', handleStorageChange)
+    
+    // Also check periodically in case of same-tab changes
+    const interval = setInterval(checkAdminAuth, 1000)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      clearInterval(interval)
+    }
   }, []);
 
   const isActiveLink = (href: string) => {

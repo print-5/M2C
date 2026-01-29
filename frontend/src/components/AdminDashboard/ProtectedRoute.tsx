@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { isAuthenticated, getStoredAuth } from '@/lib/auth'
+import { getStoredAuth } from '@/lib/auth'
 import LoadingSpinner from '@/components/UI/LoadingSpinner'
 
 interface ProtectedRouteProps {
@@ -15,26 +15,39 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter()
 
   useEffect(() => {
-    const checkAuth = () => {
+    const checkAuth = async () => {
       try {
-        const authenticated = isAuthenticated()
+        // Wait a bit to ensure storage is ready
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
         const auth = getStoredAuth()
         
-        if (!authenticated || !auth || auth.user.role.toLowerCase() !== 'admin') {
-          router.push('/admin/login')
+        if (!auth) {
+          console.log('ProtectedRoute: No auth found, redirecting to login')
+          router.replace('/admin/login')
           return
         }
         
+        if (!auth.user || auth.user.role.toLowerCase() !== 'admin') {
+          console.log('ProtectedRoute: User is not admin, redirecting to login')
+          router.replace('/admin/login')
+          return
+        }
+        
+        console.log('ProtectedRoute: Auth successful, user is admin')
         setIsAuthorized(true)
       } catch (error) {
-        console.error('Auth check error:', error)
-        router.push('/admin/login')
+        console.error('ProtectedRoute: Auth check error:', error)
+        router.replace('/admin/login')
       } finally {
         setIsLoading(false)
       }
     }
 
-    checkAuth()
+    // Only run in browser environment
+    if (typeof window !== 'undefined') {
+      checkAuth()
+    }
   }, [router])
 
   if (isLoading) {

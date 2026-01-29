@@ -19,6 +19,11 @@ const USER_KEY = 'adminUser'
 // Get stored authentication data
 export function getStoredAuth(): AuthTokens | null {
   try {
+    // Ensure we're in browser environment
+    if (typeof window === 'undefined') {
+      return null
+    }
+    
     // Check sessionStorage first, then localStorage
     let token = sessionStorage.getItem(TOKEN_KEY)
     let userStr = sessionStorage.getItem(USER_KEY)
@@ -33,6 +38,13 @@ export function getStoredAuth(): AuthTokens | null {
     }
     
     const user = JSON.parse(userStr)
+    
+    // Validate user object has required properties
+    if (!user || !user.id || !user.role) {
+      console.warn('Invalid user data found in storage')
+      return null
+    }
+    
     return { token, user }
   } catch (error) {
     console.error('Error getting stored auth:', error)
@@ -69,8 +81,13 @@ export function clearAuth(): void {
 
 // Check if user is authenticated
 export function isAuthenticated(): boolean {
-  const auth = getStoredAuth()
-  return auth !== null && auth.user.role.toLowerCase() === 'admin'
+  try {
+    const auth = getStoredAuth()
+    return auth !== null && auth.user && auth.user.role && auth.user.role.toLowerCase() === 'admin'
+  } catch (error) {
+    console.error('Error in isAuthenticated:', error)
+    return false
+  }
 }
 
 // Get authorization header for API calls
