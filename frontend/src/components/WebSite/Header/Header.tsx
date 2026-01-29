@@ -12,10 +12,12 @@ import {
   ChevronDown,
   X,
   User,
+  Settings,
 } from "lucide-react";
 import { IconUserFilled } from '@tabler/icons-react';
 import { categories } from "@/components/mockData/products";
 import Category from "./CategoryBar/CategoryBar";
+import { getStoredAuth, isAuthenticated } from "@/lib/auth";
 
 const Header = () => {
   const pathname = usePathname();
@@ -28,6 +30,7 @@ const Header = () => {
   const [selectedLanguage, setSelectedLanguage] = useState("English");
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
   const languageDropdownRef = useRef<HTMLDivElement>(null);
@@ -85,6 +88,11 @@ const Header = () => {
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
+
+  // Check if admin is logged in
+  useEffect(() => {
+    setIsAdminLoggedIn(isAuthenticated());
+  }, []);
 
   const isActiveLink = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -309,6 +317,19 @@ const Header = () => {
                 {showAccountDropdown && (
                   <div className="absolute right-0 mt-2 w-48 sm:w-56 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="p-2 space-y-1">
+                      {isAdminLoggedIn && (
+                        <>
+                          <Link
+                            href="/admin/dashboard"
+                            className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm text-slate-700 hover:bg-gray-50 hover:text-gray-600 transition-all duration-150 font-medium"
+                            onClick={() => setShowAccountDropdown(false)}
+                          >
+                            <Settings className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                            <span>Admin Dashboard</span>
+                          </Link>
+                          <hr className="my-2 border-slate-100" />
+                        </>
+                      )}
                       <Link
                         href="/profile"
                         className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm text-slate-700 hover:bg-gray-50 hover:text-gray-600 transition-all duration-150 font-medium"
@@ -424,6 +445,20 @@ const Header = () => {
               </Link>
 
               <hr className="my-3 sm:my-4 border-slate-200" />
+
+              {isAdminLoggedIn && (
+                <>
+                  <Link
+                    href="/admin/dashboard"
+                    className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-slate-700 hover:bg-slate-100 hover:text-gray-600 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Settings className="w-4 h-4" />
+                    Admin Dashboard
+                  </Link>
+                  <hr className="my-3 sm:my-4 border-slate-200" />
+                </>
+              )}
 
               <Link
                 href="/profile"

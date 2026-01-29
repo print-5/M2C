@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { Button } from '@/components/UI/Button'
 import { Badge } from '@/components/UI/Badge'
 import { getStoredAuth, logout } from '@/lib/auth'
@@ -26,7 +27,8 @@ import {
   Warehouse,
   Receipt,
   Edit3,
-  Search
+  Search,
+  Home
 } from 'lucide-react'
 
 interface HeaderProps {
@@ -185,6 +187,14 @@ export default function Header({ onMenuToggle, isSidebarOpen = true }: HeaderPro
 
           {/* Right Section */}
           <div className="flex items-center space-x-3">
+            {/* Go to Website Link */}
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                <Home className="h-4 w-4" />
+                <span className="hidden md:inline">Go to Website</span>
+              </Button>
+            </Link>
+
             {/* Search Button - Mobile */}
             <Button
               variant="ghost"
