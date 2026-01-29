@@ -13,7 +13,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Link href={`/products/${product.id}`} className="block h-full">
       <div className="bg-white font-sans rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col cursor-pointer">
-        <div className="relative h-45 sm:h-75 w-full overflow-hidden flex-shrink-0">
+        <div className="relative h-45 sm:h-75 w-full overflow-hidden shrink-0">
           <Image
             src={product.images[0]}
             alt={product.name}
@@ -39,7 +39,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               <span className="text-xs sm:text-sm text-gray-600 font-medium">{product.category}</span>
             </div>
             
-            <h3 className="text-sm sm:text-lg font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[2.5rem] sm:min-h-[3rem]">
+            <h3 className="text-sm sm:text-lg font-semibold text-gray-900 mb-2 line-clamp-2 min-h-10 sm:min-h-12">
               {product.name}
             </h3>
             
@@ -61,7 +61,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
           
           {/* Bottom content - fixed at bottom */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <div className="flex items-center space-x-2">
               <span className="text-xl font-bold text-gray-900">
                 ${product.price}
