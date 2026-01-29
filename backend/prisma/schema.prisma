@@ -1,0 +1,362 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+// ============================================
+// AUTH & USER MANAGEMENT
+// ============================================
+
+model Admin {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  password      String?   // Optional for Google OAuth users
+  name          String
+  image         String?
+  isActive      Boolean   @default(true)
+  isVerified    Boolean   @default(false)
+  googleId      String?   @unique
+  provider      String    @default("local") // "local" or "google"
+  lastLogin     DateTime?
+  resetToken    String?
+  resetTokenExpiry DateTime?
+  verificationToken String?
+  
+  // FCM Push Notification Tokens (Multi-device support)
+  fcmTokens     Json[]    @default([]) // Array of { token, device, lastUsed }
+  
+  // Additional admin profile fields
+  phoneNumber   String?
+  address       String?
+  city          String?
+  state         String?
+  zipCode       String?
+  country       String?
+  dateOfBirth   DateTime?
+  currency      String?   @default("INR") // Admin's preferred currency
+  
+  // Business Information
+  companyName   String?   // Company/Business name
+  gstNumber     String?   // GST/Tax identification number
+  
+  // Onboarding Configuration (IMMUTABLE after completion)
+  onboardingCompleted Boolean @default(false)
+  
+  // Working Hours Configuration
+  workingHours  WorkingHour[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("admins")
+}
+
+model WorkingHour {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  adminId   String  @db.ObjectId
+  day       String  // "Monday", "Tuesday", etc.
+  enabled   Boolean @default(true)
+  startTime String  // "00:00" format
+  endTime   String  // "23:59" format
+  
+  admin     Admin   @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([adminId, day])
+  @@map("working_hours")
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  password      String?   // Optional for Google OAuth users
+  name          String
+  image         String?
+  isActive      Boolean   @default(true)
+  isVerified    Boolean   @default(false)
+  googleId      String?   @unique
+  provider      String    @default("local") // "local" or "google"
+  lastLogin     DateTime?
+  resetToken    String?
+  resetTokenExpiry DateTime?
+  verificationToken String?
+  
+
+  
+  // Additional user profile fields
+  phoneNumber   String? 
+  address       String?
+  city          String?
+  state         String?
+  zipCode       String?
+  country       String?
+  dateOfBirth   DateTime?
+  
+  // Multiple addresses support
+  addresses     Address[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+ 
+
+model Session {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+model Address {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type      String   // home, work, other
+  name      String?
+  phone     String?
+  address   String
+  city      String
+  state     String
+  zipCode   String
+  country   String
+  isDefault Boolean  @default(false)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("addresses")
+}
+// ============================================
+// VENDOR MANAGEMENT
+// ============================================
+
+model Vendor {
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  email                 String    @unique
+  password              String?
+  
+  // Application Status
+  status                VendorStatus @default(PENDING)
+  rejectionReason       String?
+  approvedAt            DateTime?
+  rejectedAt            DateTime?
+  suspendedAt           DateTime?
+  
+  // Owner Profile
+  ownerName             String
+  ownerEmail            String
+  ownerPhone            String
+  ownerAddress          String
+  ownerCity             String
+  ownerState            String
+  ownerZipCode          String
+  ownerCountry          String    @default("India")
+  ownerPhoto            String?   // Cloudinary URL
+  
+  // Company Details
+  companyName           String
+  companyType           CompanyType
+  establishedYear       Int
+  companyDescription    String?
+  companyLogo           String?   // Cloudinary URL
+  
+  // Contact & Trade Information
+  businessPhone         String
+  businessEmail         String
+  businessAddress       String
+  businessCity          String
+  businessState         String
+  businessZipCode       String
+  businessCountry       String    @default("India")
+  website               String?
+  
+  // Trade Information
+  annualTurnover        String
+  exportExperience      Boolean   @default(false)
+  exportCountries       String[]  @default([])
+  primaryMarkets        String[]  @default([])
+  
+  // Manufacturing Facilities
+  factoryAddress        String?
+  factoryCity           String?
+  factoryState          String?
+  factoryZipCode        String?
+  factoryCountry        String?   @default("India")
+  factorySize           String?   // e.g., "10000 sq ft"
+  productionCapacity    String?   // e.g., "1000 units/month"
+  qualityControl        String?   // Quality control measures
+  
+  // Warehouse Details
+  warehouseAddress      String?
+  warehouseCity         String?
+  warehouseState        String?
+  warehouseZipCode      String?
+  warehouseCountry      String?   @default("India")
+  warehouseSize         String?
+  storageCapacity       String?
+  
+  // Vendor Type & Products
+  vendorType            VendorType
+  productCategories     String[]  @default([])
+  productTypes          String[]  @default([])
+  specializations       String[]  @default([])
+  
+  // Certifications & Logistics
+  certifications        VendorCertification[]
+  documents             VendorDocument[]
+  
+  // Logistics Information
+  shippingMethods       String[]  @default([])
+  deliveryTime          String?   // e.g., "7-15 days"
+  minimumOrderQuantity  String?
+  paymentTerms          String[]  @default([])
+  
+  // Additional Information
+  bankDetails           VendorBankDetails?
+  references            VendorReference[]
+  
+  // System fields
+  applicationStep       Int       @default(1) // Current step in application process
+  completedSteps        Int[]     @default([]) // Array of completed step numbers
+  submittedAt           DateTime?
+  lastLoginAt           DateTime?
+  
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("vendors")
+}
+
+model VendorCertification {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  vendorId      String   @db.ObjectId
+  vendor        Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  name          String   // e.g., "ISO 9001", "GOTS", "OEKO-TEX"
+  issuedBy      String   // Issuing authority
+  certificateNumber String?
+  issuedDate    DateTime?
+  expiryDate    DateTime?
+  documentUrl   String?  // Cloudinary URL
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("vendor_certifications")
+}
+
+model VendorDocument {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  vendorId      String   @db.ObjectId
+  vendor        Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  type          DocumentType
+  name          String
+  documentUrl   String   // Cloudinary URL
+  uploadedAt    DateTime @default(now())
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("vendor_documents")
+}
+
+model VendorBankDetails {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  vendorId      String   @unique @db.ObjectId
+  vendor        Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  bankName      String
+  accountNumber String
+  ifscCode      String
+  accountType   String   // Savings, Current, etc.
+  branchName    String?
+  branchAddress String?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("vendor_bank_details")
+}
+
+model VendorReference {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  vendorId      String   @db.ObjectId
+  vendor        Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  companyName   String
+  contactPerson String
+  email         String
+  phone         String
+  relationship  String   // e.g., "Client", "Supplier", "Partner"
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("vendor_references")
+}
+
+// Enums for Vendor Management
+enum VendorStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum CompanyType {
+  MANUFACTURER
+  TRADER
+  EXPORTER
+  IMPORTER
+  DISTRIBUTOR
+  WHOLESALER
+  RETAILER
+}
+
+enum VendorType {
+  TEXTILE_MANUFACTURER
+  GARMENT_MANUFACTURER
+  FABRIC_SUPPLIER
+  YARN_SUPPLIER
+  ACCESSORIES_SUPPLIER
+  PACKAGING_SUPPLIER
+  MACHINERY_SUPPLIER
+  CHEMICAL_SUPPLIER
+  DYES_SUPPLIER
+  TRADING_COMPANY
+}
+
+enum DocumentType {
+  COMPANY_REGISTRATION
+  GST_CERTIFICATE
+  PAN_CARD
+  TRADE_LICENSE
+  EXPORT_LICENSE
+  FACTORY_LICENSE
+  POLLUTION_CERTIFICATE
+  FIRE_SAFETY_CERTIFICATE
+  BANK_STATEMENT
+  AUDITED_FINANCIALS
+  PRODUCT_CATALOG
+  QUALITY_CERTIFICATES
+  INSURANCE_CERTIFICATE
+  OTHER
+}
