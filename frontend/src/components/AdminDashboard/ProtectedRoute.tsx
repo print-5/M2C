@@ -17,24 +17,21 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Wait a bit to ensure storage is ready
-        await new Promise(resolve => setTimeout(resolve, 100))
+        // Wait a bit longer to ensure storage is ready, especially for new tabs
+        await new Promise(resolve => setTimeout(resolve, 200))
         
         const auth = getStoredAuth()
         
         if (!auth) {
-          console.log('ProtectedRoute: No auth found, redirecting to login')
           router.replace('/admin/login')
           return
         }
         
         if (!auth.user || auth.user.role.toLowerCase() !== 'admin') {
-          console.log('ProtectedRoute: User is not admin, redirecting to login')
           router.replace('/admin/login')
           return
         }
         
-        console.log('ProtectedRoute: Auth successful, user is admin')
         setIsAuthorized(true)
       } catch (error) {
         console.error('ProtectedRoute: Auth check error:', error)
@@ -50,6 +47,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     }
   }, [router])
 
+  // Show loading for a bit longer to ensure proper auth check
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">

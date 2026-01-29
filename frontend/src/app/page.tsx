@@ -11,29 +11,36 @@ import TopSelling from '@/components/WebSite/Featured/TopSelling';
 import BestSeller from '@/components/WebSite/Featured/BestSeller';
 import ValueSection from '@/components/WebSite/Footer/ValueSection';
 import { isAuthenticated } from '@/lib/auth';
+import VendorService from '@/services/vendorService';
 
 export default function Home() {
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false)
+  const [isVendorLoggedIn, setIsVendorLoggedIn] = useState(false)
 
-  // Check if admin is logged in
+  // Check authentication status
   useEffect(() => {
-    const checkAdminAuth = () => {
+    const checkAuth = () => {
+      // Check admin authentication
       const adminLoggedIn = isAuthenticated()
       setIsAdminLoggedIn(adminLoggedIn)
+      
+      // Check vendor authentication
+      const vendorLoggedIn = VendorService.isLoggedIn()
+      setIsVendorLoggedIn(vendorLoggedIn)
     }
     
     // Check immediately and also on storage changes
-    checkAdminAuth()
+    checkAuth()
     
     // Listen for storage changes (in case user logs in/out in another tab)
     const handleStorageChange = () => {
-      checkAdminAuth()
+      checkAuth()
     }
     
     window.addEventListener('storage', handleStorageChange)
     
     // Also check periodically in case of same-tab changes
-    const interval = setInterval(checkAdminAuth, 1000)
+    const interval = setInterval(checkAuth, 1000)
     
     return () => {
       window.removeEventListener('storage', handleStorageChange)
@@ -55,21 +62,17 @@ export default function Home() {
         {/* Admin Dashboard - Only show if admin is logged in, otherwise go to login */}
         <Link 
           href={isAdminLoggedIn ? "/admin/dashboard" : "/admin/login"} 
-          target="_blank" 
-          rel="noopener noreferrer" 
           className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center"
         >
           {isAdminLoggedIn ? "Dashboard" : "Admin Login"}
         </Link>
         
-        {/* Vendor Dashboard */}
+        {/* Vendor Dashboard - Only show if vendor is logged in, otherwise go to login */}
         <Link 
-          href="/vendor/dashboard" 
-          target="_blank" 
-          rel="noopener noreferrer" 
+          href={isVendorLoggedIn ? "/vendor/dashboard" : "/vendor/login"} 
           className="px-6 py-3 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 transition-colors text-center"
         >
-          Vendor Dashboard
+          {isVendorLoggedIn ? "Vendor Dashboard" : "Vendor Login"}
         </Link>
         
         {/* Vendor Registration */}
