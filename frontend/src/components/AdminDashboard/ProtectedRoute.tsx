@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { isAuthenticated, getStoredAuth } from '@/lib/auth'
+import { getStoredAuth } from '@/lib/auth'
 import LoadingSpinner from '@/components/UI/LoadingSpinner'
 
 interface ProtectedRouteProps {
@@ -15,28 +15,39 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter()
 
   useEffect(() => {
-    const checkAuth = () => {
+    const checkAuth = async () => {
       try {
-        const authenticated = isAuthenticated()
+        // Wait a bit longer to ensure storage is ready, especially for new tabs
+        await new Promise(resolve => setTimeout(resolve, 200))
+        
         const auth = getStoredAuth()
         
-        if (!authenticated || !auth || auth.user.role.toLowerCase() !== 'admin') {
-          router.push('/admin/login')
+        if (!auth) {
+          router.replace('/admin/login')
+          return
+        }
+        
+        if (!auth.user || auth.user.role.toLowerCase() !== 'admin') {
+          router.replace('/admin/login')
           return
         }
         
         setIsAuthorized(true)
       } catch (error) {
-        console.error('Auth check error:', error)
-        router.push('/admin/login')
+        console.error('ProtectedRoute: Auth check error:', error)
+        router.replace('/admin/login')
       } finally {
         setIsLoading(false)
       }
     }
 
-    checkAuth()
+    // Only run in browser environment
+    if (typeof window !== 'undefined') {
+      checkAuth()
+    }
   }, [router])
 
+  // Show loading for a bit longer to ensure proper auth check
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">

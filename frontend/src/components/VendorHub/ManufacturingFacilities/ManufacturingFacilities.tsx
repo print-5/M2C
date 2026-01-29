@@ -132,7 +132,7 @@ export default function ManufacturingFacilities({ onNext, onPrev, onUpdateData, 
       <div className="space-y-6">
         {facilityTypes.map((facility) => {
           const Icon = facility.icon;
-          const isEnabled = formData.enabledFacilities[facility.id];
+          const isEnabled = Boolean(formData.enabledFacilities[facility.id]);
 
           return (
             <Card key={facility.id} className={isEnabled ? 'border-blue-200 bg-blue-50' : ''}>
