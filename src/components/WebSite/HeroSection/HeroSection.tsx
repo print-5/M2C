@@ -157,7 +157,7 @@ export default function HeroSection() {
           </div> */}
 
           {/* Auto-play control button */}
-          <button
+          {/* <button
             onClick={() => setIsAutoPlaying(!isAutoPlaying)}
             className="absolute top-4 right-4 z-20 bg-white/90 text-gray-800 hover:bg-white hover:text-gray-700 p-2 rounded-full transition-all duration-300 shadow-lg backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 hidden sm:block"
             aria-label={isAutoPlaying ? 'Pause slideshow' : 'Play slideshow'}
@@ -171,7 +171,7 @@ export default function HeroSection() {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
               </svg>
             )}
-          </button>
+          </button> */}
 
           {/* Touch/Swipe Area for Mobile */}
           <div 
