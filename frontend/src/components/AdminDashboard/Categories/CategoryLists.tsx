@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
 import { Button } from '@/components/UI/Button'
 import { Badge } from '@/components/UI/Badge'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/UI/Table'
+import Dropdown from '@/components/UI/Dropdown'
 import { Plus, Edit, Trash2, Eye, Search, Filter } from 'lucide-react'
 import Link from 'next/link'
 import { categoryService, Category, CategoryStats } from '@/services/categoryService'
@@ -79,8 +81,8 @@ export default function CategoryLists() {
   }
 
   const renderCategoryRow = (category: Category, isSubcategory = false) => (
-    <tr key={category.id} className={isSubcategory ? 'bg-gray-50' : ''}>
-      <td className="px-6 py-4 whitespace-nowrap">
+    <TableRow key={category.id} className={isSubcategory ? 'bg-gray-50' : ''}>
+      <TableCell>
         <div className="flex items-center">
           {!isSubcategory && category.subcategories.length > 0 && (
             <button
@@ -104,27 +106,27 @@ export default function CategoryLists() {
             <div className="text-sm text-gray-500">{category.slug}</div>
           </div>
         </div>
-      </td>
-      <td className="px-6 py-4">
+      </TableCell>
+      <TableCell>
         <div className="text-sm text-gray-900 max-w-xs truncate" title={category.description}>
           {category.description}
         </div>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap text-center">
+      </TableCell>
+      <TableCell className="text-center">
         <span className="text-sm font-medium text-gray-900">{category.productCount}</span>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap">
+      </TableCell>
+      <TableCell>
         <Badge 
           variant={category.status === 'ACTIVE' ? 'default' : 'secondary'}
           className={category.status === 'ACTIVE' ? 'bg-green-100 text-green-800 border-green-200' : ''}
         >
           {category.status.toLowerCase()}
         </Badge>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+      </TableCell>
+      <TableCell className="text-sm text-gray-500">
         {new Date(category.updatedAt).toLocaleDateString()}
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+      </TableCell>
+      <TableCell className="text-right">
         <div className="flex items-center justify-end space-x-2">
           <Link href={`/admin/dashboard/categories/view/${category.id}`}>
             <Button variant="ghost" size="sm">
@@ -145,8 +147,8 @@ export default function CategoryLists() {
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   )
 
   return (
@@ -183,15 +185,15 @@ export default function CategoryLists() {
             </div>
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-gray-500" />
-              <select
+              <Dropdown
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as 'all' | 'ACTIVE' | 'INACTIVE')}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-              >
-                <option value="all">All Status</option>
-                <option value="ACTIVE">Active</option>
-                <option value="INACTIVE">Inactive</option>
-              </select>
+                options={[
+                  { value: 'all', label: 'All Status' },
+                  { value: 'ACTIVE', label: 'Active' },
+                  { value: 'INACTIVE', label: 'Inactive' }
+                ]}
+                onChange={(value) => setStatusFilter(value as 'all' | 'ACTIVE' | 'INACTIVE')}
+              />
             </div>
           </div>
         </CardContent>
@@ -209,40 +211,27 @@ export default function CategoryLists() {
               <span className="ml-3 text-gray-600">Loading categories...</span>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Category Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Description
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Products
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Last Updated
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Category Name</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead className="text-center">Products</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Last Updated</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {filteredCategories.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center">
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-12">
                       <div className="text-gray-500">
                         <p className="text-lg font-medium">No categories found</p>
                         <p className="text-sm">Try adjusting your search or filter criteria</p>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ) : (
                   filteredCategories.map((category) => (
                     <>
@@ -254,9 +243,8 @@ export default function CategoryLists() {
                     </>
                   ))
                 )}
-              </tbody>
-            </table>
-          </div>
+              </TableBody>
+            </Table>
           )}
         </CardContent>
       </Card>
