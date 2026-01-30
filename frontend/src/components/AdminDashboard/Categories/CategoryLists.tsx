@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
 import { Button } from '@/components/UI/Button'
 import { Badge } from '@/components/UI/Badge'
@@ -144,12 +144,47 @@ const mockCategories: Category[] = [
     updatedAt: '2024-01-28'
   }
 ]
+import { categoryService, Category, CategoryStats } from '@/services/categoryService'
 
 export default function CategoryLists() {
-  const [categories] = useState<Category[]>(mockCategories)
+  const [categories, setCategories] = useState<Category[]>([])
+  const [stats, setStats] = useState<CategoryStats | null>(null)
+  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all')
+  const [statusFilter, setStatusFilter] = useState<'all' | 'ACTIVE' | 'INACTIVE'>('all')
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    loadCategories()
+    loadStats()
+  }, [searchTerm, statusFilter])
+
+  const loadCategories = async () => {
+    try {
+      setLoading(true)
+      const response = await categoryService.getCategories({
+        search: searchTerm || undefined,
+        status: statusFilter,
+        includeSubcategories: true,
+        sortBy: 'sortOrder',
+        sortOrder: 'asc'
+      })
+      setCategories(response.data)
+    } catch (error) {
+      console.error('Failed to load categories:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const loadStats = async () => {
+    try {
+      const response = await categoryService.getCategoryStats()
+      setStats(response.data)
+    } catch (error) {
+      console.error('Failed to load stats:', error)
+    }
+  }
 
   // Filter categories based on search and status
   const filteredCategories = categories.filter(category => {
@@ -169,10 +204,15 @@ export default function CategoryLists() {
     setExpandedCategories(newExpanded)
   }
 
-  const handleDelete = (categoryId: string) => {
+  const handleDelete = async (categoryId: string) => {
     if (confirm('Are you sure you want to delete this category? This action cannot be undone.')) {
-      console.log('Deleting category:', categoryId)
-      // Implement delete logic here
+      try {
+        await categoryService.deleteCategory(categoryId)
+        await loadCategories()
+        await loadStats()
+      } catch (error) {
+        alert(error instanceof Error ? error.message : 'Failed to delete category')
+      }
     }
   }
 
@@ -213,10 +253,10 @@ export default function CategoryLists() {
       </TableCell>
       <TableCell className="whitespace-nowrap">
         <Badge 
-          variant={category.status === 'active' ? 'default' : 'secondary'}
-          className={category.status === 'active' ? 'bg-green-100 text-green-800 border-green-200' : ''}
+          variant={category.status === 'ACTIVE' ? 'default' : 'secondary'}
+          className={category.status === 'ACTIVE' ? 'bg-green-100 text-green-800 border-green-200' : ''}
         >
-          {category.status}
+          {category.status.toLowerCase()}
         </Badge>
       </TableCell>
       <TableCell className="whitespace-nowrap text-sm text-gray-500">
@@ -284,13 +324,13 @@ export default function CategoryLists() {
               <Dropdown
                 id="statusFilter"
                 value={statusFilter}
-                options={[
-                  { value: 'all', label: 'All Status' },
-                  { value: 'active', label: 'Active' },
-                  { value: 'inactive', label: 'Inactive' }
-                ]}
-                onChange={(value) => setStatusFilter(value as 'all' | 'active' | 'inactive')}
-              />
+                onChange={(e) => setStatusFilter(e.target.value as 'all' | 'ACTIVE' | 'INACTIVE')}
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+              >
+                <option value="all">All Status</option>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+              </select>
             </div>
           </div>
         </CardContent>
@@ -302,52 +342,61 @@ export default function CategoryLists() {
           <CardTitle>Categories List</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-left">
-                  Category Name
-                </TableHead>
-                <TableHead className="text-left">
-                  Description
-                </TableHead>
-                <TableHead className="text-center">
-                  Products
-                </TableHead>
-                <TableHead className="text-left">
-                  Status
-                </TableHead>
-                <TableHead className="text-left">
-                  Last Updated
-                </TableHead>
-                <TableHead className="text-right">
-                  Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredCategories.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-12">
-                    <div className="text-gray-500">
-                      <p className="text-lg font-medium">No categories found</p>
-                      <p className="text-sm">Try adjusting your search or filter criteria</p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredCategories.map((category) => (
-                  <>
-                    {renderCategoryRow(category)}
-                    {expandedCategories.has(category.id) &&
-                      category.subcategories.map((subcategory) =>
-                        renderCategoryRow(subcategory, true)
-                      )}
-                  </>
-                ))
-              )}
-            </TableBody>
-          </Table>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-700"></div>
+              <span className="ml-3 text-gray-600">Loading categories...</span>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Category Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Description
+                  </th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Products
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Last Updated
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredCategories.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-12 text-center">
+                      <div className="text-gray-500">
+                        <p className="text-lg font-medium">No categories found</p>
+                        <p className="text-sm">Try adjusting your search or filter criteria</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredCategories.map((category) => (
+                    <>
+                      {renderCategoryRow(category)}
+                      {expandedCategories.has(category.id) &&
+                        category.subcategories.map((subcategory) =>
+                          renderCategoryRow(subcategory, true)
+                        )}
+                    </>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+          )}
         </CardContent>
       </Card>
 
@@ -356,7 +405,7 @@ export default function CategoryLists() {
         <Card>
           <CardContent className="p-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900">{categories.length}</div>
+              <div className="text-2xl font-bold text-gray-900">{stats?.total || 0}</div>
               <div className="text-sm text-gray-500">Total Categories</div>
             </div>
           </CardContent>
@@ -365,7 +414,7 @@ export default function CategoryLists() {
           <CardContent className="p-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
-                {categories.filter(c => c.status === 'active').length}
+                {stats?.active || 0}
               </div>
               <div className="text-sm text-gray-500">Active Categories</div>
             </div>
@@ -375,7 +424,7 @@ export default function CategoryLists() {
           <CardContent className="p-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">
-                {categories.reduce((sum, c) => sum + c.subcategories.length, 0)}
+                {stats?.subcategories || 0}
               </div>
               <div className="text-sm text-gray-500">Total Subcategories</div>
             </div>

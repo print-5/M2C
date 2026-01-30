@@ -180,6 +180,25 @@ const requireRole = (roles) => {
   };
 };
 
+// Require vendor role specifically
+const requireVendorRole = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      error: 'Authentication required'
+    });
+  }
+
+  if (req.user.role !== 'VENDOR') {
+    return res.status(403).json({
+      success: false,
+      error: 'Vendor access required'
+    });
+  }
+
+  next();
+};
+
 // Optional authentication (doesn't fail if no token)
 const optionalAuth = async (req, res, next) => {
   try {
@@ -258,5 +277,6 @@ const optionalAuth = async (req, res, next) => {
 module.exports = {
   authenticateToken,
   requireRole,
+  requireVendorRole,
   optionalAuth
 };

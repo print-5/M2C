@@ -29,33 +29,26 @@ interface SubcategoryFormData {
   image?: string
   sortOrder: number
 }
+import { categoryService, Category, CategoryFormData, SubcategoryFormData } from '@/services/categoryService'
 
 interface AddEditCategoryProps {
   categoryId?: string
   isEdit?: boolean
 }
 
-// Mock parent categories for subcategory selection
-const mockParentCategories = [
-  { id: '1', name: 'Bed Sheets' },
-  { id: '2', name: 'Towels' },
-  { id: '3', name: 'Curtains' },
-  { id: '4', name: 'Pillows' },
-  { id: '5', name: 'Blankets' }
-]
-
 export default function AddEditCategory({ categoryId, isEdit = false }: AddEditCategoryProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingData, setIsLoadingData] = useState(isEdit)
   const [activeTab, setActiveTab] = useState<'category' | 'subcategories'>('category')
+  const [parentCategories, setParentCategories] = useState<Category[]>([])
 
   const [categoryData, setCategoryData] = useState<CategoryFormData>({
     name: '',
     description: '',
     slug: '',
     parentId: '',
-    status: 'active',
+    status: 'ACTIVE',
     image: '',
     metaTitle: '',
     metaDescription: '',
@@ -67,70 +60,67 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
     name: '',
     description: '',
     slug: '',
-    status: 'active',
+    status: 'ACTIVE',
     sortOrder: 0
   })
 
   // Load category data for editing
   useEffect(() => {
+    loadParentCategories()
     if (isEdit && categoryId) {
-      setIsLoadingData(true)
-      
-      // Simulate API call to fetch category data
-      const loadCategoryData = async () => {
-        try {
-          await new Promise(resolve => setTimeout(resolve, 1000))
-          
-          // Mock category data for editing
-          setCategoryData({
-            name: 'Bed Sheets',
-            description: 'Premium quality bed sheets in various materials and sizes',
-            slug: 'bed-sheets',
-            status: 'active',
-            image: '/api/placeholder/300/200',
-            metaTitle: 'Premium Bed Sheets | Navnit Textiles',
-            metaDescription: 'Discover our collection of premium bed sheets made from the finest materials.',
-            sortOrder: 1
-          })
-
-          // Mock subcategories data
-          setSubcategories([
-            {
-              id: '1-1',
-              name: 'Cotton Sheets',
-              description: '100% cotton bed sheets',
-              slug: 'cotton-sheets',
-              status: 'active',
-              sortOrder: 1
-            },
-            {
-              id: '1-2',
-              name: 'Linen Sheets',
-              description: 'Natural linen bed sheets',
-              slug: 'linen-sheets',
-              status: 'active',
-              sortOrder: 2
-            }
-          ])
-        } catch (error) {
-          console.error('Error loading category data:', error)
-        } finally {
-          setIsLoadingData(false)
-        }
-      }
-
       loadCategoryData()
     }
   }, [isEdit, categoryId])
 
+  const loadParentCategories = async () => {
+    try {
+      const categories = await categoryService.getParentCategories()
+      setParentCategories(categories)
+    } catch (error) {
+      console.error('Failed to load parent categories:', error)
+    }
+  }
+
+  const loadCategoryData = async () => {
+    if (!categoryId) return
+    
+    setIsLoadingData(true)
+    try {
+      const response = await categoryService.getCategoryById(categoryId)
+      const category = response.data
+      
+      setCategoryData({
+        name: category.name,
+        description: category.description,
+        slug: category.slug,
+        parentId: category.parentId || '',
+        status: category.status,
+        image: category.image || '',
+        metaTitle: category.metaTitle || '',
+        metaDescription: category.metaDescription || '',
+        sortOrder: category.sortOrder
+      })
+
+      // Set subcategories
+      setSubcategories(category.subcategories.map(sub => ({
+        id: sub.id,
+        name: sub.name,
+        description: sub.description,
+        slug: sub.slug,
+        status: sub.status,
+        image: sub.image,
+        sortOrder: sub.sortOrder
+      })))
+    } catch (error) {
+      console.error('Error loading category data:', error)
+    } finally {
+      setIsLoadingData(false)
+    }
+  }
+
   // Auto-generate slug from name
   const generateSlug = (name: string) => {
-    return name
-      .toLowerCase()
-      .replace(/[^a-z0-9 -]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim()
+    return categoryService.generateSlug(name)
   }
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -176,6 +166,8 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
         slug: '',
         status: 'active',
         sortOrder: 0
+        status: 'ACTIVE',
+        sortOrder: subcategories.length + 1
       })
     } else {
       console.log('Subcategory name is empty or invalid:', newSubcategory.name)
@@ -204,25 +196,21 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
 
     try {
       const payload = {
-        category: categoryData,
+        ...categoryData,
         subcategories: subcategories
       }
 
-      if (isEdit) {
-        console.log('Updating category:', categoryId, payload)
-        // API call: PUT /api/categories/${categoryId}
+      if (isEdit && categoryId) {
+        await categoryService.updateCategory(categoryId, payload)
       } else {
-        console.log('Creating category:', payload)
-        // API call: POST /api/categories
+        await categoryService.createCategory(payload)
       }
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
       // Redirect back to categories list
-      router.push('/dashboard/categories')
+      router.push('/admin/dashboard/categories')
     } catch (error) {
       console.error('Error saving category:', error)
+      alert(error instanceof Error ? error.message : 'Failed to save category')
     } finally {
       setIsLoading(false)
     }
@@ -234,7 +222,7 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Link href="/dashboard/categories">
+            <Link href="/admin/dashboard/categories">
               <Button variant="ghost" size="sm">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Categories
@@ -260,7 +248,13 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <Link href="/admin/dashboard/categories">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Categories
+            </Button>
+          </Link>
+          <h1 className="text-2xl font-bold text-gray-900">
             {isEdit ? 'Edit Category' : 'Add New Category'}
           </h1>
         </div>
@@ -367,19 +361,22 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                   </div>
 
                   <div>
-                    <Dropdown
-                      id="parentCategory"
-                      label="Parent Category"
-                      value={categoryData.parentId || ''}
-                      options={[
-                        { value: '', label: 'None (Main Category)' },
-                        ...mockParentCategories.map(parent => ({
-                          value: parent.id,
-                          label: parent.name
-                        }))
-                      ]}
-                      onChange={(value) => setCategoryData(prev => ({ ...prev, parentId: value as string }))}
-                    />
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Parent Category
+                    </label>
+                    <select
+                      name="parentId"
+                      value={categoryData.parentId}
+                      onChange={handleCategoryChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                    >
+                      <option value="">None (Main Category)</option>
+                      {parentCategories.map((parent) => (
+                        <option key={parent.id} value={parent.id}>
+                          {parent.name}
+                        </option>
+                      ))}
+                    </select>
                     <p className="text-xs text-gray-500 mt-1">Leave empty to create a main category</p>
                   </div>
 
@@ -473,13 +470,13 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                       <Dropdown
                         id="newSubcategoryStatus"
                         value={newSubcategory.status}
-                        options={[
-                          { value: 'active', label: 'Active' },
-                          { value: 'inactive', label: 'Inactive' }
-                        ]}
-                        onChange={(value) => setNewSubcategory(prev => ({ ...prev, status: value as 'active' | 'inactive' }))}
-                      />
-                      <Button type="button" onClick={addSubcategory} className='bg-gray-800 text-white p-4 text-base'>
+                        onChange={handleNewSubcategoryChange}
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                      >
+                        <option value="ACTIVE">Active</option>
+                        <option value="INACTIVE">Inactive</option>
+                      </select>
+                      <Button type="button" onClick={addSubcategory}>
                         <Plus className="h-4 w-4 mr-2" />
                         Add Subcategory
                       </Button>
@@ -528,12 +525,12 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                                 <Dropdown
                                   id={`subcategory-status-${subcategory.id}`}
                                   value={subcategory.status}
-                                  options={[
-                                    { value: 'active', label: 'Active' },
-                                    { value: 'inactive', label: 'Inactive' }
-                                  ]}
-                                  onChange={(value) => updateSubcategory(subcategory.id!, 'status', value as 'active' | 'inactive')}
-                                />
+                                  onChange={(e) => updateSubcategory(subcategory.id!, 'status', e.target.value)}
+                                  className="px-2 py-1 border border-gray-300 rounded text-sm"
+                                >
+                                  <option value="ACTIVE">Active</option>
+                                  <option value="INACTIVE">Inactive</option>
+                                </select>
                               </div>
                               <div>
                                 <label className="block text-xs text-gray-500 mb-1">Sort Order</label>
@@ -575,12 +572,12 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                     id="categoryStatus"
                     label="Category Status"
                     value={categoryData.status}
-                    options={[
-                      { value: 'active', label: 'Active' },
-                      { value: 'inactive', label: 'Inactive' }
-                    ]}
-                    onChange={(value) => setCategoryData(prev => ({ ...prev, status: value as 'active' | 'inactive' }))}
-                  />
+                    onChange={handleCategoryChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                  >
+                    <option value="ACTIVE">Active</option>
+                    <option value="INACTIVE">Inactive</option>
+                  </select>
                 </div>
               </CardContent>
             </Card>
@@ -634,7 +631,7 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Active Subcategories:</span>
                   <span className="font-medium">
-                    {subcategories.filter(sub => sub.status === 'active').length}
+                    {subcategories.filter(sub => sub.status === 'ACTIVE').length}
                   </span>
                 </div>
               </CardContent>
@@ -654,7 +651,7 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                   <Save className="h-4 w-4 mr-2" />
                   {isLoading ? 'Saving...' : (isEdit ? 'Update Category' : 'Create Category')}
                 </Button>
-                <Link href="/dashboard/categories" className="block">
+                <Link href="/admin/dashboard/categories" className="block">
                   <Button type="button" variant="outline" className="w-full">
                     Cancel
                   </Button>
