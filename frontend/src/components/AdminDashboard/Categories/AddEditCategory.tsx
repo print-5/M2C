@@ -6,31 +6,8 @@ import { Button } from '@/components/UI/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
 import { ArrowLeft, Save, X, Plus, Trash2, Upload } from 'lucide-react'
 import Link from 'next/link'
-import Dropdown from '@/components/UI/Dropdown'
-
-interface CategoryFormData {
-  name: string
-  description: string
-  slug: string
-  parentId?: string
-  status: 'active' | 'inactive'
-  image?: string
-  metaTitle?: string
-  metaDescription?: string
-  sortOrder: number
-}
-
-interface SubcategoryFormData {
-  id?: string
-  name: string
-  description: string
-  slug: string
-  status: 'active' | 'inactive'
-  image?: string
-  sortOrder: number
-}
 import { categoryService, Category, CategoryFormData, SubcategoryFormData } from '@/services/categoryService'
-
+ 
 interface AddEditCategoryProps {
   categoryId?: string
   isEdit?: boolean
@@ -164,8 +141,6 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
         name: '',
         description: '',
         slug: '',
-        status: 'active',
-        sortOrder: 0
         status: 'ACTIVE',
         sortOrder: subcategories.length + 1
       })
@@ -467,8 +442,8 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                       />
                     </div>
                     <div className="flex gap-3">
-                      <Dropdown
-                        id="newSubcategoryStatus"
+                      <select
+                        name="status"
                         value={newSubcategory.status}
                         onChange={handleNewSubcategoryChange}
                         className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
@@ -522,8 +497,7 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                             <div className="flex items-center gap-3">
                               <div>
                                 <label className="block text-xs text-gray-500 mb-1">Status</label>
-                                <Dropdown
-                                  id={`subcategory-status-${subcategory.id}`}
+                                <select
                                   value={subcategory.status}
                                   onChange={(e) => updateSubcategory(subcategory.id!, 'status', e.target.value)}
                                   className="px-2 py-1 border border-gray-300 rounded text-sm"
@@ -568,9 +542,11 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Dropdown
-                    id="categoryStatus"
-                    label="Category Status"
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category Status
+                  </label>
+                  <select
+                    name="status"
                     value={categoryData.status}
                     onChange={handleCategoryChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
