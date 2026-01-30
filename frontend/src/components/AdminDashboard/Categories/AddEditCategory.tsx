@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/UI/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
+import Dropdown from '@/components/UI/Dropdown'
 import { ArrowLeft, Save, X, Plus, Trash2, Upload } from 'lucide-react'
 import Link from 'next/link'
 import { categoryService, Category, CategoryFormData, SubcategoryFormData } from '@/services/categoryService'
@@ -142,7 +143,7 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
         description: '',
         slug: '',
         status: 'ACTIVE',
-        sortOrder: subcategories.length + 1
+        sortOrder: 0
       })
     } else {
       console.log('Subcategory name is empty or invalid:', newSubcategory.name)
@@ -165,8 +166,35 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
     ))
   }
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      // For now, we'll create a URL for preview
+      // In a real app, you'd upload to a server/cloud storage
+      const imageUrl = URL.createObjectURL(file)
+      setCategoryData(prev => ({ ...prev, image: imageUrl }))
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Basic validation
+    if (!categoryData.name.trim()) {
+      alert('Category name is required')
+      return
+    }
+    
+    if (!categoryData.description.trim()) {
+      alert('Category description is required')
+      return
+    }
+    
+    if (!categoryData.slug?.trim()) {
+      alert('Category slug is required')
+      return
+    }
+    
     setIsLoading(true)
 
     try {
@@ -339,19 +367,18 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Parent Category
                     </label>
-                    <select
-                      name="parentId"
-                      value={categoryData.parentId}
-                      onChange={handleCategoryChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-                    >
-                      <option value="">None (Main Category)</option>
-                      {parentCategories.map((parent) => (
-                        <option key={parent.id} value={parent.id}>
-                          {parent.name}
-                        </option>
-                      ))}
-                    </select>
+                    <Dropdown
+                      value={categoryData.parentId || ''}
+                      options={[
+                        { value: '', label: 'None (Main Category)' },
+                        ...parentCategories.map(parent => ({
+                          value: parent.id,
+                          label: parent.name
+                        }))
+                      ]}
+                      onChange={(value) => setCategoryData(prev => ({ ...prev, parentId: value as string }))}
+                      placeholder="Select parent category"
+                    />
                     <p className="text-xs text-gray-500 mt-1">Leave empty to create a main category</p>
                   </div>
 
@@ -452,15 +479,14 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                       />
                     </div>
                     <div className="flex gap-3">
-                      <select
-                        name="status"
+                      <Dropdown
                         value={newSubcategory.status}
-                        onChange={handleNewSubcategoryChange}
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-                      >
-                        <option value="ACTIVE">Active</option>
-                        <option value="INACTIVE">Inactive</option>
-                      </select>
+                        options={[
+                          { value: 'ACTIVE', label: 'Active' },
+                          { value: 'INACTIVE', label: 'Inactive' }
+                        ]}
+                        onChange={(value) => setNewSubcategory(prev => ({ ...prev, status: value as 'ACTIVE' | 'INACTIVE' }))}
+                      />
                       <Button type="button" onClick={addSubcategory}>
                         <Plus className="h-4 w-4 mr-2" />
                         Add Subcategory
@@ -517,14 +543,14 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                             <div className="flex items-center gap-3">
                               <div>
                                 <label className="block text-xs text-gray-500 mb-1">Status</label>
-                                <select
+                                <Dropdown
                                   value={subcategory.status}
-                                  onChange={(e) => updateSubcategory(subcategory.id!, 'status', e.target.value)}
-                                  className="px-2 py-1 border border-gray-300 rounded text-sm"
-                                >
-                                  <option value="ACTIVE">Active</option>
-                                  <option value="INACTIVE">Inactive</option>
-                                </select>
+                                  options={[
+                                    { value: 'ACTIVE', label: 'Active' },
+                                    { value: 'INACTIVE', label: 'Inactive' }
+                                  ]}
+                                  onChange={(value) => updateSubcategory(subcategory.id!, 'status', value)}
+                                />
                               </div>
                               <div>
                                 <label className="block text-xs text-gray-500 mb-1">Sort Order</label>
@@ -565,15 +591,14 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Category Status
                   </label>
-                  <select
-                    name="status"
+                  <Dropdown
                     value={categoryData.status}
-                    onChange={handleCategoryChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-                  >
-                    <option value="ACTIVE">Active</option>
-                    <option value="INACTIVE">Inactive</option>
-                  </select>
+                    options={[
+                      { value: 'ACTIVE', label: 'Active' },
+                      { value: 'INACTIVE', label: 'Inactive' }
+                    ]}
+                    onChange={(value) => setCategoryData(prev => ({ ...prev, status: value as 'ACTIVE' | 'INACTIVE' }))}
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -585,13 +610,22 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
               <CardContent>
                 <div className="space-y-4">
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer">
-                    <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                    <p className="mt-2 text-sm text-gray-600">
-                      Click to upload category image
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      PNG, JPG up to 5MB
-                    </p>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      id="category-image-upload"
+                    />
+                    <label htmlFor="category-image-upload" className="cursor-pointer">
+                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                      <p className="mt-2 text-sm text-gray-600">
+                        Click to upload category image
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        PNG, JPG up to 5MB
+                      </p>
+                    </label>
                   </div>
                   
                   {categoryData.image && (
