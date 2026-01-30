@@ -117,12 +117,12 @@ export default function Dropdown({ id, label, value, options, placeholder, onCha
             setOpen(true);
           }
         }}
-        className="w-full text-left px-4 py-3 border border-gray-300 rounded-lg bg-white flex items-center justify-between"
+        className="w-full text-left px-4 py-2 border border-gray-300 rounded-lg bg-white flex items-center justify-between"
       >
         <span className={Array.isArray(value) ? (value.length ? 'text-gray-900' : 'text-gray-500') : (value ? 'text-gray-900' : 'text-gray-500')}>
           {renderButtonLabel()}
         </span>
-        <svg className="ml-2 w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        <svg className="ml-3 w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
       </button>
 
       {open && (

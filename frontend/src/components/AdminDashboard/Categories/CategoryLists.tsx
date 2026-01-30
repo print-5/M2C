@@ -3,10 +3,147 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
 import { Button } from '@/components/UI/Button'
-import { Table } from '@/components/UI/Table'
 import { Badge } from '@/components/UI/Badge'
 import { Plus, Edit, Trash2, Eye, Search, Filter } from 'lucide-react'
 import Link from 'next/link'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/UI/Table'
+import Dropdown from '@/components/UI/Dropdown'
+
+interface Category {
+  id: string
+  name: string
+  description: string
+  slug: string
+  parentId?: string
+  subcategories: Category[]
+  productCount: number
+  status: 'active' | 'inactive'
+  createdAt: string
+  updatedAt: string
+}
+
+// Mock data for categories
+const mockCategories: Category[] = [
+  {
+    id: '1',
+    name: 'Bed Sheets',
+    description: 'Premium quality bed sheets in various materials and sizes',
+    slug: 'bed-sheets',
+    subcategories: [
+      {
+        id: '1-1',
+        name: 'Cotton Sheets',
+        description: '100% cotton bed sheets',
+        slug: 'cotton-sheets',
+        parentId: '1',
+        subcategories: [],
+        productCount: 45,
+        status: 'active',
+        createdAt: '2024-01-15',
+        updatedAt: '2024-01-20'
+      },
+      {
+        id: '1-2',
+        name: 'Linen Sheets',
+        description: 'Natural linen bed sheets',
+        slug: 'linen-sheets',
+        parentId: '1',
+        subcategories: [],
+        productCount: 23,
+        status: 'active',
+        createdAt: '2024-01-16',
+        updatedAt: '2024-01-21'
+      },
+      {
+        id: '1-3',
+        name: 'Silk Sheets',
+        description: 'Luxury silk bed sheets',
+        slug: 'silk-sheets',
+        parentId: '1',
+        subcategories: [],
+        productCount: 12,
+        status: 'active',
+        createdAt: '2024-01-17',
+        updatedAt: '2024-01-22'
+      }
+    ],
+    productCount: 80,
+    status: 'active',
+    createdAt: '2024-01-10',
+    updatedAt: '2024-01-25'
+  },
+  {
+    id: '2',
+    name: 'Towels',
+    description: 'Absorbent and soft towels for all purposes',
+    slug: 'towels',
+    subcategories: [
+      {
+        id: '2-1',
+        name: 'Bath Towels',
+        description: 'Large bath towels',
+        slug: 'bath-towels',
+        parentId: '2',
+        subcategories: [],
+        productCount: 35,
+        status: 'active',
+        createdAt: '2024-01-18',
+        updatedAt: '2024-01-23'
+      },
+      {
+        id: '2-2',
+        name: 'Hand Towels',
+        description: 'Compact hand towels',
+        slug: 'hand-towels',
+        parentId: '2',
+        subcategories: [],
+        productCount: 28,
+        status: 'active',
+        createdAt: '2024-01-19',
+        updatedAt: '2024-01-24'
+      }
+    ],
+    productCount: 63,
+    status: 'active',
+    createdAt: '2024-01-12',
+    updatedAt: '2024-01-26'
+  },
+  {
+    id: '3',
+    name: 'Curtains',
+    description: 'Decorative and functional curtains',
+    slug: 'curtains',
+    subcategories: [
+      {
+        id: '3-1',
+        name: 'Blackout Curtains',
+        description: 'Light-blocking curtains',
+        slug: 'blackout-curtains',
+        parentId: '3',
+        subcategories: [],
+        productCount: 18,
+        status: 'active',
+        createdAt: '2024-01-20',
+        updatedAt: '2024-01-25'
+      }
+    ],
+    productCount: 42,
+    status: 'active',
+    createdAt: '2024-01-14',
+    updatedAt: '2024-01-27'
+  },
+  {
+    id: '4',
+    name: 'Pillows',
+    description: 'Comfortable pillows for better sleep',
+    slug: 'pillows',
+    subcategories: [],
+    productCount: 25,
+    status: 'inactive',
+    createdAt: '2024-01-16',
+    updatedAt: '2024-01-28'
+  }
+]
 import { categoryService, Category, CategoryStats } from '@/services/categoryService'
 
 export default function CategoryLists() {
@@ -80,8 +217,8 @@ export default function CategoryLists() {
   }
 
   const renderCategoryRow = (category: Category, isSubcategory = false) => (
-    <tr key={category.id} className={isSubcategory ? 'bg-gray-50' : ''}>
-      <td className="px-6 py-4 whitespace-nowrap">
+    <TableRow key={category.id} className={isSubcategory ? 'bg-gray-50' : ''}>
+      <TableCell className="whitespace-nowrap">
         <div className="flex items-center">
           {!isSubcategory && category.subcategories.length > 0 && (
             <button
@@ -105,27 +242,27 @@ export default function CategoryLists() {
             <div className="text-sm text-gray-500">{category.slug}</div>
           </div>
         </div>
-      </td>
-      <td className="px-6 py-4">
+      </TableCell>
+      <TableCell>
         <div className="text-sm text-gray-900 max-w-xs truncate" title={category.description}>
           {category.description}
         </div>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap text-center">
+      </TableCell>
+      <TableCell className="whitespace-nowrap text-center">
         <span className="text-sm font-medium text-gray-900">{category.productCount}</span>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap">
+      </TableCell>
+      <TableCell className="whitespace-nowrap">
         <Badge 
           variant={category.status === 'ACTIVE' ? 'default' : 'secondary'}
           className={category.status === 'ACTIVE' ? 'bg-green-100 text-green-800 border-green-200' : ''}
         >
           {category.status.toLowerCase()}
         </Badge>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+      </TableCell>
+      <TableCell className="whitespace-nowrap text-sm text-gray-500">
         {new Date(category.updatedAt).toLocaleDateString()}
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+      </TableCell>
+      <TableCell className="whitespace-nowrap text-right text-sm font-medium">
         <div className="flex items-center justify-end space-x-2">
           <Link href={`/dashboard/categories/view/${category.id}`}>
             <Button variant="ghost" size="sm">
@@ -146,8 +283,8 @@ export default function CategoryLists() {
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   )
 
   return (
@@ -158,7 +295,7 @@ export default function CategoryLists() {
           <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
           <p className="text-gray-600">Manage your product categories and subcategories</p>
         </div>
-        <Link href="/dashboard/categories/add">
+        <Link href="/admin/dashboard/categories/add">
           <Button className="bg-[#313131] text-white hover:bg-[#222222]">
             <Plus className="h-4 w-4 mr-2" />
             Add Category
@@ -184,7 +321,8 @@ export default function CategoryLists() {
             </div>
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-gray-500" />
-              <select
+              <Dropdown
+                id="statusFilter"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as 'all' | 'ACTIVE' | 'INACTIVE')}
                 className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"

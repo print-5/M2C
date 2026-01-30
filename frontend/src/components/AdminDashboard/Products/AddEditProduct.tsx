@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
 import { ArrowLeft, Save, X, Upload } from 'lucide-react'
 import Link from 'next/link'
 import { categories } from '@/components/mockData/products'
+import Dropdown from '@/components/UI/Dropdown'
 
 // Mock data for categories and subcategories
 const categorySubcategories: Record<string, string[]> = {
@@ -473,13 +474,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Link href="/dashboard/products">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Products
-            </Button>
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900">
             {isEdit ? 'Edit Product' : 'Add New Product'}
           </h1>
         </div>
@@ -490,7 +485,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
         {/* Tab Navigation */}
         <div className="mb-6">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
+            <nav className="-mb-px flex space-x-4">
               {[
                 { id: 'basic', label: 'Basic Info' },
                 { id: 'fabric', label: 'Fabric & Specs' },
@@ -503,10 +498,10 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-2 px-1 border-b-2 font-medium text-base ${
                     activeTab === tab.id
-                      ? 'border-gray-700 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      ? 'border-white text-white bg-gray-900 px-2 rounded-t-sm'
+                      : 'border-gray-100 text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
                   {tab.label}
@@ -559,43 +554,28 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Category *
-                      </label>
-                      <select
-                        name="category"
+                      <Dropdown
+                        id="category"
+                        label="Category *"
                         value={formData.category}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-                      >
-                        <option value="">Select Category</option>
-                        {categories.map((category) => (
-                          <option key={category} value={category}>
-                            {category}
-                          </option>
-                        ))}
-                      </select>
+                        options={categories}
+                        placeholder="Select Category"
+                        onChange={(value) => setFormData(prev => ({ 
+                          ...prev, 
+                          category: value as string,
+                          subCategory: '' // Reset subcategory when category changes
+                        }))}
+                      />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Sub-Category *
-                      </label>
-                      <select
-                        name="subCategory"
+                      <Dropdown
+                        id="subCategory"
+                        label="Sub-Category *"
                         value={formData.subCategory}
-                        onChange={handleInputChange}
-                        required
-                        disabled={!formData.category}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent disabled:bg-gray-100"
-                      >
-                        <option value="">Select Sub-Category</option>
-                        {formData.category && categorySubcategories[formData.category]?.map((subCat) => (
-                          <option key={subCat} value={subCat}>
-                            {subCat}
-                          </option>
-                        ))}
-                      </select>
+                        options={formData.category ? categorySubcategories[formData.category] || [] : []}
+                        placeholder="Select Sub-Category"
+                        onChange={(value) => setFormData(prev => ({ ...prev, subCategory: value as string }))}
+                      />
                     </div>
                   </div>
 
@@ -656,7 +636,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                           onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                         />
-                        <Button type="button" onClick={addTag}>
+                        <Button type="button" onClick={addTag} className='bg-gray-800 text-white p-4'>
                           Add
                         </Button>
                       </div>
@@ -691,23 +671,14 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Fabric Type *
-                    </label>
-                    <select
-                      name="fabricType"
+                    <Dropdown
+                      id="fabricType"
+                      label="Fabric Type *"
                       value={formData.fabricType}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-                    >
-                      <option value="">Select Fabric Type</option>
-                      {fabricTypes.map((fabric) => (
-                        <option key={fabric} value={fabric}>
-                          {fabric}
-                        </option>
-                      ))}
-                    </select>
+                      options={fabricTypes}
+                      placeholder="Select Fabric Type"
+                      onChange={(value) => setFormData(prev => ({ ...prev, fabricType: value as string }))}
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -783,7 +754,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                           onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCareInstruction())}
                         />
-                        <Button type="button" onClick={addCareInstruction}>
+                        <Button type="button" onClick={addCareInstruction} className='bg-gray-800 text-white p-4'>
                           Add
                         </Button>
                       </div>
@@ -837,28 +808,22 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                         <h4 className="font-medium text-gray-900 mb-3">Add New Variant</h4>
                         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
                           <div>
-                            <select
-                              value={newVariant.size}
-                              onChange={(e) => setNewVariant(prev => ({ ...prev, size: e.target.value }))}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-                            >
-                              <option value="">Size</option>
-                              {standardSizes.map((size) => (
-                                <option key={size} value={size}>{size}</option>
-                              ))}
-                            </select>
+                            <Dropdown
+                              id="newVariantSize"
+                              value={newVariant.size || ''}
+                              options={standardSizes}
+                              placeholder="Size"
+                              onChange={(value) => setNewVariant(prev => ({ ...prev, size: value as string }))}
+                            />
                           </div>
                           <div>
-                            <select
-                              value={newVariant.color}
-                              onChange={(e) => setNewVariant(prev => ({ ...prev, color: e.target.value }))}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-                            >
-                              <option value="">Color</option>
-                              {standardColors.map((color) => (
-                                <option key={color} value={color}>{color}</option>
-                              ))}
-                            </select>
+                            <Dropdown
+                              id="newVariantColor"
+                              value={newVariant.color || ''}
+                              options={standardColors}
+                              placeholder="Color"
+                              onChange={(value) => setNewVariant(prev => ({ ...prev, color: value as string }))}
+                            />
                           </div>
                           <div>
                             <input
@@ -881,7 +846,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                             />
                           </div>
                           <div>
-                            <Button type="button" onClick={addVariant} className="w-full">
+                            <Button type="button" onClick={addVariant} className="w-full bg-gray-800 text-white rounded-lg p-4">
                               Add Variant
                             </Button>
                           </div>
@@ -971,8 +936,6 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                         value={formData.basePrice}
                         onChange={handleInputChange}
                         required
-                        min="0"
-                        step="0.01"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       />
                     </div>
@@ -1005,7 +968,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <h4 className="font-medium text-gray-900">Pricing Tiers</h4>
-                        <Button type="button" onClick={addPricingTier} size="sm">
+                        <Button type="button" onClick={addPricingTier} size="sm" className='bg-gray-800 text-white p-4'>
                           Add Tier
                         </Button>
                       </div>
@@ -1238,20 +1201,18 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Product Status
-                  </label>
-                  <select
-                    name="status"
+                  <Dropdown
+                    id="productStatus"
+                    label="Product Status"
                     value={formData.status}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="active">Active</option>
-                    <option value="suspended">Suspended</option>
-                    <option value="out_of_stock">Out of Stock</option>
-                  </select>
+                    options={[
+                      { value: 'pending', label: 'Pending' },
+                      { value: 'active', label: 'Active' },
+                      { value: 'suspended', label: 'Suspended' },
+                      { value: 'out_of_stock', label: 'Out of Stock' }
+                    ]}
+                    onChange={(value) => setFormData(prev => ({ ...prev, status: value as 'active' | 'pending' | 'suspended' | 'out_of_stock' }))}
+                  />
                 </div>
 
                 <div className="flex items-center">

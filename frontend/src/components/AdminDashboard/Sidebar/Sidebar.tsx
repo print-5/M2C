@@ -31,6 +31,11 @@ const sidebarItems = [
     href: '/admin/dashboard/vendors',
     icon: Store,
   },
+    {
+    title: 'Categories',
+    href: '/admin/dashboard/categories',
+    icon: Tags,
+  },
   {
     title: 'Products',
     href: '/admin/dashboard/products',
@@ -51,21 +56,17 @@ const sidebarItems = [
     href: '/admin/dashboard/billing',
     icon: Receipt,
   },
-  {
-    title: 'Categories',
-    href: '/admin/dashboard/categories',
-    icon: Tags,
-  },
+
   {
     title: 'Users',
     href: '/admin/dashboard/users',
     icon: Users,
   },
-  {
-    title: 'Content Management',
-    href: '/admin/dashboard/cms',
-    icon: Edit3,
-  },
+  // {
+  //   title: 'Content Management',
+  //   href: '/admin/dashboard/cms',
+  //   icon: Edit3,
+  // },
   {
     title: 'Reviews',
     href: '/admin/dashboard/reviews',

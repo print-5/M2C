@@ -6,6 +6,29 @@ import { Button } from '@/components/UI/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
 import { ArrowLeft, Save, X, Plus, Trash2, Upload } from 'lucide-react'
 import Link from 'next/link'
+import Dropdown from '@/components/UI/Dropdown'
+
+interface CategoryFormData {
+  name: string
+  description: string
+  slug: string
+  parentId?: string
+  status: 'active' | 'inactive'
+  image?: string
+  metaTitle?: string
+  metaDescription?: string
+  sortOrder: number
+}
+
+interface SubcategoryFormData {
+  id?: string
+  name: string
+  description: string
+  slug: string
+  status: 'active' | 'inactive'
+  image?: string
+  sortOrder: number
+}
 import { categoryService, Category, CategoryFormData, SubcategoryFormData } from '@/services/categoryService'
 
 interface AddEditCategoryProps {
@@ -111,27 +134,43 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
 
   const handleNewSubcategoryChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setNewSubcategory(prev => ({
-      ...prev,
-      [name]: name === 'sortOrder' ? parseInt(value) || 0 : value,
-      ...(name === 'name' && { slug: generateSlug(value) })
-    }))
+    console.log('Subcategory input changed:', name, value)
+    setNewSubcategory(prev => {
+      const updated = {
+        ...prev,
+        [name]: name === 'sortOrder' ? parseInt(value) || 0 : value,
+        ...(name === 'name' && { slug: generateSlug(value) })
+      }
+      console.log('Updated newSubcategory state:', updated)
+      return updated
+    })
   }
 
   const addSubcategory = () => {
+    console.log('Add subcategory clicked, current newSubcategory:', newSubcategory)
+    
     if (newSubcategory.name.trim()) {
       const subcategory: SubcategoryFormData = {
         ...newSubcategory,
         id: Date.now().toString()
       }
-      setSubcategories(prev => [...prev, subcategory])
+      console.log('Adding subcategory:', subcategory)
+      setSubcategories(prev => {
+        const updated = [...prev, subcategory]
+        console.log('Updated subcategories:', updated)
+        return updated
+      })
       setNewSubcategory({
         name: '',
         description: '',
         slug: '',
+        status: 'active',
+        sortOrder: 0
         status: 'ACTIVE',
         sortOrder: subcategories.length + 1
       })
+    } else {
+      console.log('Subcategory name is empty or invalid:', newSubcategory.name)
     }
   }
 
@@ -226,7 +265,7 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
         {/* Tab Navigation */}
         <div className="mb-6">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
+            <nav className="-mb-px flex space-x-4">
               {[
                 { id: 'category', label: 'Category Details' },
                 { id: 'subcategories', label: 'Subcategories' }
@@ -235,10 +274,10 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id as 'category' | 'subcategories')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-2 px-1 border-b-2 font-medium text-base ${
                     activeTab === tab.id
-                      ? 'border-gray-700 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      ? 'border-white text-white bg-gray-900 px-4 rounded-t-sm'
+                      : 'border-gray-100 text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
                   {tab.label}
@@ -428,8 +467,8 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                       />
                     </div>
                     <div className="flex gap-3">
-                      <select
-                        name="status"
+                      <Dropdown
+                        id="newSubcategoryStatus"
                         value={newSubcategory.status}
                         onChange={handleNewSubcategoryChange}
                         className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
@@ -483,7 +522,8 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                             <div className="flex items-center gap-3">
                               <div>
                                 <label className="block text-xs text-gray-500 mb-1">Status</label>
-                                <select
+                                <Dropdown
+                                  id={`subcategory-status-${subcategory.id}`}
                                   value={subcategory.status}
                                   onChange={(e) => updateSubcategory(subcategory.id!, 'status', e.target.value)}
                                   className="px-2 py-1 border border-gray-300 rounded text-sm"
@@ -528,11 +568,9 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Category Status
-                  </label>
-                  <select
-                    name="status"
+                  <Dropdown
+                    id="categoryStatus"
+                    label="Category Status"
                     value={categoryData.status}
                     onChange={handleCategoryChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
