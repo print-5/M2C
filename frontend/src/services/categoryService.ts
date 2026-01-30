@@ -237,6 +237,27 @@ class CategoryService {
     
     return response.data.filter(cat => !cat.parentId);
   }
+
+  // Get subcategories of a specific category
+  async getSubcategories(parentId: string): Promise<{ data: Category[]; total: number }> {
+    const response = await fetch(`${API_BASE_URL}/categories/${parentId}/subcategories`, {
+      method: 'GET',
+      headers: this.getAuthHeaders()
+    });
+
+    return this.handleResponse(response);
+  }
+
+  // Create subcategory
+  async createSubcategory(parentId: string, subcategoryData: Omit<SubcategoryFormData, 'id'>): Promise<{ data: Category; message: string }> {
+    const response = await fetch(`${API_BASE_URL}/categories/${parentId}/subcategories`, {
+      method: 'POST',
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify(subcategoryData)
+    });
+
+    return this.handleResponse(response);
+  }
 }
 
 // Export singleton instance

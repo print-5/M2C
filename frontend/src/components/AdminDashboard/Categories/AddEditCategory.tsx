@@ -441,6 +441,16 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       />
                     </div>
+                    <div className="mb-3">
+                      <input
+                        type="text"
+                        name="image"
+                        value={newSubcategory.image || ''}
+                        onChange={handleNewSubcategoryChange}
+                        placeholder="Image URL (optional)"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                      />
+                    </div>
                     <div className="flex gap-3">
                       <select
                         name="status"
@@ -490,6 +500,16 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                               value={subcategory.description}
                               onChange={(e) => updateSubcategory(subcategory.id!, 'description', e.target.value)}
                               rows={2}
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                            />
+                          </div>
+                          <div className="mb-3">
+                            <label className="block text-xs text-gray-500 mb-1">Image URL</label>
+                            <input
+                              type="text"
+                              value={subcategory.image || ''}
+                              onChange={(e) => updateSubcategory(subcategory.id!, 'image', e.target.value)}
+                              placeholder="Image URL (optional)"
                               className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
                             />
                           </div>
