@@ -1,10 +1,14 @@
-import { use } from 'react'
+'use client'
+
+import { use, useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Breadcrumb } from '@/components/AdminDashboard/Breadcrumb/Breadcrumb'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
 import { Badge } from '@/components/UI/Badge'
 import { Button } from '@/components/UI/Button'
 import { ArrowLeft, Edit, Trash2 } from 'lucide-react'
 import Link from 'next/link'
+import { categoryService, Category } from '@/services/categoryService'
 
 interface ViewCategoryPageProps {
   params: Promise<{
@@ -12,63 +16,78 @@ interface ViewCategoryPageProps {
   }>
 }
 
-// Mock category data for viewing
-const mockCategoryData = {
-  id: '1',
-  name: 'Bed Sheets',
-  description: 'Premium quality bed sheets in various materials and sizes',
-  slug: 'bed-sheets',
-  status: 'active' as const,
-  image: '/api/placeholder/300/200',
-  metaTitle: 'Premium Bed Sheets | Navnit Textiles',
-  metaDescription: 'Discover our collection of premium bed sheets made from the finest materials.',
-  sortOrder: 1,
-  productCount: 80,
-  createdAt: '2024-01-10',
-  updatedAt: '2024-01-25',
-  subcategories: [
-    {
-      id: '1-1',
-      name: 'Cotton Sheets',
-      description: '100% cotton bed sheets',
-      slug: 'cotton-sheets',
-      status: 'active' as const,
-      productCount: 45,
-      createdAt: '2024-01-15',
-      updatedAt: '2024-01-20'
-    },
-    {
-      id: '1-2',
-      name: 'Linen Sheets',
-      description: 'Natural linen bed sheets',
-      slug: 'linen-sheets',
-      status: 'active' as const,
-      productCount: 23,
-      createdAt: '2024-01-16',
-      updatedAt: '2024-01-21'
-    },
-    {
-      id: '1-3',
-      name: 'Silk Sheets',
-      description: 'Luxury silk bed sheets',
-      slug: 'silk-sheets',
-      status: 'active' as const,
-      productCount: 12,
-      createdAt: '2024-01-17',
-      updatedAt: '2024-01-22'
-    }
-  ]
-}
-
 export default function ViewCategoryPage({ params }: ViewCategoryPageProps) {
   const { id } = use(params)
-  const category = mockCategoryData // In real app, fetch by id
+  const router = useRouter()
+  const [category, setCategory] = useState<Category | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleDelete = () => {
-    if (confirm('Are you sure you want to delete this category? This action cannot be undone.')) {
-      console.log('Deleting category:', id)
-      // Implement delete logic here
+  useEffect(() => {
+    loadCategory()
+  }, [id])
+
+  const loadCategory = async () => {
+    try {
+      setLoading(true)
+      const response = await categoryService.getCategoryById(id)
+      setCategory(response.data)
+    } catch (err) {
+      console.error('Failed to load category:', err)
+      setError(err instanceof Error ? err.message : 'Failed to load category')
+    } finally {
+      setLoading(false)
     }
+  }
+
+  const handleDelete = async () => {
+    if (!category) return
+    
+    if (confirm('Are you sure you want to delete this category? This action cannot be undone.')) {
+      try {
+        await categoryService.deleteCategory(category.id)
+        router.push('/admin/dashboard/categories')
+      } catch (err) {
+        alert(err instanceof Error ? err.message : 'Failed to delete category')
+      }
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Breadcrumb />
+        <Card>
+          <CardContent className="p-8">
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-700"></div>
+              <span className="ml-3 text-gray-600">Loading category...</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (error || !category) {
+    return (
+      <div className="space-y-6">
+        <Breadcrumb />
+        <Card>
+          <CardContent className="p-8 text-center">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              {error ? 'Error Loading Category' : 'Category Not Found'}
+            </h2>
+            <p className="text-gray-600 mb-4">
+              {error || "The category you're looking for doesn't exist or has been removed."}
+            </p>
+            <Button onClick={() => router.push('/admin/dashboard/categories')}>
+              Back to Categories
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   return (
@@ -79,19 +98,12 @@ export default function ViewCategoryPage({ params }: ViewCategoryPageProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Link href="/dashboard/categories">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Categories
-            </Button>
-          </Link>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">{category.name}</h1>
-            <p className="text-gray-600">Category Details</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <Link href={`/dashboard/categories/edit/${category.id}`}>
+          <Link href={`/admin/dashboard/categories/edit/${category.id}`}>
             <Button variant="outline">
               <Edit className="h-4 w-4 mr-2" />
               Edit Category
@@ -133,10 +145,10 @@ export default function ViewCategoryPage({ params }: ViewCategoryPageProps) {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                   <Badge 
-                    variant={category.status === 'active' ? 'default' : 'secondary'}
-                    className={category.status === 'active' ? 'bg-green-100 text-green-800 border-green-200' : ''}
+                    variant={category.status === 'ACTIVE' ? 'default' : 'secondary'}
+                    className={category.status === 'ACTIVE' ? 'bg-green-100 text-green-800 border-green-200' : ''}
                   >
-                    {category.status}
+                    {category.status.toLowerCase()}
                   </Badge>
                 </div>
                 <div>
@@ -183,10 +195,10 @@ export default function ViewCategoryPage({ params }: ViewCategoryPageProps) {
                           <div className="flex items-center space-x-3">
                             <h4 className="font-medium text-gray-900">{subcategory.name}</h4>
                             <Badge 
-                              variant={subcategory.status === 'active' ? 'default' : 'secondary'}
-                              className={subcategory.status === 'active' ? 'bg-green-100 text-green-800 border-green-200' : ''}
+                              variant={subcategory.status === 'ACTIVE' ? 'default' : 'secondary'}
+                              className={subcategory.status === 'ACTIVE' ? 'bg-green-100 text-green-800 border-green-200' : ''}
                             >
-                              {subcategory.status}
+                              {subcategory.status.toLowerCase()}
                             </Badge>
                           </div>
                           <p className="text-sm text-gray-600 mt-1">{subcategory.description}</p>
@@ -197,7 +209,7 @@ export default function ViewCategoryPage({ params }: ViewCategoryPageProps) {
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Link href={`/dashboard/categories/edit/${subcategory.id}`}>
+                          <Link href={`/admin/dashboard/categories/edit/${subcategory.id}`}>
                             <Button variant="ghost" size="sm">
                               <Edit className="h-3 w-3" />
                             </Button>
@@ -227,6 +239,11 @@ export default function ViewCategoryPage({ params }: ViewCategoryPageProps) {
                   src={category.image}
                   alt={category.name}
                   className="w-full h-48 object-cover rounded-lg border"
+                  onError={(e) => {
+                    // Handle broken images
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/assets/images/categories/cs1.jpg'; // Fallback image
+                  }}
                 />
               ) : (
                 <div className="w-full h-48 bg-gray-100 rounded-lg border flex items-center justify-center">
@@ -253,7 +270,7 @@ export default function ViewCategoryPage({ params }: ViewCategoryPageProps) {
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Active Subcategories:</span>
                 <span className="font-medium">
-                  {category.subcategories.filter(sub => sub.status === 'active').length}
+                  {category.subcategories.filter(sub => sub.status === 'ACTIVE').length}
                 </span>
               </div>
               <div className="flex justify-between text-sm">

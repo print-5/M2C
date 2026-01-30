@@ -27,7 +27,7 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
     slug: '',
     parentId: '',
     status: 'ACTIVE',
-    image: '',
+    image: '', // You can test with: '/assets/images/categories/cs1.jpg'
     metaTitle: '',
     metaDescription: '',
     sortOrder: 0
@@ -251,12 +251,6 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Link href="/admin/dashboard/categories">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Categories
-            </Button>
-          </Link>
           <h1 className="text-2xl font-bold text-gray-900">
             {isEdit ? 'Edit Category' : 'Add New Category'}
           </h1>
@@ -609,31 +603,17 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                      id="category-image-upload"
-                    />
-                    <label htmlFor="category-image-upload" className="cursor-pointer">
-                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                      <p className="mt-2 text-sm text-gray-600">
-                        Click to upload category image
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        PNG, JPG up to 5MB
-                      </p>
-                    </label>
-                  </div>
-                  
-                  {categoryData.image && (
+                  {categoryData.image ? (
                     <div className="relative">
                       <img
                         src={categoryData.image}
                         alt="Category"
                         className="w-full h-32 object-cover rounded border"
+                        onError={(e) => {
+                          // Handle broken images
+                          const target = e.target as HTMLImageElement;
+                          target.src = '/assets/images/categories/cs1.jpg'; // Fallback image
+                        }}
                       />
                       <button
                         type="button"
@@ -643,7 +623,44 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                         <X className="h-3 w-3" />
                       </button>
                     </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="category-image-upload"
+                      />
+                      <label htmlFor="category-image-upload" className="cursor-pointer">
+                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                        <p className="mt-2 text-sm text-gray-600">
+                          Click to upload category image
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          PNG, JPG up to 5MB
+                        </p>
+                      </label>
+                    </div>
                   )}
+                  
+                  {/* URL Input Alternative */}
+                  <div className="border-t pt-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Or paste image URL
+                    </label>
+                    <input
+                      type="url"
+                      name="image"
+                      value={categoryData.image || ''}
+                      onChange={handleCategoryChange}
+                      placeholder="https://example.com/image.jpg"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent text-sm"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      You can also paste a direct image URL here
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

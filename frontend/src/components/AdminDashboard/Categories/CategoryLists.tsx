@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
 import { Button } from '@/components/UI/Button'
 import { Badge } from '@/components/UI/Badge'
@@ -234,13 +234,13 @@ export default function CategoryLists() {
                   </TableRow>
                 ) : (
                   filteredCategories.map((category) => (
-                    <>
+                    <React.Fragment key={category.id}>
                       {renderCategoryRow(category)}
                       {expandedCategories.has(category.id) &&
                         category.subcategories.map((subcategory) =>
                           renderCategoryRow(subcategory, true)
                         )}
-                    </>
+                    </React.Fragment>
                   ))
                 )}
               </TableBody>
