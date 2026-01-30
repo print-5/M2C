@@ -277,8 +277,8 @@ const createCategory = async (req, res) => {
         slug: sub.slug || generateSlug(sub.name),
         parentId: category.id,
         status: (sub.status || 'ACTIVE').toUpperCase(),
-        image: sub.image,
-        sortOrder: sub.sortOrder || index + 1,
+        image: sub.image || null,
+        sortOrder: sub.sortOrder !== undefined ? sub.sortOrder : index + 1,
         createdBy: req.user?.id
       }));
 
@@ -428,13 +428,13 @@ const updateCategory = async (req, res) => {
     });
 
     // Handle subcategories update
-    if (subcategories.length > 0) {
+    if (subcategories.length >= 0) { // Allow empty array to clear subcategories
       // Get existing subcategory IDs
       const existingSubIds = existingCategory.subcategories.map(sub => sub.id);
       const providedSubIds = subcategories.filter(sub => sub.id).map(sub => sub.id);
 
       // Delete removed subcategories
-      const toDelete = existingSubIds.filter(id => !providedSubIds.includes(id));
+      const toDelete = existingSubIds.filter(subId => !providedSubIds.includes(subId));
       if (toDelete.length > 0) {
         await prisma.category.deleteMany({
           where: {
@@ -444,19 +444,19 @@ const updateCategory = async (req, res) => {
       }
 
       // Update or create subcategories
-      for (const sub of subcategories) {
+      for (const [index, sub] of subcategories.entries()) {
         const subData = {
           name: sub.name,
           description: sub.description,
           slug: sub.slug || generateSlug(sub.name),
           parentId: id,
           status: (sub.status || 'ACTIVE').toUpperCase(),
-          image: sub.image,
-          sortOrder: sub.sortOrder || 0,
+          image: sub.image || null,
+          sortOrder: sub.sortOrder !== undefined ? sub.sortOrder : index + 1,
           updatedBy: req.user?.id
         };
 
-        if (sub.id) {
+        if (sub.id && existingSubIds.includes(sub.id)) {
           // Update existing subcategory
           await prisma.category.update({
             where: { id: sub.id },
@@ -649,6 +649,149 @@ const bulkUpdateStatus = async (req, res) => {
   }
 };
 
+// Get subcategories of a specific category
+const getSubcategories = async (req, res) => {
+  try {
+    const { parentId } = req.params;
+
+    // Verify parent category exists
+    const parentCategory = await prisma.category.findUnique({
+      where: { id: parentId }
+    });
+
+    if (!parentCategory) {
+      return res.status(404).json({
+        success: false,
+        error: 'Parent category not found'
+      });
+    }
+
+    const subcategories = await prisma.category.findMany({
+      where: { parentId },
+      orderBy: { sortOrder: 'asc' },
+      include: {
+        _count: {
+          select: {
+            subcategories: true
+          }
+        }
+      }
+    });
+
+    // Add mock product count
+    const subcategoriesWithStats = subcategories.map(sub => ({
+      ...sub,
+      productCount: Math.floor(Math.random() * 50), // Mock data
+      subcategoryCount: sub._count.subcategories
+    }));
+
+    res.json({
+      success: true,
+      data: subcategoriesWithStats,
+      total: subcategories.length
+    });
+  } catch (error) {
+    console.error('Get subcategories error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch subcategories'
+    });
+  }
+};
+
+// Create subcategory
+const createSubcategory = async (req, res) => {
+  try {
+    const { parentId } = req.params;
+    const {
+      name,
+      description,
+      slug: customSlug,
+      status = 'ACTIVE',
+      image,
+      sortOrder = 0
+    } = req.body;
+
+    // Validation
+    if (!name || !description) {
+      return res.status(400).json({
+        success: false,
+        error: 'Name and description are required'
+      });
+    }
+
+    // Verify parent category exists
+    const parentCategory = await prisma.category.findUnique({
+      where: { id: parentId }
+    });
+
+    if (!parentCategory) {
+      return res.status(404).json({
+        success: false,
+        error: 'Parent category not found'
+      });
+    }
+
+    // Generate slug if not provided
+    const slug = customSlug || generateSlug(name);
+
+    // Check if slug already exists
+    const existingCategory = await prisma.category.findUnique({
+      where: { slug }
+    });
+
+    if (existingCategory) {
+      return res.status(400).json({
+        success: false,
+        error: 'A category with this slug already exists'
+      });
+    }
+
+    // Create subcategory
+    const subcategory = await prisma.category.create({
+      data: {
+        name,
+        description,
+        slug,
+        parentId,
+        status: status.toUpperCase(),
+        image,
+        sortOrder: parseInt(sortOrder),
+        createdBy: req.user?.id
+      },
+      include: {
+        parent: {
+          select: {
+            id: true,
+            name: true,
+            slug: true
+          }
+        }
+      }
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Subcategory created successfully',
+      data: subcategory
+    });
+  } catch (error) {
+    console.error('Create subcategory error:', error);
+    
+    if (error.code === 'P2002') {
+      return res.status(400).json({
+        success: false,
+        error: 'A category with this slug already exists'
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create subcategory'
+    });
+  }
+};
+
 module.exports = {
   getAllCategories,
   getCategoryById,
@@ -656,5 +799,7 @@ module.exports = {
   updateCategory,
   deleteCategory,
   getCategoryStats,
-  bulkUpdateStatus
+  bulkUpdateStatus,
+  getSubcategories,
+  createSubcategory
 };
