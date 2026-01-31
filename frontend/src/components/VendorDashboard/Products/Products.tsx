@@ -50,13 +50,13 @@ export default function Products() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[#222222]">Product</TableHead>
-                <TableHead className="text-[#222222]">Category</TableHead>
-                <TableHead className="text-[#222222]">Price</TableHead>
-                <TableHead className="text-[#222222]">Stock</TableHead>
-                <TableHead className="text-[#222222]">Status</TableHead>
-                <TableHead className="text-[#222222]">Sales</TableHead>
-                <TableHead className="text-[#222222]">Actions</TableHead>
+                <TableHead>Product</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead>Stock</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Sales</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -971,16 +971,16 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                 <CardHeader>
                   <CardTitle>Size & Color Variants</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   <div className="flex items-center space-x-2">
                     <input
                       type="checkbox"
                       name="hasVariants"
                       checked={formData.hasVariants}
                       onChange={handleInputChange}
-                      className="rounded border-gray-300 text-gray-700 focus:ring-gray-700"
+                      className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
                     />
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium text-gray-900">
                       This product has variants (different sizes/colors)
                     </label>
                   </div>
@@ -988,55 +988,77 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                   {formData.hasVariants && (
                     <>
                       {/* Add New Variant */}
-                      <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                        <h4 className="font-medium text-gray-900 mb-3">Add New Variant</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                      <div className="border-2 border-gray-300 rounded-lg p-6 bg-gray-50">
+                        <h4 className="font-semibold text-gray-900 mb-4">Add New Variant</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-6 gap-3 mb-4">
                           <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Size *</label>
                             <select
                               value={newVariant.size}
                               onChange={(e) => setNewVariant(prev => ({ ...prev, size: e.target.value }))}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
                             >
-                              <option value="">Size</option>
+                              <option value="">Select Size</option>
                               {standardSizes.map((size) => (
                                 <option key={size} value={size}>{size}</option>
                               ))}
                             </select>
                           </div>
                           <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Color *</label>
                             <select
                               value={newVariant.color}
                               onChange={(e) => setNewVariant(prev => ({ ...prev, color: e.target.value }))}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
                             >
-                              <option value="">Color</option>
-                              {standardColors.map((color) => (
+                              <option value="">Select Color</option>
+                              {['Black', 'Gray', 'White'].map((color) => (
                                 <option key={color} value={color}>{color}</option>
                               ))}
                             </select>
                           </div>
                           <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">SKU *</label>
                             <input
                               type="text"
                               value={newVariant.sku}
                               onChange={(e) => setNewVariant(prev => ({ ...prev, sku: e.target.value }))}
-                              placeholder="SKU"
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                              placeholder="e.g., CS-Q-BLK"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
                             />
                           </div>
                           <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Price *</label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-2 text-gray-500 text-sm">₹</span>
+                              <input
+                                type="number"
+                                value={newVariant.price}
+                                onChange={(e) => setNewVariant(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
+                                placeholder="0.00"
+                                min="0"
+                                step="0.01"
+                                className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Stock *</label>
                             <input
                               type="number"
-                              value={newVariant.price}
-                              onChange={(e) => setNewVariant(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
-                              placeholder="Price"
+                              value={newVariant.stock}
+                              onChange={(e) => setNewVariant(prev => ({ ...prev, stock: parseInt(e.target.value) || 0 }))}
+                              placeholder="0"
                               min="0"
-                              step="0.01"
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
                             />
                           </div>
-                          <div>
-                            <Button type="button" onClick={addVariant} className="w-full">
+                          <div className="flex items-end">
+                            <Button 
+                              type="button" 
+                              onClick={addVariant}
+                              className="w-full bg-gray-900 text-white hover:bg-black"
+                            >
                               Add Variant
                             </Button>
                           </div>
@@ -1046,90 +1068,147 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       {/* Existing Variants */}
                       {formData.variants.length > 0 && (
                         <div className="space-y-3">
-                          <h4 className="font-medium text-gray-900">Current Variants</h4>
-                          {formData.variants.map((variant) => (
-                            <div key={variant.id} className="border border-gray-200 rounded-lg p-4">
-                              <div className="grid grid-cols-1 md:grid-cols-6 gap-3 items-center">
-                                <div>
-                                  <label className="block text-xs text-gray-500 mb-1">Size</label>
-                                  <input
-                                    type="text"
-                                    value={variant.size}
-                                    onChange={(e) => updateVariant(variant.id, 'size', e.target.value)}
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-xs text-gray-500 mb-1">Color</label>
-                                  <input
-                                    type="text"
-                                    value={variant.color}
-                                    onChange={(e) => updateVariant(variant.id, 'color', e.target.value)}
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-xs text-gray-500 mb-1">SKU</label>
-                                  <input
-                                    type="text"
-                                    value={variant.sku}
-                                    onChange={(e) => updateVariant(variant.id, 'sku', e.target.value)}
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-xs text-gray-500 mb-1">Price</label>
-                                  <input
-                                    type="number"
-                                    value={variant.price}
-                                    onChange={(e) => updateVariant(variant.id, 'price', parseFloat(e.target.value) || 0)}
-                                    min="0"
-                                    step="0.01"
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-xs text-gray-500 mb-1">Stock</label>
-                                  <input
-                                    type="number"
-                                    value={variant.stock}
-                                    onChange={(e) => updateVariant(variant.id, 'stock', parseInt(e.target.value) || 0)}
-                                    min="0"
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                  />
-                                </div>
-                                <div>
-                                  <button
-                                    type="button"
-                                    onClick={() => removeVariant(variant.id)}
-                                    className="text-red-600 hover:text-red-800 p-1"
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </button>
-                                </div>
-                              </div>
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-semibold text-gray-900">Current Variants ({formData.variants.length})</h4>
+                            <div className="text-xs text-gray-600">
+                              Total Stock: <span className="font-semibold text-gray-900">{formData.variants.reduce((sum, v) => sum + v.stock, 0)}</span>
                             </div>
-                          ))}
+                          </div>
+
+                          {/* Variants Table */}
+                          <div className="overflow-x-auto border border-gray-300 rounded-lg">
+                            <table className="w-full text-sm">
+                              <thead>
+                                <tr className="bg-gray-900 text-white">
+                                  <th className="px-4 py-3 text-left font-semibold">Size</th>
+                                  <th className="px-4 py-3 text-left font-semibold">Color</th>
+                                  <th className="px-4 py-3 text-left font-semibold">SKU</th>
+                                  <th className="px-4 py-3 text-left font-semibold">Price</th>
+                                  <th className="px-4 py-3 text-left font-semibold">Stock</th>
+                                  <th className="px-4 py-3 text-center font-semibold">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {formData.variants.map((variant, idx) => (
+                                  <tr key={variant.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'}>
+                                    <td className="px-4 py-3 text-gray-900 font-medium">{variant.size}</td>
+                                    <td className="px-4 py-3">
+                                      <div className="flex items-center gap-2">
+                                        <div 
+                                          className="w-5 h-5 rounded border border-gray-300"
+                                          style={{
+                                            backgroundColor: 
+                                              variant.color === 'Black' ? '#000000' :
+                                              variant.color === 'Gray' ? '#808080' :
+                                              variant.color === 'White' ? '#FFFFFF' : '#CCCCCC'
+                                          }}
+                                        />
+                                        <span className="text-gray-900">{variant.color}</span>
+                                      </div>
+                                    </td>
+                                    <td className="px-4 py-3 text-gray-700 font-mono text-xs">{variant.sku}</td>
+                                    <td className="px-4 py-3 text-gray-900 font-semibold">₹{variant.price.toFixed(2)}</td>
+                                    <td className="px-4 py-3">
+                                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                        variant.stock > 20 ? 'bg-green-100 text-green-800' :
+                                        variant.stock > 5 ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-red-100 text-red-800'
+                                      }`}>
+                                        {variant.stock} units
+                                      </span>
+                                    </td>
+                                    <td className="px-4 py-3 text-center">
+                                      <button
+                                        type="button"
+                                        onClick={() => removeVariant(variant.id)}
+                                        className="text-gray-600 hover:text-red-600 p-1 inline-block"
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* Variant Summary */}
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
+                              <p className="text-xs text-gray-600 mb-1">Total Variants</p>
+                              <p className="text-2xl font-bold text-gray-900">{formData.variants.length}</p>
+                            </div>
+                            <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
+                              <p className="text-xs text-gray-600 mb-1">Total Stock</p>
+                              <p className="text-2xl font-bold text-gray-900">{formData.variants.reduce((sum, v) => sum + v.stock, 0)}</p>
+                            </div>
+                            <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
+                              <p className="text-xs text-gray-600 mb-1">Price Range</p>
+                              <p className="text-2xl font-bold text-gray-900">
+                                ₹{Math.min(...formData.variants.map(v => v.price)).toFixed(2)} - ₹{Math.max(...formData.variants.map(v => v.price)).toFixed(2)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {formData.variants.length === 0 && (
+                        <div className="text-center py-8 bg-gray-50 rounded-lg border border-gray-300">
+                          <p className="text-gray-600 mb-2">No variants added yet</p>
+                          <p className="text-sm text-gray-500">Add your first variant above to get started</p>
                         </div>
                       )}
                     </>
                   )}
 
                   {!formData.hasVariants && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Base Price *
-                      </label>
-                      <input
-                        type="number"
-                        name="basePrice"
-                        value={formData.basePrice}
-                        onChange={handleInputChange}
-                        required
-                        min="0"
-                        step="0.01"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-                      />
+                    <div className="border-2 border-gray-300 rounded-lg p-6 bg-gray-50">
+                      <h4 className="font-semibold text-gray-900 mb-4">Single Unit Pricing</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Base Price *
+                          </label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                            <input
+                              type="number"
+                              name="basePrice"
+                              value={formData.basePrice}
+                              onChange={handleInputChange}
+                              required
+                              min="0"
+                              step="0.01"
+                              className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                              placeholder="0.00"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Stock Quantity *
+                          </label>
+                          <input
+                            type="number"
+                            name="totalStock"
+                            value={formData.totalStock}
+                            onChange={handleInputChange}
+                            required
+                            min="0"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                            placeholder="0"
+                          />
+                        </div>
+                      </div>
+
+                      {formData.basePrice > 0 && (
+                        <div className="mt-4 p-4 bg-white border border-gray-300 rounded-lg">
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-700">Selling Price:</span>
+                            <span className="text-2xl font-bold text-gray-900">₹{formData.basePrice.toFixed(2)}</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </CardContent>
@@ -1142,93 +1221,238 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                 <CardHeader>
                   <CardTitle>Pricing Configuration</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      name="bulkPricingEnabled"
-                      checked={formData.bulkPricingEnabled}
-                      onChange={handleInputChange}
-                      className="rounded border-gray-300 text-gray-700 focus:ring-gray-700"
-                    />
-                    <label className="text-sm font-medium text-gray-700">
-                      Enable bulk pricing tiers
-                    </label>
+                <CardContent className="space-y-6">
+                  {/* Single Price Section */}
+                  <div className="border-2 border-gray-300 rounded-lg p-6 bg-blue-50">
+                    <h4 className="font-semibold text-gray-900 mb-4">Single Unit Pricing</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Base Price *
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                          <input
+                            type="number"
+                            name="basePrice"
+                            value={formData.basePrice}
+                            onChange={handleInputChange}
+                            required
+                            min="0"
+                            step="0.01"
+                            className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                            placeholder="0.00"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1">Price for single unit</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Original Price (Optional)
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                          <input
+                            type="number"
+                            name="originalPrice"
+                            value={formData.originalPrice || ''}
+                            onChange={handleInputChange}
+                            min="0"
+                            step="0.01"
+                            className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                            placeholder="0.00"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1">For showing discount</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Discount %
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            name="discount"
+                            value={formData.discount || ''}
+                            onChange={handleInputChange}
+                            min="0"
+                            max="100"
+                            step="0.1"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                            placeholder="0"
+                          />
+                          <span className="absolute right-3 top-2 text-gray-500">%</span>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1">Auto-calculated if original price set</p>
+                      </div>
+                    </div>
+
+                    {/* Price Summary */}
+                    {formData.basePrice > 0 && (
+                      <div className="p-4 bg-white border border-gray-300 rounded-lg">
+                        <div className="grid grid-cols-3 gap-4 text-center">
+                          <div>
+                            <p className="text-xs text-gray-600 mb-1">Selling Price</p>
+                            <p className="text-2xl font-bold text-gray-900">₹{formData.basePrice.toFixed(2)}</p>
+                          </div>
+                          {formData.originalPrice && formData.originalPrice > formData.basePrice && (
+                            <>
+                              <div>
+                                <p className="text-xs text-gray-600 mb-1">Original Price</p>
+                                <p className="text-2xl font-bold text-gray-400 line-through">₹{formData.originalPrice.toFixed(2)}</p>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-600 mb-1">You Save</p>
+                                <p className="text-2xl font-bold text-green-600">
+                                  ₹{(formData.originalPrice - formData.basePrice).toFixed(2)}
+                                </p>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {formData.bulkPricingEnabled && (
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <h4 className="font-medium text-gray-900">Pricing Tiers</h4>
-                        <Button type="button" onClick={addPricingTier} size="sm">
-                          Add Tier
+                  {/* Bulk Pricing Section */}
+                  <div className="border-2 border-gray-300 rounded-lg p-6 bg-green-50">
+                    <div className="flex items-center space-x-2 mb-4">
+                      <input
+                        type="checkbox"
+                        id="bulkPricingEnabled"
+                        name="bulkPricingEnabled"
+                        checked={formData.bulkPricingEnabled}
+                        onChange={handleInputChange}
+                        className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                      />
+                      <label htmlFor="bulkPricingEnabled" className="text-sm font-medium text-gray-900">
+                        Enable Bulk Pricing Tiers
+                      </label>
+                    </div>
+
+                    {formData.bulkPricingEnabled && (
+                      <div className="space-y-4">
+                        {/* Pricing Tiers Table */}
+                        <div className="overflow-x-auto border border-gray-300 rounded-lg">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="bg-gray-900 text-white">
+                                <th className="px-4 py-3 text-left font-semibold">Quantity Range</th>
+                                <th className="px-4 py-3 text-left font-semibold">Price per Unit</th>
+                                <th className="px-4 py-3 text-left font-semibold">Discount %</th>
+                                <th className="px-4 py-3 text-left font-semibold">Savings per Unit</th>
+                                <th className="px-4 py-3 text-center font-semibold">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {formData.pricingTiers.map((tier, index) => {
+                                const savings = formData.basePrice - tier.price
+                                const discountPercent = formData.basePrice > 0 
+                                  ? ((savings / formData.basePrice) * 100).toFixed(1)
+                                  : 0
+                                
+                                return (
+                                  <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'}>
+                                    <td className="px-4 py-3">
+                                      <div className="flex items-center gap-2">
+                                        <input
+                                          type="number"
+                                          value={tier.minQuantity}
+                                          onChange={(e) => updatePricingTier(index, 'minQuantity', parseInt(e.target.value) || 1)}
+                                          min="1"
+                                          className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
+                                        />
+                                        <span className="text-gray-600 text-sm">to</span>
+                                        <input
+                                          type="number"
+                                          value={tier.maxQuantity || ''}
+                                          onChange={(e) => updatePricingTier(index, 'maxQuantity', e.target.value ? parseInt(e.target.value) : undefined)}
+                                          min="1"
+                                          placeholder="∞"
+                                          className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
+                                        />
+                                      </div>
+                                    </td>
+                                    <td className="px-4 py-3">
+                                      <div className="relative">
+                                        <span className="absolute left-2 top-2 text-gray-500 text-sm">₹</span>
+                                        <input
+                                          type="number"
+                                          value={tier.price}
+                                          onChange={(e) => updatePricingTier(index, 'price', parseFloat(e.target.value) || 0)}
+                                          min="0"
+                                          step="0.01"
+                                          className="w-full pl-6 pr-2 py-1 border border-gray-300 rounded text-sm"
+                                        />
+                                      </div>
+                                    </td>
+                                    <td className="px-4 py-3 text-gray-900 font-semibold">{discountPercent}%</td>
+                                    <td className="px-4 py-3 text-gray-900 font-semibold">₹{savings.toFixed(2)}</td>
+                                    <td className="px-4 py-3 text-center">
+                                      {formData.pricingTiers.length > 1 && (
+                                        <button
+                                          type="button"
+                                          onClick={() => removePricingTier(index)}
+                                          className="text-gray-600 hover:text-red-600 p-1 inline-block"
+                                        >
+                                          <X className="h-4 w-4" />
+                                        </button>
+                                      )}
+                                    </td>
+                                  </tr>
+                                )
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+
+                        {/* Add Tier Button */}
+                        <Button 
+                          type="button" 
+                          onClick={addPricingTier}
+                          className="w-full bg-gray-900 text-white hover:bg-black"
+                        >
+                          + Add Pricing Tier
                         </Button>
-                      </div>
-                      
-                      {formData.pricingTiers.map((tier, index) => (
-                        <div key={index} className="border border-gray-200 rounded-lg p-4">
-                          <div className="grid grid-cols-1 md:grid-cols-5 gap-3 items-center">
-                            <div>
-                              <label className="block text-xs text-gray-500 mb-1">Min Qty</label>
-                              <input
-                                type="number"
-                                value={tier.minQuantity}
-                                onChange={(e) => updatePricingTier(index, 'minQuantity', parseInt(e.target.value) || 1)}
-                                min="1"
-                                className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs text-gray-500 mb-1">Max Qty</label>
-                              <input
-                                type="number"
-                                value={tier.maxQuantity || ''}
-                                onChange={(e) => updatePricingTier(index, 'maxQuantity', e.target.value ? parseInt(e.target.value) : undefined)}
-                                min="1"
-                                placeholder="No limit"
-                                className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs text-gray-500 mb-1">Price</label>
-                              <input
-                                type="number"
-                                value={tier.price}
-                                onChange={(e) => updatePricingTier(index, 'price', parseFloat(e.target.value) || 0)}
-                                min="0"
-                                step="0.01"
-                                className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs text-gray-500 mb-1">Discount %</label>
-                              <input
-                                type="number"
-                                value={tier.discount || ''}
-                                onChange={(e) => updatePricingTier(index, 'discount', e.target.value ? parseFloat(e.target.value) : undefined)}
-                                min="0"
-                                max="100"
-                                step="0.1"
-                                placeholder="Optional"
-                                className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                              />
-                            </div>
-                            <div>
-                              {formData.pricingTiers.length > 1 && (
-                                <button
-                                  type="button"
-                                  onClick={() => removePricingTier(index)}
-                                  className="text-red-600 hover:text-red-800 p-1"
-                                >
-                                  <X className="h-4 w-4" />
-                                </button>
-                              )}
-                            </div>
+
+                        {/* Bulk Pricing Example */}
+                        <div className="p-4 bg-white border border-gray-300 rounded-lg">
+                          <p className="text-xs font-medium text-gray-700 mb-2">Bulk Pricing Example:</p>
+                          <div className="space-y-1 text-xs text-gray-600">
+                            {formData.pricingTiers.map((tier, idx) => (
+                              <div key={idx} className="flex justify-between">
+                                <span>
+                                  {tier.minQuantity} - {tier.maxQuantity ? tier.maxQuantity : '∞'} units:
+                                </span>
+                                <span className="font-medium text-gray-900">
+                                  ₹{tier.price.toFixed(2)} each
+                                </span>
+                              </div>
+                            ))}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      </div>
+                    )}
+
+                    {!formData.bulkPricingEnabled && (
+                      <div className="p-4 bg-white border border-gray-300 rounded-lg text-center">
+                        <p className="text-sm text-gray-600">
+                          Enable bulk pricing to offer discounts for larger orders
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Pricing Strategy Tips */}
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <h4 className="font-medium text-amber-900 mb-2">💡 Pricing Tips</h4>
+                    <ul className="text-sm text-amber-800 space-y-1">
+                      <li>• Set competitive base prices to attract customers</li>
+                      <li>• Use bulk pricing to encourage larger orders</li>
+                      <li>• Typical bulk discounts: 5-10% for 10+ units, 10-15% for 50+ units</li>
+                      <li>• Ensure bulk prices still maintain healthy profit margins</li>
+                    </ul>
+                  </div>
                 </CardContent>
               </Card>
             )}
