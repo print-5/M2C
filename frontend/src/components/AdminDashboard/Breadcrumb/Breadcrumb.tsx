@@ -12,25 +12,119 @@ interface BreadcrumbItem {
 export function Breadcrumb() {
   const pathname = usePathname()
   
+  // Map technical paths to user-friendly labels
+  const pathLabels: Record<string, string> = {
+    'admin': 'Admin',
+    'dashboard': 'Dashboard',
+    'products': 'Products',
+    'categories': 'Categories',
+    'inventory': 'Inventory',
+    'orders': 'Orders',
+    'users': 'Users',
+    'vendors': 'Vendors',
+    'reports': 'Reports',
+    'settings': 'Settings',
+    'billing': 'Billing',
+    'cms': 'CMS',
+    'reviews': 'Reviews',
+    'add': 'Add New',
+    'edit': 'Edit',
+    'view': 'View Details',
+    'profile': 'Profile',
+    'returns': 'Returns',
+    'shipping': 'Shipping',
+    'earnings': 'Earnings',
+    'support': 'Support',
+    'analytics': 'Analytics',
+    'customers': 'Customers',
+    'vendor-requests': 'Vendor Requests'
+  }
+
   // Generate breadcrumb items from pathname
   const generateBreadcrumbs = (): BreadcrumbItem[] => {
     const paths = pathname.split('/').filter(Boolean)
     const breadcrumbs: BreadcrumbItem[] = []
 
-    // Always start with Dashboard
-    breadcrumbs.push({ label: 'Dashboard', href: '/dashboard' })
+    // Handle different route structures
+    if (paths[0] === 'admin' && paths[1] === 'dashboard') {
+      // Admin dashboard routes
+      breadcrumbs.push({ label: 'Dashboard', href: '/admin/dashboard' })
 
-    // Add subsequent paths
-    let currentPath = ''
-    for (let i = 1; i < paths.length; i++) {
-      currentPath += `/${paths[i]}`
-      const label = paths[i].charAt(0).toUpperCase() + paths[i].slice(1)
+      // Process remaining paths starting from index 2
+      let currentPath = '/admin/dashboard'
+      for (let i = 2; i < paths.length; i++) {
+        const segment = paths[i]
+        currentPath += `/${segment}`
+        
+        // Handle dynamic routes (like [id])
+        if (segment.match(/^\[.*\]$/) || /^\d+$/.test(segment)) {
+          // For dynamic segments, use a generic label or try to get from context
+          const label = segment.match(/^\[.*\]$/) ? 'Details' : `#${segment}`
+          
+          // Don't add href for the last item (current page)
+          if (i === paths.length - 1) {
+            breadcrumbs.push({ label })
+          } else {
+            breadcrumbs.push({ label, href: currentPath })
+          }
+        } else {
+          // Use mapped label or capitalize the segment
+          const label = pathLabels[segment] || segment.charAt(0).toUpperCase() + segment.slice(1)
+          
+          // Don't add href for the last item (current page)
+          if (i === paths.length - 1) {
+            breadcrumbs.push({ label })
+          } else {
+            breadcrumbs.push({ label, href: currentPath })
+          }
+        }
+      }
+    } else if (paths[0] === 'vendor' && paths[1] === 'dashboard') {
+      // Vendor dashboard routes
+      breadcrumbs.push({ label: 'Vendor Dashboard', href: '/vendor/dashboard' })
+
+      // Process remaining paths starting from index 2
+      let currentPath = '/vendor/dashboard'
+      for (let i = 2; i < paths.length; i++) {
+        const segment = paths[i]
+        currentPath += `/${segment}`
+        
+        // Handle dynamic routes
+        if (segment.match(/^\[.*\]$/) || /^\d+$/.test(segment)) {
+          const label = segment.match(/^\[.*\]$/) ? 'Details' : `#${segment}`
+          
+          if (i === paths.length - 1) {
+            breadcrumbs.push({ label })
+          } else {
+            breadcrumbs.push({ label, href: currentPath })
+          }
+        } else {
+          const label = pathLabels[segment] || segment.charAt(0).toUpperCase() + segment.slice(1)
+          
+          if (i === paths.length - 1) {
+            breadcrumbs.push({ label })
+          } else {
+            breadcrumbs.push({ label, href: currentPath })
+          }
+        }
+      }
+    } else {
+      // Fallback for other routes
+      breadcrumbs.push({ label: 'Home', href: '/' })
       
-      // Don't add href for the last item (current page)
-      if (i === paths.length - 1) {
-        breadcrumbs.push({ label })
-      } else {
-        breadcrumbs.push({ label, href: `/dashboard${currentPath}` })
+      let currentPath = ''
+      for (let i = 0; i < paths.length; i++) {
+        const segment = paths[i]
+        currentPath += `/${segment}`
+        
+        const label = pathLabels[segment] || segment.charAt(0).toUpperCase() + segment.slice(1)
+        
+        // Don't add href for the last item (current page)
+        if (i === paths.length - 1) {
+          breadcrumbs.push({ label })
+        } else {
+          breadcrumbs.push({ label, href: currentPath })
+        }
       }
     }
 
@@ -39,8 +133,13 @@ export function Breadcrumb() {
 
   const breadcrumbs = generateBreadcrumbs()
 
+  // Don't render if there's only one breadcrumb item
+  if (breadcrumbs.length <= 1) {
+    return null
+  }
+
   return (
-    <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+    <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6" aria-label="Breadcrumb">
       <Home className="h-4 w-4" />
       {breadcrumbs.map((item, index) => (
         <div key={index} className="flex items-center space-x-2">
@@ -48,12 +147,14 @@ export function Breadcrumb() {
           {item.href ? (
             <Link
               href={item.href}
-              className="hover:text-gray-900 transition-colors"
+              className="hover:text-gray-900 transition-colors duration-200 hover:underline"
             >
               {item.label}
             </Link>
           ) : (
-            <span className="text-gray-900 font-medium">{item.label}</span>
+            <span className="text-gray-900 font-medium" aria-current="page">
+              {item.label}
+            </span>
           )}
         </div>
       ))}

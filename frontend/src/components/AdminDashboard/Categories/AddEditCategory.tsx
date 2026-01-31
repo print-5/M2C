@@ -176,6 +176,24 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
     }
   }
 
+  const handleSubcategoryImageUpload = (e: React.ChangeEvent<HTMLInputElement>, isNew: boolean = false) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const imageUrl = URL.createObjectURL(file)
+      if (isNew) {
+        setNewSubcategory(prev => ({ ...prev, image: imageUrl }))
+      }
+    }
+  }
+
+  const handleExistingSubcategoryImageUpload = (e: React.ChangeEvent<HTMLInputElement>, subcategoryId: string) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const imageUrl = URL.createObjectURL(file)
+      updateSubcategory(subcategoryId, 'image', imageUrl)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -462,16 +480,48 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                       />
                     </div>
+                    
+                    {/* Image Upload for New Subcategory */}
                     <div className="mb-3">
-                      <input
-                        type="text"
-                        name="image"
-                        value={newSubcategory.image || ''}
-                        onChange={handleNewSubcategoryChange}
-                        placeholder="Image URL (optional)"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-                      />
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Subcategory Image
+                      </label>
+                      {newSubcategory.image ? (
+                        <div className="relative">
+                          <img
+                            src={newSubcategory.image}
+                            alt="Subcategory"
+                            className="w-full h-24 object-cover rounded border"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = '/assets/images/categories/cs1.jpg';
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setNewSubcategory(prev => ({ ...prev, image: '' }))}
+                            className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors cursor-pointer">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleSubcategoryImageUpload(e, true)}
+                            className="hidden"
+                            id="new-subcategory-image-upload"
+                          />
+                          <label htmlFor="new-subcategory-image-upload" className="cursor-pointer">
+                            <Upload className="mx-auto h-8 w-8 text-gray-400" />
+                            <p className="mt-1 text-xs text-gray-600">Click to upload image</p>
+                          </label>
+                        </div>
+                      )}
                     </div>
+                    
                     <div className="flex gap-3">
                       <Dropdown
                         value={newSubcategory.status}
@@ -481,7 +531,7 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                         ]}
                         onChange={(value) => setNewSubcategory(prev => ({ ...prev, status: value as 'ACTIVE' | 'INACTIVE' }))}
                       />
-                      <Button type="button" onClick={addSubcategory}>
+                      <Button type="button" onClick={addSubcategory} className="bg-gray-900 text-white p-4" >
                         <Plus className="h-4 w-4 mr-2" />
                         Add Subcategory
                       </Button>
@@ -524,14 +574,41 @@ export default function AddEditCategory({ categoryId, isEdit = false }: AddEditC
                             />
                           </div>
                           <div className="mb-3">
-                            <label className="block text-xs text-gray-500 mb-1">Image URL</label>
-                            <input
-                              type="text"
-                              value={subcategory.image || ''}
-                              onChange={(e) => updateSubcategory(subcategory.id!, 'image', e.target.value)}
-                              placeholder="Image URL (optional)"
-                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                            />
+                            <label className="block text-xs text-gray-500 mb-1">Image</label>
+                            {subcategory.image ? (
+                              <div className="relative">
+                                <img
+                                  src={subcategory.image}
+                                  alt="Subcategory"
+                                  className="w-full h-24 object-cover rounded border"
+                                  onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.src = '/assets/images/categories/cs1.jpg';
+                                  }}
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => updateSubcategory(subcategory.id!, 'image', '')}
+                                  className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
+                                >
+                                  <X className="h-3 w-3" />
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-center hover:border-gray-400 transition-colors cursor-pointer">
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) => handleExistingSubcategoryImageUpload(e, subcategory.id!)}
+                                  className="hidden"
+                                  id={`subcategory-image-upload-${subcategory.id}`}
+                                />
+                                <label htmlFor={`subcategory-image-upload-${subcategory.id}`} className="cursor-pointer">
+                                  <Upload className="mx-auto h-6 w-6 text-gray-400" />
+                                  <p className="mt-1 text-xs text-gray-600">Click to upload</p>
+                                </label>
+                              </div>
+                            )}
                           </div>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
