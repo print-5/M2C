@@ -30,6 +30,19 @@ interface LoginResponse {
     email: string
     name: string
     role: string
+    image?: string
+    isVerified: boolean
+    phoneNumber?: string
+    address?: string
+    city?: string
+    state?: string
+    zipCode?: string
+    country?: string
+    dateOfBirth?: string
+    currency?: string
+    companyName?: string
+    gstNumber?: string
+    onboardingCompleted?: boolean
   }
   token: string
 }
@@ -102,12 +115,13 @@ export default function AdminLogin() {
     setIsLoading(true)
 
     try {
-      // Call backend API
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      // Call super admin login endpoint
+      const response = await fetch('http://localhost:5000/api/auth/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for httpOnly token
         body: JSON.stringify({
           email: loginData.email,
           password: loginData.password,
@@ -117,21 +131,21 @@ export default function AdminLogin() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Login failed')
+        throw new Error(data.error || 'Super Admin login failed')
       }
 
-      const loginResponse: LoginResponse = data
+      const loginResponse: LoginResponse = data.data
 
-      console.log('Login response:', loginResponse)
+      console.log('Super Admin login response:', loginResponse)
 
-      // Check if user is admin
+      // Verify this is an admin user (should always be true from super admin endpoint)
       if (loginResponse.user.role !== 'admin') {
         console.log('User role:', loginResponse.user.role, 'Expected: admin')
-        showErrorToast('Access Denied', 'Only administrators can access this dashboard.')
+        showErrorToast('Access Denied', 'Only super administrators can access this dashboard.')
         return
       }
 
-      console.log('Admin login successful, storing auth data...')
+      console.log('Super Admin login successful, storing auth data...')
 
       // Store authentication data
       if (loginData.rememberMe) {
@@ -152,8 +166,8 @@ export default function AdminLogin() {
         router.push('/admin/dashboard')
       }, 1000)
     } catch (error) {
-      console.error('Login error:', error)
-      showErrorToast('Login Failed', error instanceof Error ? error.message : 'Invalid credentials. Please try again.')
+      console.error('Super Admin login error:', error)
+      showErrorToast('Login Failed', error instanceof Error ? error.message : 'Invalid admin credentials. Please try again.')
     } finally {
       setIsLoading(false)
     }
