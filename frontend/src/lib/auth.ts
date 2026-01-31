@@ -5,6 +5,19 @@ export interface AdminUser {
   email: string
   name: string
   role: string
+  image?: string
+  isVerified?: boolean
+  phoneNumber?: string
+  address?: string
+  city?: string
+  state?: string
+  zipCode?: string
+  country?: string
+  dateOfBirth?: string
+  currency?: string
+  companyName?: string
+  gstNumber?: string
+  onboardingCompleted?: boolean
 }
 
 export interface AuthTokens {
@@ -108,6 +121,7 @@ export async function authenticatedFetch(url: string, options: RequestInit = {})
   
   const response = await fetch(url, {
     ...options,
+    credentials: 'include', // Include httpOnly cookies
     headers: {
       'Content-Type': 'application/json',
       ...authHeaders,
@@ -129,10 +143,14 @@ export async function logout(): Promise<void> {
   try {
     const auth = getStoredAuth()
     if (auth) {
-      // Call backend logout endpoint if available
+      // Call backend logout endpoint with credentials for httpOnly cookies
       await fetch('http://localhost:5000/api/auth/logout', {
         method: 'POST',
-        headers: getAuthHeader(),
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeader(),
+        },
+        credentials: 'include', // Include httpOnly cookies
       }).catch(() => {
         // Ignore errors, just clear local storage
       })
