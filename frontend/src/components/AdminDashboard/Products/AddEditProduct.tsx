@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/UI/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/UI/Table'
 import { ArrowLeft, Save, X, Upload } from 'lucide-react'
 import Link from 'next/link'
 import { categories } from '@/components/mockData/products'
-import Dropdown from '@/components/UI/Dropdown'
+import { showSuccessToast, showErrorToast, showWarningToast } from '@/lib/toast-utils'
 
 // Mock data for categories and subcategories
 const categorySubcategories: Record<string, string[]> = {
@@ -64,8 +65,18 @@ interface ProductFormData {
   category: string
   subCategory: string
   
+  // Pricing Information
+  basePrice: number
+  originalPrice?: number
+  discount?: number // Discount percentage (e.g., 25 for 25% off)
+  
+  // Product Rating & Reviews (for display/reference)
+  rating?: number
+  reviews?: number
+  
   // Fabric & Specifications
   fabricType: string
+  material: string // Main material description (e.g., "100% Organic Cotton")
   fabricSpecifications: FabricSpecification
   
   // Variants Management
@@ -73,7 +84,6 @@ interface ProductFormData {
   hasVariants: boolean
   
   // Base Product Info (when no variants)
-  basePrice: number
   baseSku: string
   
   // Images
@@ -123,8 +133,18 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
     category: '',
     subCategory: '',
     
+    // Pricing Information
+    basePrice: 0,
+    originalPrice: undefined,
+    discount: undefined,
+    
+    // Product Rating & Reviews
+    rating: undefined,
+    reviews: undefined,
+    
     // Fabric & Specifications
     fabricType: '',
+    material: '',
     fabricSpecifications: {
       type: '',
       composition: '',
@@ -139,7 +159,6 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
     hasVariants: false,
     
     // Base Product Info
-    basePrice: 0,
     baseSku: '',
     
     // Images
@@ -176,6 +195,26 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
   const [newTag, setNewTag] = useState('')
   const [newCareInstruction, setNewCareInstruction] = useState('')
   const [activeTab, setActiveTab] = useState('basic')
+  // Auto-save functionality (optional)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+
+  useEffect(() => {
+    setHasUnsavedChanges(true)
+  }, [formData])
+
+  // Warn user about unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [hasUnsavedChanges])
+
   const [newVariant, setNewVariant] = useState<Partial<ProductVariant>>({
     size: '',
     color: '',
@@ -203,7 +242,17 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
             category: categories[0],
             subCategory: 'Cotton Sheets',
             
+            // Pricing Information
+            basePrice: 89.99,
+            originalPrice: 99.99,
+            discount: 10,
+            
+            // Product Rating & Reviews
+            rating: 4.5,
+            reviews: 128,
+            
             fabricType: 'Cotton',
+            material: '100% Organic Cotton',
             fabricSpecifications: {
               type: 'Cotton',
               composition: '100% Cotton',
@@ -235,7 +284,6 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
             ],
             hasVariants: true,
             
-            basePrice: 89.99,
             baseSku: 'CS-001',
             
             images: [],
@@ -268,6 +316,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
           })
         } catch (error) {
           console.error('Error loading product data:', error)
+          showErrorToast('Failed to Load Product', 'Unable to load product data. Please try again.')
         } finally {
           setIsLoadingData(false)
         }
@@ -410,6 +459,62 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
     }
   }
 
+  // Image handling functions
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files) return
+
+    Array.from(files).forEach((file) => {
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        showWarningToast('File Too Large', `${file.name} is larger than 10MB`)
+        return
+      }
+
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const newImage: ProductImage = {
+          id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+          url: event.target?.result as string,
+          alt: file.name,
+          isPrimary: formData.images.length === 0 // First image is primary
+        }
+
+        setFormData(prev => ({
+          ...prev,
+          images: [...prev.images, newImage]
+        }))
+      }
+      reader.readAsDataURL(file)
+    })
+
+    // Reset input
+    e.target.value = ''
+  }
+
+  const setPrimaryImage = (imageId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.map(img => ({
+        ...img,
+        isPrimary: img.id === imageId
+      }))
+    }))
+  }
+
+  const removeImage = (imageId: string) => {
+    setFormData(prev => {
+      const updatedImages = prev.images.filter(img => img.id !== imageId)
+      // If we removed the primary image, make the first remaining image primary
+      if (updatedImages.length > 0 && !updatedImages.some(img => img.isPrimary)) {
+        updatedImages[0].isPrimary = true
+      }
+      return {
+        ...prev,
+        images: updatedImages
+      }
+    })
+  }
+
   const removeTag = (tag: string) => {
     setFormData(prev => ({
       ...prev,
@@ -417,26 +522,66 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
     }))
   }
 
+  const handleSaveDraft = async () => {
+    setIsLoading(true)
+    try {
+      // Save as draft
+      console.log('Saving draft:', formData)
+      showSuccessToast('Draft Saved', 'Your product draft has been saved.')
+      setHasUnsavedChanges(false)
+    } catch (error) {
+      showErrorToast('Save Failed', 'Unable to save draft.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Basic validation
+    if (!formData.name.trim()) {
+      showErrorToast('Validation Error', 'Product name is required.')
+      return
+    }
+    
+    if (!formData.category) {
+      showErrorToast('Validation Error', 'Please select a category.')
+      return
+    }
+    
+    if (!formData.hasVariants && formData.basePrice <= 0) {
+      showErrorToast('Validation Error', 'Please enter a valid base price.')
+      return
+    }
+    
+    if (formData.hasVariants && formData.variants.length === 0) {
+      showErrorToast('Validation Error', 'Please add at least one variant or disable variants.')
+      return
+    }
+
     setIsLoading(true)
 
     try {
       if (isEdit) {
         console.log('Updating product:', productId, formData)
         // API call: PUT /api/products/${productId}
+        showSuccessToast('Product Updated', 'Your product has been updated successfully.')
       } else {
         console.log('Creating product:', formData)
         // API call: POST /api/products
+        showSuccessToast('Product Created', 'Your product has been created successfully.')
       }
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000))
       
       // Redirect back to products list
-      router.push('/dashboard/products')
+      router.push('/admin/dashboard/products')
+      setHasUnsavedChanges(false)
     } catch (error) {
       console.error('Error saving product:', error)
+      showErrorToast('Save Failed', 'Unable to save product. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -448,7 +593,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Link href="/dashboard/products">
+            <Link href="/admin/dashboard/products">
               <Button variant="ghost" size="sm">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Products
@@ -474,7 +619,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900">
             {isEdit ? 'Edit Product' : 'Add New Product'}
           </h1>
         </div>
@@ -485,7 +630,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
         {/* Tab Navigation */}
         <div className="mb-6">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-4">
+            <nav className="-mb-px flex space-x-8">
               {[
                 { id: 'basic', label: 'Basic Info' },
                 { id: 'fabric', label: 'Fabric & Specs' },
@@ -498,10 +643,10 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`py-2 px-1 border-b-2 font-medium text-base ${
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
                     activeTab === tab.id
-                      ? 'border-white text-white bg-gray-900 px-2 rounded-t-sm'
-                      : 'border-gray-100 text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      ? 'border-gray-700 text-gray-900'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
                   {tab.label}
@@ -554,28 +699,43 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Dropdown
-                        id="category"
-                        label="Category *"
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Category *
+                      </label>
+                      <select
+                        name="category"
                         value={formData.category}
-                        options={categories}
-                        placeholder="Select Category"
-                        onChange={(value) => setFormData(prev => ({ 
-                          ...prev, 
-                          category: value as string,
-                          subCategory: '' // Reset subcategory when category changes
-                        }))}
-                      />
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                      >
+                        <option value="">Select Category</option>
+                        {categories.map((category) => (
+                          <option key={category} value={category}>
+                            {category}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                     <div>
-                      <Dropdown
-                        id="subCategory"
-                        label="Sub-Category *"
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Sub-Category *
+                      </label>
+                      <select
+                        name="subCategory"
                         value={formData.subCategory}
-                        options={formData.category ? categorySubcategories[formData.category] || [] : []}
-                        placeholder="Select Sub-Category"
-                        onChange={(value) => setFormData(prev => ({ ...prev, subCategory: value as string }))}
-                      />
+                        onChange={handleInputChange}
+                        required
+                        disabled={!formData.category}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent disabled:bg-gray-100"
+                      >
+                        <option value="">Select Sub-Category</option>
+                        {formData.category && categorySubcategories[formData.category]?.map((subCat) => (
+                          <option key={subCat} value={subCat}>
+                            {subCat}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
@@ -636,7 +796,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                           onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                         />
-                        <Button type="button" onClick={addTag} className='bg-gray-800 text-white p-4'>
+                        <Button type="button" onClick={addTag}>
                           Add
                         </Button>
                       </div>
@@ -671,13 +831,36 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Dropdown
-                      id="fabricType"
-                      label="Fabric Type *"
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Fabric Type *
+                    </label>
+                    <select
+                      name="fabricType"
                       value={formData.fabricType}
-                      options={fabricTypes}
-                      placeholder="Select Fabric Type"
-                      onChange={(value) => setFormData(prev => ({ ...prev, fabricType: value as string }))}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                    >
+                      <option value="">Select Fabric Type</option>
+                      {fabricTypes.map((fabric) => (
+                        <option key={fabric} value={fabric}>
+                          {fabric}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Material Description
+                    </label>
+                    <input
+                      type="text"
+                      name="material"
+                      value={formData.material}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                      placeholder="e.g., 100% Organic Cotton"
                     />
                   </div>
 
@@ -754,7 +937,7 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                           onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCareInstruction())}
                         />
-                        <Button type="button" onClick={addCareInstruction} className='bg-gray-800 text-white p-4'>
+                        <Button type="button" onClick={addCareInstruction}>
                           Add
                         </Button>
                       </div>
@@ -787,16 +970,16 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                 <CardHeader>
                   <CardTitle>Size & Color Variants</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   <div className="flex items-center space-x-2">
                     <input
                       type="checkbox"
                       name="hasVariants"
                       checked={formData.hasVariants}
                       onChange={handleInputChange}
-                      className="rounded border-gray-300 text-gray-700 focus:ring-gray-700"
+                      className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
                     />
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium text-gray-900">
                       This product has variants (different sizes/colors)
                     </label>
                   </div>
@@ -804,49 +987,77 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                   {formData.hasVariants && (
                     <>
                       {/* Add New Variant */}
-                      <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                        <h4 className="font-medium text-gray-900 mb-3">Add New Variant</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                      <div className="border-2 border-gray-300 rounded-lg p-6 bg-gray-50">
+                        <h4 className="font-semibold text-gray-900 mb-4">Add New Variant</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-6 gap-3 mb-4">
                           <div>
-                            <Dropdown
-                              id="newVariantSize"
-                              value={newVariant.size || ''}
-                              options={standardSizes}
-                              placeholder="Size"
-                              onChange={(value) => setNewVariant(prev => ({ ...prev, size: value as string }))}
-                            />
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Size *</label>
+                            <select
+                              value={newVariant.size}
+                              onChange={(e) => setNewVariant(prev => ({ ...prev, size: e.target.value }))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
+                            >
+                              <option value="">Select Size</option>
+                              {standardSizes.map((size) => (
+                                <option key={size} value={size}>{size}</option>
+                              ))}
+                            </select>
                           </div>
                           <div>
-                            <Dropdown
-                              id="newVariantColor"
-                              value={newVariant.color || ''}
-                              options={standardColors}
-                              placeholder="Color"
-                              onChange={(value) => setNewVariant(prev => ({ ...prev, color: value as string }))}
-                            />
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Color *</label>
+                            <select
+                              value={newVariant.color}
+                              onChange={(e) => setNewVariant(prev => ({ ...prev, color: e.target.value }))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
+                            >
+                              <option value="">Select Color</option>
+                              {standardColors.map((color) => (
+                                <option key={color} value={color}>{color}</option>
+                              ))}
+                            </select>
                           </div>
                           <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">SKU *</label>
                             <input
                               type="text"
                               value={newVariant.sku}
                               onChange={(e) => setNewVariant(prev => ({ ...prev, sku: e.target.value }))}
-                              placeholder="SKU"
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                              placeholder="e.g., CS-Q-BLK"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
                             />
                           </div>
                           <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Price *</label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-2 text-gray-500 text-sm">₹</span>
+                              <input
+                                type="number"
+                                value={newVariant.price}
+                                onChange={(e) => setNewVariant(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
+                                placeholder="0.00"
+                                min="0"
+                                step="0.01"
+                                className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Stock *</label>
                             <input
                               type="number"
-                              value={newVariant.price}
-                              onChange={(e) => setNewVariant(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
-                              placeholder="Price"
+                              value={newVariant.stock}
+                              onChange={(e) => setNewVariant(prev => ({ ...prev, stock: parseInt(e.target.value) || 0 }))}
+                              placeholder="0"
                               min="0"
-                              step="0.01"
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
                             />
                           </div>
-                          <div>
-                            <Button type="button" onClick={addVariant} className="w-full bg-gray-800 text-white rounded-lg p-4">
+                          <div className="flex items-end">
+                            <Button 
+                              type="button" 
+                              onClick={addVariant}
+                              className="w-full bg-gray-900 text-white hover:bg-black"
+                            >
                               Add Variant
                             </Button>
                           </div>
@@ -856,88 +1067,147 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       {/* Existing Variants */}
                       {formData.variants.length > 0 && (
                         <div className="space-y-3">
-                          <h4 className="font-medium text-gray-900">Current Variants</h4>
-                          {formData.variants.map((variant) => (
-                            <div key={variant.id} className="border border-gray-200 rounded-lg p-4">
-                              <div className="grid grid-cols-1 md:grid-cols-6 gap-3 items-center">
-                                <div>
-                                  <label className="block text-xs text-gray-500 mb-1">Size</label>
-                                  <input
-                                    type="text"
-                                    value={variant.size}
-                                    onChange={(e) => updateVariant(variant.id, 'size', e.target.value)}
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-xs text-gray-500 mb-1">Color</label>
-                                  <input
-                                    type="text"
-                                    value={variant.color}
-                                    onChange={(e) => updateVariant(variant.id, 'color', e.target.value)}
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-xs text-gray-500 mb-1">SKU</label>
-                                  <input
-                                    type="text"
-                                    value={variant.sku}
-                                    onChange={(e) => updateVariant(variant.id, 'sku', e.target.value)}
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-xs text-gray-500 mb-1">Price</label>
-                                  <input
-                                    type="number"
-                                    value={variant.price}
-                                    onChange={(e) => updateVariant(variant.id, 'price', parseFloat(e.target.value) || 0)}
-                                    min="0"
-                                    step="0.01"
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-xs text-gray-500 mb-1">Stock</label>
-                                  <input
-                                    type="number"
-                                    value={variant.stock}
-                                    onChange={(e) => updateVariant(variant.id, 'stock', parseInt(e.target.value) || 0)}
-                                    min="0"
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                  />
-                                </div>
-                                <div>
-                                  <button
-                                    type="button"
-                                    onClick={() => removeVariant(variant.id)}
-                                    className="text-red-600 hover:text-red-800 p-1"
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </button>
-                                </div>
-                              </div>
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-semibold text-gray-900">Current Variants ({formData.variants.length})</h4>
+                            <div className="text-xs text-gray-600">
+                              Total Stock: <span className="font-semibold text-gray-900">{formData.variants.reduce((sum, v) => sum + v.stock, 0)}</span>
                             </div>
-                          ))}
+                          </div>
+
+                          {/* Variants Table */}
+                          <div className="overflow-x-auto border border-gray-300 rounded-lg">
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Size</TableHead>
+                                  <TableHead>Color</TableHead>
+                                  <TableHead>SKU</TableHead>
+                                  <TableHead>Price</TableHead>
+                                  <TableHead>Stock</TableHead>
+                                  <TableHead className="text-center">Action</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {formData.variants.map((variant, idx) => (
+                                  <TableRow key={variant.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'}>
+                                    <TableCell className="text-gray-900 font-medium">{variant.size}</TableCell>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <div 
+                                          className="w-5 h-5 rounded border border-gray-300"
+                                          style={{
+                                            backgroundColor: 
+                                              variant.color === 'Black' ? '#000000' :
+                                              variant.color === 'Gray' ? '#808080' :
+                                              variant.color === 'White' ? '#FFFFFF' : '#CCCCCC'
+                                          }}
+                                        />
+                                        <span className="text-gray-900">{variant.color}</span>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell className="text-gray-700 font-mono text-xs">{variant.sku}</TableCell>
+                                    <TableCell className="text-gray-900 font-semibold">₹{variant.price.toFixed(2)}</TableCell>
+                                    <TableCell>
+                                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                        variant.stock > 20 ? 'bg-green-100 text-green-800' :
+                                        variant.stock > 5 ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-red-100 text-red-800'
+                                      }`}>
+                                        {variant.stock} units
+                                      </span>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                      <button
+                                        type="button"
+                                        onClick={() => removeVariant(variant.id)}
+                                        className="text-gray-600 hover:text-red-600 p-1 inline-block"
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </button>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
+
+                          {/* Variant Summary */}
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
+                              <p className="text-xs text-gray-600 mb-1">Total Variants</p>
+                              <p className="text-2xl font-bold text-gray-900">{formData.variants.length}</p>
+                            </div>
+                            <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
+                              <p className="text-xs text-gray-600 mb-1">Total Stock</p>
+                              <p className="text-2xl font-bold text-gray-900">{formData.variants.reduce((sum, v) => sum + v.stock, 0)}</p>
+                            </div>
+                            <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
+                              <p className="text-xs text-gray-600 mb-1">Price Range</p>
+                              <p className="text-2xl font-bold text-gray-900">
+                                ₹{Math.min(...formData.variants.map(v => v.price)).toFixed(2)} - ₹{Math.max(...formData.variants.map(v => v.price)).toFixed(2)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {formData.variants.length === 0 && (
+                        <div className="text-center py-8 bg-gray-50 rounded-lg border border-gray-300">
+                          <p className="text-gray-600 mb-2">No variants added yet</p>
+                          <p className="text-sm text-gray-500">Add your first variant above to get started</p>
                         </div>
                       )}
                     </>
                   )}
 
                   {!formData.hasVariants && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Base Price *
-                      </label>
-                      <input
-                        type="number"
-                        name="basePrice"
-                        value={formData.basePrice}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
-                      />
+                    <div className="border-2 border-gray-300 rounded-lg p-6 bg-gray-50">
+                      <h4 className="font-semibold text-gray-900 mb-4">Single Unit Pricing</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Base Price *
+                          </label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                            <input
+                              type="number"
+                              name="basePrice"
+                              value={formData.basePrice}
+                              onChange={handleInputChange}
+                              required
+                              min="0"
+                              step="0.01"
+                              className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                              placeholder="0.00"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Stock Quantity *
+                          </label>
+                          <input
+                            type="number"
+                            name="totalStock"
+                            value={formData.totalStock}
+                            onChange={handleInputChange}
+                            required
+                            min="0"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                            placeholder="0"
+                          />
+                        </div>
+                      </div>
+
+                      {formData.basePrice > 0 && (
+                        <div className="mt-4 p-4 bg-white border border-gray-300 rounded-lg">
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-700">Selling Price:</span>
+                            <span className="text-2xl font-bold text-gray-900">₹{formData.basePrice.toFixed(2)}</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </CardContent>
@@ -950,93 +1220,232 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                 <CardHeader>
                   <CardTitle>Pricing Configuration</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      name="bulkPricingEnabled"
-                      checked={formData.bulkPricingEnabled}
-                      onChange={handleInputChange}
-                      className="rounded border-gray-300 text-gray-700 focus:ring-gray-700"
-                    />
-                    <label className="text-sm font-medium text-gray-700">
-                      Enable bulk pricing tiers
-                    </label>
+                <CardContent className="space-y-6">
+                  {/* Single Price Section */}
+                  <div className="border-2 border-gray-300 rounded-lg p-6">
+                    <h4 className="font-semibold text-gray-900 mb-4">Single Unit Pricing</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Base Price *
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                          <input
+                            type="number"
+                            name="basePrice"
+                            value={formData.basePrice}
+                            onChange={handleInputChange}
+                            required
+                            className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                            placeholder="0"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1">Price for single unit</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Original Price (Optional)
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                          <input
+                            type="number"
+                            name="originalPrice"
+                            value={formData.originalPrice || ''}
+                            onChange={handleInputChange}
+                            className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                            placeholder="0"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1">For showing discount</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Discount %
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            name="discount"
+                            value={formData.discount || ''}
+                            onChange={handleInputChange}
+                            max="100"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                            placeholder="0"
+                          />
+                          <span className="absolute right-3 top-2 text-gray-500">%</span>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1">Auto-calculated if original price set</p>
+                      </div>
+                    </div>
+
+                    {/* Price Summary */}
+                    {formData.basePrice > 0 && (
+                      <div className="p-4 bg-white border border-gray-300 rounded-lg">
+                        <div className="grid grid-cols-3 gap-4 text-center">
+                          <div>
+                            <p className="text-xs text-gray-600 mb-1">Selling Price</p>
+                            <p className="text-2xl font-bold text-gray-900">₹{formData.basePrice.toFixed(2)}</p>
+                          </div>
+                          {formData.originalPrice && formData.originalPrice > formData.basePrice && (
+                            <>
+                              <div>
+                                <p className="text-xs text-gray-600 mb-1">Original Price</p>
+                                <p className="text-2xl font-bold text-gray-400 line-through">₹{formData.originalPrice.toFixed(2)}</p>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-600 mb-1">You Save</p>
+                                <p className="text-2xl font-bold text-green-600">
+                                  ₹{(formData.originalPrice - formData.basePrice).toFixed(2)}
+                                </p>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {formData.bulkPricingEnabled && (
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <h4 className="font-medium text-gray-900">Pricing Tiers</h4>
-                        <Button type="button" onClick={addPricingTier} size="sm" className='bg-gray-800 text-white p-4'>
-                          Add Tier
+                  {/* Bulk Pricing Section */}
+                  <div className="border-2 border-gray-300 rounded-lg p-6">
+                    <div className="flex items-center space-x-2 mb-4">
+                      <input
+                        type="checkbox"
+                        id="bulkPricingEnabled"
+                        name="bulkPricingEnabled"
+                        checked={formData.bulkPricingEnabled}
+                        onChange={handleInputChange}
+                        className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                      />
+                      <label htmlFor="bulkPricingEnabled" className="text-sm font-medium text-gray-900">
+                        Enable Bulk Pricing Tiers
+                      </label>
+                    </div>
+
+                    {formData.bulkPricingEnabled && (
+                      <div className="space-y-4">
+                        {/* Pricing Tiers Table */}
+                        <div className="overflow-x-auto border border-gray-300 rounded-lg">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Quantity Range</TableHead>
+                                <TableHead>Price per Unit</TableHead>
+                                <TableHead>Discount %</TableHead>
+                                <TableHead>Savings per Unit</TableHead>
+                                <TableHead className="text-center">Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {formData.pricingTiers.map((tier, index) => {
+                                const savings = formData.basePrice - tier.price
+                                const discountPercent = formData.basePrice > 0 
+                                  ? ((savings / formData.basePrice) * 100).toFixed(1)
+                                  : 0
+                                
+                                return (
+                                  <TableRow key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'}>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <input
+                                          type="number"
+                                          value={tier.minQuantity}
+                                          onChange={(e) => updatePricingTier(index, 'minQuantity', parseInt(e.target.value) || 1)}
+                                          min="1"
+                                          className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
+                                        />
+                                        <span className="text-gray-600 text-sm">to</span>
+                                        <input
+                                          type="number"
+                                          value={tier.maxQuantity || ''}
+                                          onChange={(e) => updatePricingTier(index, 'maxQuantity', e.target.value ? parseInt(e.target.value) : undefined)}
+                                          min="1"
+                                          placeholder="∞"
+                                          className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
+                                        />
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>
+                                      <div className="relative">
+                                        <span className="absolute left-2 top-2 text-gray-500 text-sm">₹</span>
+                                        <input
+                                          type="number"
+                                          value={tier.price}
+                                          onChange={(e) => updatePricingTier(index, 'price', parseFloat(e.target.value) || 0)}
+                                          min="0"
+                                          step="0.01"
+                                          className="w-full pl-6 pr-2 py-1 border border-gray-300 rounded text-sm"
+                                        />
+                                      </div>
+                                    </TableCell>
+                                    <TableCell className="text-gray-900 font-semibold">{discountPercent}%</TableCell>
+                                    <TableCell className="text-gray-900 font-semibold">₹{savings.toFixed(2)}</TableCell>
+                                    <TableCell className="text-center">
+                                      {formData.pricingTiers.length > 1 && (
+                                        <button
+                                          type="button"
+                                          onClick={() => removePricingTier(index)}
+                                          className="text-gray-600 hover:text-red-600 p-1 inline-block"
+                                        >
+                                          <X className="h-4 w-4" />
+                                        </button>
+                                      )}
+                                    </TableCell>
+                                  </TableRow>
+                                )
+                              })}
+                            </TableBody>
+                          </Table>
+                        </div>
+
+                        {/* Add Tier Button */}
+                        <Button 
+                          type="button" 
+                          onClick={addPricingTier}
+                          className="w-full bg-gray-900 text-white hover:bg-black"
+                        >
+                          + Add Pricing Tier
                         </Button>
-                      </div>
-                      
-                      {formData.pricingTiers.map((tier, index) => (
-                        <div key={index} className="border border-gray-200 rounded-lg p-4">
-                          <div className="grid grid-cols-1 md:grid-cols-5 gap-3 items-center">
-                            <div>
-                              <label className="block text-xs text-gray-500 mb-1">Min Qty</label>
-                              <input
-                                type="number"
-                                value={tier.minQuantity}
-                                onChange={(e) => updatePricingTier(index, 'minQuantity', parseInt(e.target.value) || 1)}
-                                min="1"
-                                className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs text-gray-500 mb-1">Max Qty</label>
-                              <input
-                                type="number"
-                                value={tier.maxQuantity || ''}
-                                onChange={(e) => updatePricingTier(index, 'maxQuantity', e.target.value ? parseInt(e.target.value) : undefined)}
-                                min="1"
-                                placeholder="No limit"
-                                className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs text-gray-500 mb-1">Price</label>
-                              <input
-                                type="number"
-                                value={tier.price}
-                                onChange={(e) => updatePricingTier(index, 'price', parseFloat(e.target.value) || 0)}
-                                min="0"
-                                step="0.01"
-                                className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs text-gray-500 mb-1">Discount %</label>
-                              <input
-                                type="number"
-                                value={tier.discount || ''}
-                                onChange={(e) => updatePricingTier(index, 'discount', e.target.value ? parseFloat(e.target.value) : undefined)}
-                                min="0"
-                                max="100"
-                                step="0.1"
-                                placeholder="Optional"
-                                className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                              />
-                            </div>
-                            <div>
-                              {formData.pricingTiers.length > 1 && (
-                                <button
-                                  type="button"
-                                  onClick={() => removePricingTier(index)}
-                                  className="text-red-600 hover:text-red-800 p-1"
-                                >
-                                  <X className="h-4 w-4" />
-                                </button>
-                              )}
-                            </div>
+
+                        {/* Bulk Pricing Example */}
+                        <div className="p-4 bg-white border border-gray-300 rounded-lg">
+                          <p className="text-xs font-medium text-gray-700 mb-2">Bulk Pricing Example:</p>
+                          <div className="space-y-1 text-xs text-gray-600">
+                            {formData.pricingTiers.map((tier, idx) => (
+                              <div key={idx} className="flex justify-between">
+                                <span>
+                                  {tier.minQuantity} - {tier.maxQuantity ? tier.maxQuantity : '∞'} units:
+                                </span>
+                                <span className="font-medium text-gray-900">
+                                  ₹{tier.price.toFixed(2)} each
+                                </span>
+                              </div>
+                            ))}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      </div>
+                    )}
+
+                    {!formData.bulkPricingEnabled && (
+                      <div className="p-4 bg-white border border-gray-300 rounded-lg text-center">
+                        <p className="text-sm text-gray-600">
+                          Enable bulk pricing to offer discounts for larger orders
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Pricing Strategy Tips */}
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <h4 className="font-medium text-amber-900 mb-2">💡 Pricing Tips</h4>
+                    <ul className="text-sm text-amber-800 space-y-1">
+                      <li>• Set competitive base prices to attract customers</li>
+                      <li>• Use bulk pricing to encourage larger orders</li>
+                      <li>• Typical bulk discounts: 5-10% for 10+ units, 10-15% for 50+ units</li>
+                      <li>• Ensure bulk prices still maintain healthy profit margins</li>
+                    </ul>
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -1074,7 +1483,6 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                             value={formData.totalStock}
                             onChange={handleInputChange}
                             required
-                            min="0"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                           />
                         </div>
@@ -1087,7 +1495,6 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                             name="lowStockThreshold"
                             value={formData.lowStockThreshold}
                             onChange={handleInputChange}
-                            min="0"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                           />
                         </div>
@@ -1104,7 +1511,6 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                             value={formData.minimumOrderQuantity}
                             onChange={handleInputChange}
                             required
-                            min="1"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                           />
                         </div>
@@ -1117,7 +1523,6 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                             name="maximumOrderQuantity"
                             value={formData.maximumOrderQuantity || ''}
                             onChange={handleInputChange}
-                            min="1"
                             placeholder="No limit"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
                           />
@@ -1201,18 +1606,20 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Dropdown
-                    id="productStatus"
-                    label="Product Status"
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Product Status
+                  </label>
+                  <select
+                    name="status"
                     value={formData.status}
-                    options={[
-                      { value: 'pending', label: 'Pending' },
-                      { value: 'active', label: 'Active' },
-                      { value: 'suspended', label: 'Suspended' },
-                      { value: 'out_of_stock', label: 'Out of Stock' }
-                    ]}
-                    onChange={(value) => setFormData(prev => ({ ...prev, status: value as 'active' | 'pending' | 'suspended' | 'out_of_stock' }))}
-                  />
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent"
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="active">Active</option>
+                    <option value="suspended">Suspended</option>
+                    <option value="out_of_stock">Out of Stock</option>
+                  </select>
                 </div>
 
                 <div className="flex items-center">
@@ -1236,7 +1643,10 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer">
+                  <div 
+                    className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer"
+                    onClick={() => document.getElementById('image-upload')?.click()}
+                  >
                     <Upload className="mx-auto h-12 w-12 text-gray-400" />
                     <p className="mt-2 text-sm text-gray-600">
                       Click to upload or drag and drop
@@ -1245,36 +1655,38 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       PNG, JPG, GIF up to 10MB
                     </p>
                     <input
+                      id="image-upload"
                       type="file"
                       multiple
                       accept="image/*"
                       className="hidden"
-                      onChange={(e) => {
-                        // Handle image upload logic here
-                        console.log('Files selected:', e.target.files)
-                      }}
+                      onChange={handleImageUpload}
                     />
                   </div>
                   
                   {/* Image Preview Grid */}
                   {formData.images.length > 0 && (
                     <div className="grid grid-cols-2 gap-2">
-                      {formData.images.map((image, index) => (
+                      {formData.images.map((image) => (
                         <div key={image.id} className="relative group">
                           <img
                             src={image.url}
                             alt={image.alt}
                             className="w-full h-20 object-cover rounded border"
                           />
-                          <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
+                          <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center gap-2">
+                            {!image.isPrimary && (
+                              <button
+                                type="button"
+                                onClick={() => setPrimaryImage(image.id)}
+                                className="text-white text-xs bg-blue-600 px-2 py-1 rounded hover:bg-blue-700"
+                              >
+                                Set Primary
+                              </button>
+                            )}
                             <button
                               type="button"
-                              onClick={() => {
-                                setFormData(prev => ({
-                                  ...prev,
-                                  images: prev.images.filter((_, i) => i !== index)
-                                }))
-                              }}
+                              onClick={() => removeImage(image.id)}
                               className="text-white hover:text-red-300"
                             >
                               <X className="h-4 w-4" />
@@ -1346,11 +1758,30 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                   <Save className="h-4 w-4 mr-2" />
                   {isLoading ? 'Saving...' : (isEdit ? 'Update Product' : 'Create Product')}
                 </Button>
-                <Link href="/dashboard/products" className="block">
+                
+                {!isEdit && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleSaveDraft}
+                    disabled={isLoading}
+                    className="w-full"
+                  >
+                    Save as Draft
+                  </Button>
+                )}
+                
+                <Link href="/admin/dashboard/products" className="block">
                   <Button type="button" variant="outline" className="w-full">
                     Cancel
                   </Button>
                 </Link>
+                
+                {hasUnsavedChanges && (
+                  <p className="text-xs text-amber-600 text-center">
+                    You have unsaved changes
+                  </p>
+                )}
               </CardContent>
             </Card>
           </div>

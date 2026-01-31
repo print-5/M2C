@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/UI/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/UI/Card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/UI/Table'
 import { ArrowLeft, Save, X, Upload } from 'lucide-react'
 import Link from 'next/link'
 import { categories } from '@/components/mockData/products'
@@ -1077,22 +1078,22 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
 
                           {/* Variants Table */}
                           <div className="overflow-x-auto border border-gray-300 rounded-lg">
-                            <table className="w-full text-sm">
-                              <thead>
-                                <tr className="bg-gray-900 text-white">
-                                  <th className="px-4 py-3 text-left font-semibold">Size</th>
-                                  <th className="px-4 py-3 text-left font-semibold">Color</th>
-                                  <th className="px-4 py-3 text-left font-semibold">SKU</th>
-                                  <th className="px-4 py-3 text-left font-semibold">Price</th>
-                                  <th className="px-4 py-3 text-left font-semibold">Stock</th>
-                                  <th className="px-4 py-3 text-center font-semibold">Action</th>
-                                </tr>
-                              </thead>
-                              <tbody>
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Size</TableHead>
+                                  <TableHead>Color</TableHead>
+                                  <TableHead>SKU</TableHead>
+                                  <TableHead>Price</TableHead>
+                                  <TableHead>Stock</TableHead>
+                                  <TableHead className="text-center">Action</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
                                 {formData.variants.map((variant, idx) => (
-                                  <tr key={variant.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'}>
-                                    <td className="px-4 py-3 text-gray-900 font-medium">{variant.size}</td>
-                                    <td className="px-4 py-3">
+                                  <TableRow key={variant.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'}>
+                                    <TableCell className="text-gray-900 font-medium">{variant.size}</TableCell>
+                                    <TableCell>
                                       <div className="flex items-center gap-2">
                                         <div 
                                           className="w-5 h-5 rounded border border-gray-300"
@@ -1105,10 +1106,10 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                                         />
                                         <span className="text-gray-900">{variant.color}</span>
                                       </div>
-                                    </td>
-                                    <td className="px-4 py-3 text-gray-700 font-mono text-xs">{variant.sku}</td>
-                                    <td className="px-4 py-3 text-gray-900 font-semibold">₹{variant.price.toFixed(2)}</td>
-                                    <td className="px-4 py-3">
+                                    </TableCell>
+                                    <TableCell className="text-gray-700 font-mono text-xs">{variant.sku}</TableCell>
+                                    <TableCell className="text-gray-900 font-semibold">₹{variant.price.toFixed(2)}</TableCell>
+                                    <TableCell>
                                       <span className={`px-2 py-1 rounded text-xs font-medium ${
                                         variant.stock > 20 ? 'bg-green-100 text-green-800' :
                                         variant.stock > 5 ? 'bg-yellow-100 text-yellow-800' :
@@ -1116,8 +1117,8 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                                       }`}>
                                         {variant.stock} units
                                       </span>
-                                    </td>
-                                    <td className="px-4 py-3 text-center">
+                                    </TableCell>
+                                    <TableCell className="text-center">
                                       <button
                                         type="button"
                                         onClick={() => removeVariant(variant.id)}
@@ -1125,11 +1126,11 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                                       >
                                         <X className="h-4 w-4" />
                                       </button>
-                                    </td>
-                                  </tr>
+                                    </TableCell>
+                                  </TableRow>
                                 ))}
-                              </tbody>
-                            </table>
+                              </TableBody>
+                            </Table>
                           </div>
 
                           {/* Variant Summary */}
@@ -1334,17 +1335,17 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                       <div className="space-y-4">
                         {/* Pricing Tiers Table */}
                         <div className="overflow-x-auto border border-gray-300 rounded-lg">
-                          <table className="w-full text-sm">
-                            <thead>
-                              <tr className="bg-gray-900 text-white">
-                                <th className="px-4 py-3 text-left font-semibold">Quantity Range</th>
-                                <th className="px-4 py-3 text-left font-semibold">Price per Unit</th>
-                                <th className="px-4 py-3 text-left font-semibold">Discount %</th>
-                                <th className="px-4 py-3 text-left font-semibold">Savings per Unit</th>
-                                <th className="px-4 py-3 text-center font-semibold">Action</th>
-                              </tr>
-                            </thead>
-                            <tbody>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Quantity Range</TableHead>
+                                <TableHead>Price per Unit</TableHead>
+                                <TableHead>Discount %</TableHead>
+                                <TableHead>Savings per Unit</TableHead>
+                                <TableHead className="text-center">Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
                               {formData.pricingTiers.map((tier, index) => {
                                 const savings = formData.basePrice - tier.price
                                 const discountPercent = formData.basePrice > 0 
@@ -1352,8 +1353,8 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                                   : 0
                                 
                                 return (
-                                  <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'}>
-                                    <td className="px-4 py-3">
+                                  <TableRow key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'}>
+                                    <TableCell>
                                       <div className="flex items-center gap-2">
                                         <input
                                           type="number"
@@ -1372,8 +1373,8 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                                           className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
                                         />
                                       </div>
-                                    </td>
-                                    <td className="px-4 py-3">
+                                    </TableCell>
+                                    <TableCell>
                                       <div className="relative">
                                         <span className="absolute left-2 top-2 text-gray-500 text-sm">₹</span>
                                         <input
@@ -1385,10 +1386,10 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                                           className="w-full pl-6 pr-2 py-1 border border-gray-300 rounded text-sm"
                                         />
                                       </div>
-                                    </td>
-                                    <td className="px-4 py-3 text-gray-900 font-semibold">{discountPercent}%</td>
-                                    <td className="px-4 py-3 text-gray-900 font-semibold">₹{savings.toFixed(2)}</td>
-                                    <td className="px-4 py-3 text-center">
+                                    </TableCell>
+                                    <TableCell className="text-gray-900 font-semibold">{discountPercent}%</TableCell>
+                                    <TableCell className="text-gray-900 font-semibold">₹{savings.toFixed(2)}</TableCell>
+                                    <TableCell className="text-center">
                                       {formData.pricingTiers.length > 1 && (
                                         <button
                                           type="button"
@@ -1398,12 +1399,12 @@ export default function AddEditProduct({ productId, isEdit = false }: AddEditPro
                                           <X className="h-4 w-4" />
                                         </button>
                                       )}
-                                    </td>
-                                  </tr>
+                                    </TableCell>
+                                  </TableRow>
                                 )
                               })}
-                            </tbody>
-                          </table>
+                            </TableBody>
+                          </Table>
                         </div>
 
                         {/* Add Tier Button */}
